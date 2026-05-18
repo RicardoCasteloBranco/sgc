@@ -19,9 +19,9 @@ return new class extends Migration
             $table->text('edital_discente');
             $table->text('portaria_docente');
             $table->text('portaria_matricula');
-            $table->integer('quantidade_matriculados')->unsigned();
+            $table->integer('quantidade_matriculados');
             $table->text('portaria_conclusao');
-            $table->integer('quantidade_concluintes')->unsigned();
+            $table->integer('quantidade_concluintes');
             $table->unsignedBigInteger('projeto_id');
             $table->foreign('projeto_id')->references('id')->on('projetos')->onDelete('cascade');
             $table->timestamps();

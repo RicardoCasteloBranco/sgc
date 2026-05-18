@@ -16,7 +16,7 @@ return new class extends Migration
             $table->bigInteger('curso_id')->unsigned();
             $table->date('data_aprovacao');
             $table->text('parecer_tecnico');
-            $table->integer('quantidade_turmas')->unsigned();
+            $table->integer('quantidade_turmas');
             $table->timestamps();
             $table->foreign('curso_id')->references('id')->on('cursos')->onDelete('cascade');
         });

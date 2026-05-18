@@ -24,7 +24,7 @@ class Projeto extends Component
     public function render()
     {
         $this->projetos = ProjetoModel::all();
-        $this->cursos = CursoModel::where('centro_ensino_id', auth()->user()->centroEnsino->id)->get();
+        $this->cursos = CursoModel::all();
         return view('livewire.projeto')->layout('layouts.app');
     }
 
@@ -35,7 +35,7 @@ class Projeto extends Component
         ProjetoModel::create(
             [
                 'curso_id' => $this->curso_id,
-                'ano' => $this->ano,
+                'data_aprovacao' => $this->data_aprovacao,
             ]);
 
         session()->flash('message','Projeto criado com sucesso.');
@@ -56,7 +56,7 @@ class Projeto extends Component
         $projeto = ProjetoModel::findOrFail($id);
         $this->id = $projeto->id;
         $this->curso_id = $projeto->curso_id;
-        $this->ano = $projeto->ano;
+        $this->data_aprovacao = $projeto->data_aprovacao;
         $this->isEditMode = true;
         $this->openModal();
     }
@@ -69,7 +69,7 @@ class Projeto extends Component
         $projeto->update(
             [
                 'curso_id' => $this->curso_id,
-                'ano' => $this->ano,
+                'data_aprovacao' => $this->data_aprovacao,
             ]
         );
 
@@ -93,7 +93,7 @@ class Projeto extends Component
     private function resetInputFields()
     {
         $this->curso_id = null;
-        $this->ano = null;
+        $this->data_aprovacao = null;
     }
 
     public function openModal()
