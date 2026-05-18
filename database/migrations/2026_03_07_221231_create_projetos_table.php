@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('projetos', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('curso_id')->unsigned();
-            $table->bigInteger('ano')->unsigned();
+            $table->date('data_aprovacao');
+            $table->text('parecer_tecnico');
+            $table->integer('quantidade_turmas')->unsigned();
             $table->timestamps();
             $table->foreign('curso_id')->references('id')->on('cursos')->onDelete('cascade');
         });

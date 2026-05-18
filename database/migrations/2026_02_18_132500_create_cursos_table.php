@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('cursos', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
+            $table->string('sigla')->unique();
             $table->text('objetivo_geral');
             $table->longText('objetivos_especificos');
             $table->text('publico_alvo');

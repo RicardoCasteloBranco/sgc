@@ -8,6 +8,7 @@ class Curso extends Model
 {
     protected $fillable = [
         'nome',
+        'sigla',
         'objetivo_geral',
         'objetivos_especificos',
         'publico_alvo',
