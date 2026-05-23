@@ -15,6 +15,11 @@ class Curso extends Model
         'centro_ensino_id',
     ];
 
+    public function projetos()
+    {
+        return $this->hasMany(Projeto::class);
+    }
+
     public function centroEnsino()
     {
         return $this->belongsTo(CentroEnsino::class);

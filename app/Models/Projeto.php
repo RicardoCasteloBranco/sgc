@@ -27,4 +27,9 @@ class Projeto extends Model
     {
         return $this->hasMany(Turma::class);
     }
+
+    public function encerrado()
+    {
+        return $this->turmas()->whereNotNull('data_fim')->exists();
+    }
 }
