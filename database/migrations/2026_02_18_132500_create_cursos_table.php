@@ -18,8 +18,6 @@ return new class extends Migration
             $table->text('objetivo_geral');
             $table->longText('objetivos_especificos');
             $table->text('publico_alvo');
-            $table->unsignedBigInteger('centro_ensino_id')->nullable();
-            $table->foreign('centro_ensino_id')->references('id')->on('centro_ensinos')->onDelete('cascade');
             $table->timestamps();
         });
     }

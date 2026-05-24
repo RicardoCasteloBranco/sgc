@@ -19,7 +19,7 @@ class CentroEnsino extends Component
     protected $rules = [
         'nome' => 'required|string|max:255',
         'sigla' => 'required|string|max:10',
-        'centro_ensino_id' => 'nullable|exists:centros_ensino,id',
+        'centro_ensino_id' => 'nullable|exists:centro_ensinos,id',
     ];
 
 

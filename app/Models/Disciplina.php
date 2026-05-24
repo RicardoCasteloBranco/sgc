@@ -10,6 +10,7 @@ class Disciplina extends Model
         'nome',
         'abreviacao',
         'ementa',
+        'carga_horaria',
         'conhecimentos',
         'habilidades',
         'atitudes',
@@ -18,6 +19,6 @@ class Disciplina extends Model
 
     public function projetos()
     {
-       return $this->belongsToManyThrough(Projeto::class, 'disciplina_projeto', 'disciplina_id', 'projeto_id', 'id', 'id');
+       return $this->belongsToManyThrough(Projeto::class, DisciplinaProjeto::class, 'disciplina_id', 'projeto_id', 'id', 'id');
     }
 }

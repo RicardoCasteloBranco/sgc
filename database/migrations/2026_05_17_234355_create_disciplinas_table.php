@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nome');
             $table->string('abreviacao');
             $table->text('ementa');
+            $table->bigInteger('carga_horaria')->unsigned()->default(0);
             $table->text('conhecimentos');
             $table->text('habilidades');
             $table->text('atitudes');

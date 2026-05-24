@@ -9,8 +9,11 @@ class Projeto extends Model
     protected $fillable = [
         'curso_id',
         'data_aprovacao',
-        'parecer_tecnico',
         'quantidade_turmas',
+        'custo_pessoal',
+        'custo_material',
+        'custo_servicos',
+        'centro_ensino_id',
     ];
 
     public function curso()
@@ -20,12 +23,17 @@ class Projeto extends Model
 
     public function disciplinas()
     {
-        return $this->hasManyThrough(Disciplina::class, 'disciplina_projeto', 'projeto_id', 'id', 'id', 'disciplina_id');
+        return $this->hasManyThrough(Disciplina::class, DisciplinaProjeto::class, 'projeto_id', 'id', 'id', 'disciplina_id');
     }
 
     public function turmas()
     {
         return $this->hasMany(Turma::class);
+    }
+
+    public function centroEnsino()
+    {
+        return $this->belongsTo(CentroEnsino::class);
     }
 
     public function encerrado()

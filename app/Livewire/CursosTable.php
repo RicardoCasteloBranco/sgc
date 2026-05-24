@@ -4,6 +4,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Curso;
 use App\Models\Projeto;
+use App\Models\CentroEnsino;
 
 class CursosTable extends Component
 {
@@ -22,8 +23,11 @@ class CursosTable extends Component
     //campos do Projeto
     public $projetoId;
     public $data_aprovacao;
-    public $parecer_tecnico;
     public $quantidade_turmas;
+    public $custo_pessoal=0.00;
+    public $custo_material=0.00;
+    public $custo_servicos=0.00;
+    public $centro_ensino_id;
     public $curso_id;
 
 
@@ -39,11 +43,12 @@ class CursosTable extends Component
         $this->openModalCurso = true;
     }
 
-    public function createProjeto()
+    public function createProjeto($cursoId)
     {
         $this->resetFieldsProjeto();
         $this->isEditProjeto = false;
         $this->openModalProjeto=true;
+        $this->curso_id = $cursoId;
     }
 
     public function editCurso($id)
@@ -64,9 +69,13 @@ class CursosTable extends Component
         $projeto = Projeto::findOrFail($id);
         $this->curso_id = $projeto->curso_id;
         $this->data_aprovacao = $projeto->data_aprovacao;
-        $this->parecer_tecnico = $projeto->parecer_tecnico;
         $this->quantidade_turmas = $projeto->quantidade_turmas;
-
+        $this->custo_pessoal = $projeto->custo_pessoal;
+        $this->custo_material = $projeto->custo_material;
+        $this->custo_servicos = $projeto->custo_servicos;
+        $this->centro_ensino_id = $projeto->centro_ensino_id;
+        $this->projetoId = $projeto->id;
+        
         $this->isEditProjeto = true;
         $this->openModalProjeto = true;
     }
@@ -94,8 +103,11 @@ class CursosTable extends Component
         $data = [
             'curso_id' => $this->curso_id,
             'data_aprovacao' => $this->data_aprovacao,
-            'parecer_tecnico' => $this->parecer_tecnico,
             'quantidade_turmas' => $this->quantidade_turmas,
+            'custo_pessoal' => $this->custo_pessoal,
+            'custo_material' => $this->custo_material,
+            'custo_servicos' => $this->custo_servicos,
+            'centro_ensino_id' => $this->centro_ensino_id,
         ];
 
         Projeto::create($data);
@@ -128,14 +140,16 @@ class CursosTable extends Component
 
     public function updateProjeto()
     {
-        $projeto = Projeto::findOrFail($this->projetoId);
-
         $data = [
             'curso_id' => $this->curso_id,
             'data_aprovacao' => $this->data_aprovacao,
-            'parecer_tecnico' => $this->parecer_tecnico,
             'quantidade_turmas' => $this->quantidade_turmas,
+            'custo_pessoal' => $this->custo_pessoal,
+            'custo_material' => $this->custo_material,
+            'custo_servicos' => $this->custo_servicos,
+            'centro_ensino_id' => $this->centro_ensino_id,
         ];
+        $projeto = Projeto::findOrFail($this->projetoId);
 
         $projeto->update($data);
 
@@ -145,6 +159,11 @@ class CursosTable extends Component
         $this->resetFieldsProjeto();
     }
 
+    public function viewProjeto($id)
+    {
+        return redirect()->route('projeto', ['id' => $id]);
+    }
+
     public function resetFieldsCurso()
     {
         $this->reset(['cursoId', 'nome', 'sigla', 'objetivo_geral', 'objetivos_especificos', 'publico_alvo']);
@@ -152,13 +171,13 @@ class CursosTable extends Component
 
     public function resetFieldsProjeto()
     {
-        $this->reset(['projetoId', 'curso_id', 'data_aprovacao', 'parecer_tecnico', 'quantidade_turmas']);
+        $this->reset(['projetoId', 'curso_id', 'data_aprovacao', 'quantidade_turmas', 'custo_pessoal', 'custo_material', 'custo_servicos', 'centro_ensino_id']);
     }
 
     public function render()
     {
         return view('livewire.cursos-table', [
-            'cursos' => Curso::with('projetos')->get(),
+            'cursos' => Curso::with('projetos')->get(), 'centrosEnsino' => CentroEnsino::all(),
         ])->layout('layouts.app');
     }
 }

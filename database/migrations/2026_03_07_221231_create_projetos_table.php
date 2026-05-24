@@ -13,12 +13,16 @@ return new class extends Migration
     {
         Schema::create('projetos', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('curso_id')->unsigned();
             $table->date('data_aprovacao');
-            $table->text('parecer_tecnico');
             $table->integer('quantidade_turmas');
+            $table->double('custo_pessoal', 15, 2);
+            $table->double('custo_material', 15, 2);
+            $table->double('custo_servicos', 15, 2);
+            $table->unsignedBigInteger('curso_id');
+            $table->unsignedBigInteger('centro_ensino_id');
             $table->timestamps();
             $table->foreign('curso_id')->references('id')->on('cursos')->onDelete('cascade');
+            $table->foreign('centro_ensino_id')->references('id')->on('centro_ensinos')->onDelete('cascade');
         });
     }
 
