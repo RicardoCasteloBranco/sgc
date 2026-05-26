@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->date('data_aprovacao');
             $table->integer('quantidade_turmas');
-            $table->double('custo_pessoal', 15, 2);
-            $table->double('custo_material', 15, 2);
-            $table->double('custo_servicos', 15, 2);
+            $table->double('custo_pessoal', 15, 2)->default(0);
+            $table->double('custo_material', 15, 2)->default(0);
+            $table->double('custo_servicos', 15, 2)->default(0);
             $table->unsignedBigInteger('curso_id');
             $table->unsignedBigInteger('centro_ensino_id');
             $table->timestamps();

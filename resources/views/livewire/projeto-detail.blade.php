@@ -21,6 +21,7 @@
     <!-- Exibe as turmas associadas ao projeto -->
     <div>
         <h2 class="text-xl font-semibold mb-2 mt-4">Turmas</h2>
+        <button class="mb-2 px-4 py-2 bg-blue-500 rounded" wire:click="createTurma">Criar Nova Turma</button>
         <x-table>
             <x-slot name="theaders">
                 <th>Turma</th>
@@ -28,6 +29,7 @@
                 <th>Data de Término</th>
                 <th>Matriculados</th>
                 <th>Concluintes</th>
+                <th>Unidade</th>
                 <th>Ações</th>
             </x-slot>
             <x-slot name="tbody">
@@ -38,6 +40,7 @@
                         <td class="border px-4 py-2">{{ $turma->data_fim }}</td>
                         <td class="border px-4 py-2">{{ $turma->quantidade_matriculados }}</td>
                         <td class="border px-4 py-2">{{ $turma->quantidade_concluintes }}</td>
+                        <td class="border px-4 py-2">{{ $turma->unidade->sigla }}</td>
                         <td class="border px-4 py-2">
                             <!-- Adicione ações para cada turma aqui -->
                             <button class="text-blue-500 hover:underline">Ver Detalhes</button>
@@ -76,4 +79,56 @@
             </x-slot>
         </x-table>
     </div>
+
+    <!-- Modal para criar nova turma -->
+    <x-modal maxWidth="xl" wire:model="openModalTurma">
+        <x-form-section submit="{{ $isEditTurma ? 'updateTurma' : 'saveTurma' }}">
+            <x-slot name="title">
+                {{ $isEditTurma ? 'Editar Turma' : 'Criar Nova Turma' }}
+            </x-slot>
+            <x-slot name="description">
+                {{ $isEditTurma ? 'Edite os detalhes da turma.' : 'Preencha os detalhes para criar uma nova turma.' }}
+            </x-slot>
+            <x-slot name="form">
+                <div class="mb-4">
+                    <label for="nome" class="block text-gray-700">Nome da Turma:</label>
+                    <input type="text" id="nome" wire:model="nome" class="w-full border rounded px-3 py-2">
+                </div>
+                <div class="mb-4">
+                    <label for="data_inicio" class="block text-gray-700">Data de Início:</label>
+                    <input type="date" id="data_inicio" wire:model="data_inicio" class="w-full border rounded px-3 py-2">
+                </div>
+                <div class="mb-4">
+                    <label for="data_fim" class="block text-gray-700">Data de Término:</label>
+                    <input type="date" id="data_fim" wire:model="data_fim" class="w-full border rounded px-3 py-2">
+                </div>
+                <div class="mb-4">
+                    <label for="quantidade_matriculados" class="block text-gray-700">Quantidade de Matriculados:</label>
+                    <input type="number" id="quantidade_matriculados" wire:model="quantidade_matriculados" class="w-full border rounded px-3 py-2">
+                </div>
+                <div class="mb-4">
+                    <label for="quantidade_concluintes" class="block text-gray-700">Quantidade de Concluintes:</label>
+                    <input type="number" id="quantidade_concluintes" wire:model="quantidade_concluintes" class="w-full border rounded px-3 py-2">
+                </div>
+                <div class="mb-4">
+                    <label for="unidade_id" class="block text-gray-700">Unidade:</label>
+                    <select id="unidade_id" wire:model="unidade_id" class="w-full border rounded px-3 py-2">
+                        <option value="">Selecione uma unidade</option>
+                        @foreach($unidades as $unidade)
+                            <option value="{{ $unidade->id }}">{{ $unidade->sigla }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </x-slot>
+            <x-slot name="actions">
+                <x-button type="submit">
+                    {{ $isEditTurma ? 'Atualizar' : 'Criar' }}
+                </x-button>
+                @if ($isEditTurma)
+                    <x-secondary-button type="reset" wire:click="$set('openModalTurma', false)">Cancelar</x-secondary-button>
+                @endif
+            </x-slot>
+        </x-form-section>
+    </x-modal>
+    <!-- Fim do modal para criação de turmas -->
 </div>

@@ -16,11 +16,17 @@ class Turma extends Model
         'quantidade_matriculados',
         'portaria_conclusao',
         'quantidade_concluintes',
+        'unidade_id',
         'projeto_id'
     ];
 
     public function projeto()
     {
         return $this->belongsTo(Projeto::class);
+    }
+
+    public function unidade()
+    {
+        return $this->belongsTo(Unidade::class);
     }
 }
