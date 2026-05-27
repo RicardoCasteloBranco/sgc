@@ -19,5 +19,5 @@ Route::middleware([
     Route::get('/centro', \App\Livewire\CentroEnsino::class)->name('centro-ensino');
     Route::get('/supervisor', \App\Livewire\Supervisor::class)->name('supervisor');
     Route::get('/curso', \App\Livewire\CursosTable::class)->name('curso');
-    Route::get('/projeto/{id}', \App\Livewire\ProjetoDetail::class)->name('projeto');
+    Route::get('/projetos/{projeto}', \App\Livewire\ProjetoDetail::class);
 });
