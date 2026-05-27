@@ -30,7 +30,7 @@ return new class extends Migration
             $table->text('portaria_matricula')->nullable();
             $table->integer('quantidade_matriculados')->default(0);
             $table->text('portaria_conclusao')->nullable();
-            $table->integer('quantidade_concluintes')->default(0);
+            $table->integer('quantidade_concluintes')->default(0)->nullable();
             $table->unsignedBigInteger('projeto_id');
             $table->unsignedBigInteger('unidade_id');
             $table->foreign('projeto_id')->references('id')->on('projetos')->onDelete('cascade');
@@ -43,6 +43,7 @@ return new class extends Migration
             ['nome' => 'Diretoria Integrada do Interior I', 'sigla' => 'Dinter 1', 'unidade_gestora' => null],
             ['nome' => 'Diretoria Integrada do Interior II', 'sigla' => 'Dinter 2', 'unidade_gestora' => null],
             ['nome' => 'Diretoria Integrada Especializada', 'sigla' => 'DIRESP', 'unidade_gestora' => null],
+            ['nome' => 'Diretoria de Ensino, Instrução e Pesquisa', 'sigla' => 'DEIP', 'unidade_gestora' => null],
             ['nome' => '1º Batalhão de Polícia Militar', 'sigla' => '1º BPM', 'unidade_gestora' => 1],
             ['nome' => '2º Batalhão de Polícia Militar', 'sigla' => '2º BPM', 'unidade_gestora' => 2],
             ['nome' => '3º Batalhão de Polícia Militar', 'sigla' => '3º BPM', 'unidade_gestora' => 3],
@@ -93,6 +94,9 @@ return new class extends Migration
             ['nome' => '2º Batalhão Integrado Especializado', 'sigla' => '2º BIESP', 'unidade_gestora' => 4],
             ['nome' => 'Companhia Independente de Policiamento com Motos', 'sigla' => 'CIPMotos', 'unidade_gestora' => 4],
             ['nome' => 'Companhia Independente de Policiamento com Cães', 'sigla' => 'CIPCães', 'unidade_gestora' => 4],
+            ['nome' => 'Academia de Polícia Militar do Paudalho', 'sigla' => 'APMP', 'unidade_gestora' => 5],
+            ['nome' => 'Centro de Formação e Aperfeiçoamento de Praças', 'sigla' => 'CFAP', 'unidade_gestora' => 5],
+            ['nome' => 'Centro de Treinamento Tático', 'sigla' => 'CTT', 'unidade_gestora' => 5],
         ]);
     }
 

@@ -13,14 +13,16 @@ return new class extends Migration
     {
         Schema::create('pareceres_tecnicos', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('numero')->unsigned();
+            $table->string('numero');
             $table->date('validade');
-            $table->binary('arquivo');
-            $table->text('nome_arquivo');
+            $table->string('name');
+            $table->string('mime_type');
             $table->unsignedBigInteger('projeto_id');
             $table->foreign('projeto_id')->references('id')->on('projetos')->onDelete('cascade');
             $table->timestamps();
         });
+
+        DB::statement("ALTER TABLE pareceres_tecnicos ADD file_data MEDIUMBLOB");
     }
 
     /**

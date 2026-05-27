@@ -15,10 +15,13 @@ class Disciplina extends Model
         'habilidades',
         'atitudes',
         'referencias',
+        'projeto_id',
     ];
 
-    public function projetos()
+    public function projeto()
     {
-       return $this->belongsToManyThrough(Projeto::class, DisciplinaProjeto::class, 'disciplina_id', 'projeto_id', 'id', 'id');
+       return $this->belongsTo(Projeto::class);
     }
+
+
 }

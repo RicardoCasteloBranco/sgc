@@ -161,7 +161,7 @@ class CursosTable extends Component
 
     public function viewProjeto($id)
     {
-        return redirect()->route('projeto', ['id' => $id]);
+        return redirect('/projetos/' . $id);
     }
 
     public function resetFieldsCurso()

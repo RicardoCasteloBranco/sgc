@@ -6,6 +6,7 @@
         <x-slot name="theaders">
             <th class="p-3 text-left">Curso</th>
             <th>Sigla</th>
+            <th>Turmas Previstas</th>
             <th>Turmas em Andamento</th>
             <th>Turmas Encerradas</th>
             <th>Ações</th> 
@@ -17,6 +18,7 @@
                 <tr>
                     <td class="p-3 cursor-pointer" wire:click="toggle({{ $curso->id }})">{{ $curso->nome }}</td>
                     <td class="text-center">{{ $curso->sigla }}</td>
+                    <td class="text-center">{{ $curso->projetos->filter(fn($p) => $p->turmas()->whereNull('data_fim')->exists())->sum('quantidade_turmas') }}</td>
                     <td class="text-center">{{ $curso->projetos->filter(fn($p) => $p->turmas()->whereNull('data_fim')->exists())->count() }}</td>
                     <td class="text-center">{{ $curso->projetos->filter(fn($p) => $p->turmas()->whereNotNull('data_fim')->exists())->count() }}</td>
                     <td>
@@ -34,7 +36,8 @@
                                     <tr>
                                         <th>Projeto</th>
                                         <th>Data de Aprovação</th>
-                                        <th>Quantidade de Turmas</th>
+                                        <th>Turmas Previstas</th>
+                                        <th>Carga Horária</th>
                                         <th>Custo Pessoal</th>
                                         <th>Custo Material</th>
                                         <th>Custo Serviços</th>
@@ -54,6 +57,9 @@
                                             <td class="text-center">
                                                 {{ $projeto->quantidade_turmas }}
                                             </td>
+                                            <td class="text-center">
+                                                {{ $projeto->disciplinas->sum('carga_horaria') }}
+                                            </td>
                                             <td class="text-right">
                                                 R$ {{ number_format($projeto->custo_pessoal, 2, ',', '.') }}
                                             </td>
@@ -64,7 +70,7 @@
                                                 R$ {{ number_format($projeto->custo_servicos, 2, ',', '.') }}
                                             </td>
                                             <td class="text-center">
-                                                {{ $projeto->centroEnsino->nome }}
+                                                {{ $projeto->centroEnsino->sigla }}
                                             </td>
                                             <td>
                                                 <button wire:click="editProjeto({{ $projeto->id }})" class="text-blue-600">
@@ -84,7 +90,7 @@
                                     <tr>
                                         <th>Projeto</th>
                                         <th>Data de Aprovação</th>
-                                        <th>Quantidade de Turmas</th>
+                                        <th>Turmas Previstas</th>
                                         <th>Custo Pessoal</th>
                                         <th>Custo Material</th>
                                         <th>Custo Serviços</th>
@@ -114,7 +120,7 @@
                                                 R$ {{ number_format($projeto->custo_servicos, 2, ',', '.') }}
                                             </td>
                                             <td class="text-center">
-                                                {{ $projeto->centroEnsino->nome }}
+                                                {{ $projeto->centroEnsino->sigla }}
                                             </td>
                                             <td>
                                                 <button wire:click="editProjeto({{ $projeto->id }})" class="text-blue-600">

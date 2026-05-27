@@ -11,10 +11,13 @@ class ParecerTecnico extends Model
     protected $fillable = [
         'numero',
         'validade',
-        'arquivo',
-        'nome_arquivo',
+        'file_data',
+        'name',
+        'mime_type',
         'projeto_id',
     ];
+
+    protected $hidden = ['file_data'];
 
     public function projeto()
     {

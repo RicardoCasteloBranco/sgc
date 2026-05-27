@@ -23,7 +23,7 @@ class Projeto extends Model
 
     public function disciplinas()
     {
-        return $this->hasManyThrough(Disciplina::class, DisciplinaProjeto::class, 'projeto_id', 'id', 'id', 'disciplina_id');
+        return $this->hasMany(Disciplina::class);
     }
 
     public function turmas()
@@ -39,5 +39,10 @@ class Projeto extends Model
     public function encerrado()
     {
         return $this->turmas()->whereNotNull('data_fim')->exists();
+    }
+
+    public function pareceresTecnicos()
+    {
+        return $this->hasMany(ParecerTecnico::class);
     }
 }

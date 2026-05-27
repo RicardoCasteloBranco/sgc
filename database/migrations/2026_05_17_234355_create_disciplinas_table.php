@@ -15,21 +15,15 @@ return new class extends Migration
             $table->id();
             $table->string('nome');
             $table->string('abreviacao');
-            $table->text('ementa');
+            $table->text('ementa')->nullable();
             $table->bigInteger('carga_horaria')->unsigned()->default(0);
-            $table->text('conhecimentos');
-            $table->text('habilidades');
-            $table->text('atitudes');
-            $table->longText('referencias');
-            $table->timestamps();
-        });
-        Schema::create('disciplina_projeto', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('disciplina_id');
+            $table->text('conhecimentos')->nullable();
+            $table->text('habilidades')->nullable();
+            $table->text('atitudes')->nullable();
+            $table->longText('referencias')->nullable();
             $table->unsignedBigInteger('projeto_id');
-            $table->timestamps();
-            $table->foreign('disciplina_id')->references('id')->on('disciplinas')->onDelete('cascade');
             $table->foreign('projeto_id')->references('id')->on('projetos')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

@@ -20,4 +20,5 @@ Route::middleware([
     Route::get('/supervisor', \App\Livewire\Supervisor::class)->name('supervisor');
     Route::get('/curso', \App\Livewire\CursosTable::class)->name('curso');
     Route::get('/projetos/{projeto}', \App\Livewire\ProjetoDetail::class);
+    Route::get('/parecer/{id}/visualizar', [\App\Http\Controllers\ParecerTecnicoController::class, 'visualizar'])->name('parecer.visualizar');
 });
