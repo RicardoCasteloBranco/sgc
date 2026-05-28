@@ -1,7 +1,7 @@
 <div class="p-6">
     <div class="w-full">
-        <div class="flex gap-6 iterms-start">
-            <div class="w-1/2 bg-gray-600 text-black p-5 rounded-lg">
+        <div class="flex flex-col lg:flex-row gap-6 items-start">
+            <div class="w-full lg:w-1/2 bg-gray-600 text-black p-5 rounded-lg h-[600px]">
                 <h3 class="text-2xl font-bold mb-4">Detalhes do Projeto</h3>
                 <p><strong>Nome:</strong> {{ $projeto->curso->nome }}</p>
                 <p><strong>Centro de Ensino:</strong> {{ $projeto->centroEnsino->nome }}</p>
@@ -11,32 +11,37 @@
                 <p><strong>Custo com Material:</strong> R$ {{ number_format($projeto->custo_material, 2, ',', '.') }}</p>
                 <p><strong>Custo com Serviços:</strong> R$ {{ number_format($projeto->custo_servico, 2, ',', '.') }}</p>
             </div>
-            <div class="w-1/2 bg-white p-5 rounded-lg shadow overflow-y" maxHeight="xl">
+            <div class="w-full lg:w-1/2 bg-white p-5 rounded-lg shadow h-[600px] flex flex-col">
                 <!-- Tabela de Disciplinas -->
                 <x-section-title title="Disciplinas" description="Lista de disciplinas do projeto" />
-                <x-table>
-                    <x-slot name="theaders">
-                        <th>Nome</th>
-                        <th>Abreviação</th>
-                        <th>Carga Horária</th>
-                        <th>Ação</th>
-                    </x-slot>
-                    <x-slot name="tbody">
-                        @foreach($projeto->disciplinas as $disciplina)
-                            <tr>
-                                <td class="text-center">{{ $disciplina->nome }}</td>
-                                <td class="text-center">{{ $disciplina->abreviacao }}</td>
-                                <td class="text-center">{{ $disciplina->carga_horaria }}</td>
-                                <td class="text-center">
-                                    <x-secondary-button wire:click="route({{ $disciplina->id }})">
-                                        Visualizar
-                                    </x-secondary-button>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </x-slot>
-                </x-table>
-                <!-- Fim da Tabela de Disciplinas -->
+                <div class="flex-1 overflow-y-auto mt-4">
+                    <x-table>
+                        <x-slot name="theaders">
+                            <th>Nome</th>
+                            <th>Abreviação</th>
+                            <th>Carga Horária</th>
+                            <th>Ação</th>
+                        </x-slot>
+                        <x-slot name="tbody">
+                            @foreach($disciplinas as $disciplina)
+                                <tr>
+                                    <td class="text-center">{{ $disciplina->nome }}</td>
+                                    <td class="text-center">{{ $disciplina->abreviacao }}</td>
+                                    <td class="text-center">{{ $disciplina->carga_horaria }}</td>
+                                    <td class="text-center">
+                                        <x-secondary-button wire:click="editDisciplina({{ $disciplina->id }})">
+                                        Editar
+                                        </x-secondary-button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </x-slot>
+                    </x-table>
+                    <!-- Fim da Tabela de Disciplinas -->
+                </div>
+                <div class="mt-4">
+                    {{ $disciplinas->links() }}
+                </div>
                 <x-secondary-button class="mt-4" wire:click="createDisciplina">
                     Inserir Disciplina
                 </x-secondary-button>
@@ -201,7 +206,7 @@
      <!-- Fim do Modal de Cadastro/Edição de Turma -->
      <!-- Modal de Cadastro/Edição de Disciplina -->
      <x-modal wire:model="openModalDisciplina">
-        <x-form-section submit=" {{ $isEditDisciplina ? 'updateDisciplina' : 'saveDisciplina' }}">
+        <x-form-section submit="{{ $isEditDisciplina ? 'updateDisciplina' : 'saveDisciplina' }}">
             <x-slot name="title">
                 {{ $isEditDisciplina ? 'Editar Disciplina' : 'Nova Disciplina' }}
             </x-slot>
@@ -360,7 +365,7 @@
 
                         <!-- Rodapé -->
                         <div class="flex justify-end gap-3 border-t px-6 py-4 bg-gray-50">
-                            <x-secondary-button wire:click="$set(openModalParecer, false)">
+                            <x-secondary-button wire:click="$set('openModalParecer', false)">
                                 Cancelar
                             </x-secondary-button>
                             <x-button type="submit">Salvar</x-button>

@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 use App\Models\Projeto;
 use App\Models\Unidade;
 use App\Models\Turma;
@@ -12,7 +13,7 @@ use App\Models\ParecerTecnico;
 
 class ProjetoDetail extends Component
 {
-    use WithFileUploads;
+    use WithFileUploads, WithPagination;
 
     public $isEditTurma = false;
     public $openModalTurma = false;
@@ -62,7 +63,11 @@ class ProjetoDetail extends Component
 
     public function render()
     {
-        return view('livewire.projeto-detail')->layout('layouts.app');
+        $disciplinas = Disciplina::where('projeto_id', $this->projetoId)
+        ->orderBy('nome')
+        ->paginate(4);
+
+        return view('livewire.projeto-detail',['disciplinas' => $disciplinas])->layout('layouts.app');
     }
 
     public function createDisciplina()
