@@ -53,18 +53,23 @@
             <main class="flex max-w-[335px] w-full flex-col-reverse lg:max-w-4xl lg:flex-row">
                 <!-- Caixa da Esquerda -->
                 <div class="text-[13px] leading-[20px] flex-1 p-6 pb-12 lg:p-20 bg-white dark:bg-[#161615] dark:text-[#EDEDEC] shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d] rounded-bl-lg rounded-br-lg lg:rounded-tl-lg lg:rounded-br-none">
-                   <div class="mb-6">
-                        <h1 class="text-6xl lg:text-7xl font-black tracking-widest text-[#003366] dark:text-[#4DA3FF] drop-shadow-[3px_3px_6px_rgba(0,0,0,0.35)] leading-none">
-                        SGE
+                   <div style="
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100%;
+                        flex-direction: column;">
+                     <h1 style="font-size: 110px; font-weight: bold; color: #D4AF37; margin-bottom=2px;">
+                            SGE
                         </h1>
-                        <div class="h-1 w-28 bg-[#D4AF37] rounded-full mt-3 mb-4"></div>
-                        <h3 class="text-sm lg:text-base uppercase tracking-[0.25em] font-semibold text-[#4B5563] dark:text-[#D1D5DB]">Sistema de Gestão de Ensino da PMPE</h3>
+                        <h2><strong>Sistema de Gestão de Ensino da PMPE</strong></h2>
                     </div>
                 </div>
                 <!-- Fim da Caixa da Esquerda -->
                 <!-- Caixa da Direita -->
-                <div class="bg-[##6E11B0] dark:bg-[#1D0002] relative lg:-ml-px -mb-px lg:mb-0 rounded-t-lg lg:rounded-t-none lg:rounded-r-lg aspect-[335/376] lg:aspect-auto w-full lg:w-[438px] shrink-0 overflow-hidden text-center">
-                    <x-application-logo />
+                <div style="background-color: #321E69;"
+                    class="relative lg:-ml-px -mb-px lg:mb-0 rounded-t-lg lg:rounded-t-none lg:rounded-r-lg aspect-[335/376] lg:aspect-auto w-full lg:w-[438px] shrink-0 overflow-hidden flex items-center justify-center">
+                    <x-application-logo class="w-48 h-48" />
                 </div>
             </main>
         </div>
