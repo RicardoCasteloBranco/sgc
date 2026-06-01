@@ -29,4 +29,14 @@ class Turma extends Model
     {
         return $this->belongsTo(Unidade::class);
     }
+
+    public function encerradas()
+    {
+        return $this->whereNotNull('data_fim')->where('YEAR data_inicio LIKE '.date('Y'))->exists();
+    }
+
+    public function andamento()
+    {
+        return $this->whereNotNull('data_fim')->where('YEAR data_inicio LIKE '.date('Y'))->exists();
+    }
 }

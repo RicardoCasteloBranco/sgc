@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="container-fluid">
-        <div class="row max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="row max-w-7xl mx-auto mt-4 sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <x-welcome />
             </div>
