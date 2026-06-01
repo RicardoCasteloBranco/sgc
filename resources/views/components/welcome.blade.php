@@ -49,13 +49,12 @@
         const valores = dados.map(item => item.total);
 
         new Chart(document.getElementById('chart1'), {
-            type: 'column',
+            type: 'bar',
             data: {
-                labels: labels,
+                labels: [labels],
                 datasets: [{
-                    label: 'Alunos',
-                    data: valores,
-                    borderWidth: 2
+                    label: 'Alunos Concluintes',
+                    data: valores
                 }]
             }
         });
