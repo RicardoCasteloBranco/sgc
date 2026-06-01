@@ -230,7 +230,7 @@ class ProjetoDetail extends Component
             'dataFim' => 'nullable|date|after_or_equal:dataInicio',
             'unidadeId' => 'required|exists:unidades,id',
             'quantidadeMatriculados' => 'required|integer|min:0',
-            'quantidadeConcluintes' => 'nullable|integer|min:0|max:quantidadeMatriculados',
+            'quantidadeConcluintes' => 'nullable|integer|min:0|lte:quantidadeMatriculados',
             'editalDocente' => 'nullable|string|max:255',
             'editalDiscente' => 'nullable|string|max:255',
             'portariaDocente' => 'nullable|string|max:255',

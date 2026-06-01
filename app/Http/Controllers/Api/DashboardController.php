@@ -9,8 +9,8 @@ class DashboardController extends Controller
 {
     public function turmas()
     {
-        $encerradas = \App\Models\Turma::with('encerradas')->count();
-        $andamento = \App\Models\Turma::with('andamento')->count();
+        $encerradas = \App\Models\Turma::whereNotNull('data_fim')->count();
+        $andamento = \App\Models\Turma::whereNull('data_fim')->count();
         return response()->json([
             [
                 'status' => 'Andamento',

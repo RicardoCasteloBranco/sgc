@@ -22,7 +22,10 @@
                     <td class="text-center">{{ $curso->projetos->filter(fn($p) => $p->turmas()->whereNull('data_fim')->exists())->count() }}</td>
                     <td class="text-center">{{ $curso->projetos->filter(fn($p) => $p->turmas()->whereNotNull('data_fim')->exists())->count() }}</td>
                     <td>
-                        <x-secondary-button wire:click="editCurso({{ $curso->id }})">Editar Curso</x-secondary-button>
+                        <x-secondary-button wire:click="editCurso({{ $curso->id }})">Editar</x-secondary-button>
+                        <x-button wire:click="toggle({{ $curso->id }})" class="ml-2">
+                            {{ ($expanded[$curso->id] ?? false) ? 'Fechar' : 'Projetos' }}
+                        </x-button>
                     </td>
                 </tr>
                 <!-- Relação dos projetos por curso -->
