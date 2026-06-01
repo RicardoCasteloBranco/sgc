@@ -51,7 +51,7 @@
         new Chart(document.getElementById('chart1'), {
             type: 'bar',
             data: {
-                labels: [labels],
+                labels: labels,
                 datasets: [{
                     label: 'Alunos Concluintes',
                     data: valores

@@ -47,6 +47,7 @@ class DashboardController extends Controller
 
     public function alunos()
     {
+        $dados = array();
         $concluintes = \App\Models\Turma::selectRaw('
             MONTH(data_fim) as mes,
             SUM(quantidade_concluintes) as total
@@ -55,13 +56,13 @@ class DashboardController extends Controller
         ->groupByRaw('MONTH(data_fim)')
         ->orderByRaw('MONTH(data_fim)')
         ->get();
-        
-        return response()->json([
-            [
-                'mes' => $this->getMes($concluintes->pluck('mes')->first()),
-                'total' => $concluintes->pluck('total')
-            ]
-        ]);
+        foreach($concluintes as $concluinte){
+            $dados[] = [
+                'mes' => $this->getMes($concluinte->mes),
+                'total' => $concluinte->total
+            ];
+        }
+        return response()->json($dados);
     }
 
     private function getMes($mes){
