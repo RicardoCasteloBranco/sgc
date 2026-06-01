@@ -32,11 +32,45 @@ class Turma extends Model
 
     public function encerradas()
     {
-        return $this->whereNotNull('data_fim')->where('YEAR(data_inicio)', date('Y'))->exists();
+        return $this->whereNotNull('data_fim')->whereYear('data_inicio', date('Y'))->exists();
     }
 
     public function andamento()
     {
-        return $this->whereNull('data_fim')->where('YEAR(data_inicio)', date('Y'))->exists();
+        return $this->whereNull('data_fim')->whereYear('data_inicio', date('Y'))->exists();
+    }
+
+    public function statusTurma()
+    {
+        if(!is_null($this->portaria_conclusao)) {
+            return 'Curso Concluído';
+        }
+        if(!is_null($this->portaria_matricula)) {
+            return 'Curso Iniciado';
+        }
+        if(!is_null($this->edital_discente) or !is_null($this->edital_docente)) {
+            return 'Fase de Seleção';
+        }
+        if(!is_null($this->data_inicio)
+            && is_null($this->data_fim)
+            && is_null($this->edital_discente)
+            && is_null($this->edital_docente)
+            && is_null($this->portaria_matricula)
+            && is_null($this->portaria_conclusao)) {
+            return 'Previsto';
+        }
+        return 'Sem Previsão para esse período';
+
+    }
+
+    public function linkEdital()
+    {
+        if(!is_null($this->edital_docente)) {
+            return $this->edital_docente;
+        }
+        if(!is_null($this->edital_discente)) {
+            return $this->edital_discente;
+        }
+        return null;
     }
 }
