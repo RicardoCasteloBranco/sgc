@@ -8,3 +8,5 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::get('/turmas', '\App\Http\Controllers\Api\DashboardController@turmas');
+Route::get('/cursos', '\App\Http\Controllers\Api\DashboardController@cursos');
+Route::get('/alunos', '\App\Http\Controllers\Api\DashboardController@alunos');

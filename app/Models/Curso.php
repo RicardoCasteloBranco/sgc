@@ -24,4 +24,9 @@ class Curso extends Model
     {
         return $this->belongsTo(CentroEnsino::class);
     }
+
+    public function turmas()
+    {
+        return $this->hasManyThrough(Turma::class, Projeto::class);
+    }
 }
