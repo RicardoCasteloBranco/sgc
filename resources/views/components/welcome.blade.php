@@ -15,7 +15,7 @@
         <!-- GRÁFICO 2 -->
         <div class="bg-gray-50 p-4 rounded-2xl shadow">
             <h2 class="text-lg font-bold mb-4">
-                Cursos
+                Parecer Técnico
             </h2>
 
             <canvas id="chart2"></canvas>
@@ -61,9 +61,9 @@
     }
 
     // GRÁFICO 2 COM API
-    async function carregarGraficoCursos() {
+    async function carregarGraficoPT() {
 
-        const response = await fetch('/api/cursos');
+        const response = await fetch('/api/projetos');
 
         const dados = await response.json();
 
@@ -104,7 +104,7 @@
 
     carregarGraficoAlunos();
 
-    carregarGraficoCursos();
+    carregarGraficoPT();
 
     carregarGraficoTurmas();
 

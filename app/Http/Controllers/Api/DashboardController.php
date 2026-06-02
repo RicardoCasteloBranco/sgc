@@ -23,24 +23,23 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function cursos()
+    public function projetos()
     {
-        $cursosPrevistos = \App\Models\Curso::whereHas('turmas', function ($query) {
-            $query->whereNull('data_fim')
-            ->whereYear('data_inicio', date('Y'));
-        })->get();
-        $cursosEncerrados = \App\Models\Curso::whereHas('turmas', function ($query) {
-            $query->whereNotNull('data_fim')
-            ->whereYear('data_inicio', date('Y'));
+        $projetosSemPT = \App\Models\Projeto::whereHas('pareceresTecnicos', function ($query) {
+            $query->whereNull('validade');
+            })->get();
+        $projetosComPT = \App\Models\Projeto::whereHas('pareceresTecnicos', function ($query) {
+            $query->whereNotNull('validade')
+            ->whereYear('validade', '<=', date('Y-m-d'));
         })->get();
         return response()->json([
             [
-                'status' => 'Previstos',
-                'total' => $cursosPrevistos->count()
+                'status' => 'sem parecer técnico',
+                'total' => $projetosSemPT->count()
             ],
             [
-                'status' => 'Encerrados',
-                'total' => $cursosEncerrados->count()
+                'status' => 'com parecer técnico',
+                'total' => $projetosComPT->count()
             ]
         ]);
     }
