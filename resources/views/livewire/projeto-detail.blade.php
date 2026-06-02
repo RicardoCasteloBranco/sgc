@@ -6,7 +6,7 @@
                 <p><strong>Nome:</strong> {{ $projeto->curso->nome }}</p>
                 <p><strong>Centro de Ensino:</strong> {{ $projeto->centroEnsino->nome }}</p>
                 <p><strong>Quantidade de Turmas Previstas:</strong> {{ $projeto->quantidade_turmas }}</p>
-                <p><strong>Carga Horária Total: </strong>{{ $projeto->disciplinas->sum('carga_horaria')}}
+                <p><strong>Carga Horária Total: </strong>{{ $projeto->cargaHorariaTotal() }} horas</p>
                 <p><strong>Custo com Pessoal:</strong> R$ {{ number_format($projeto->custo_pessoal, 2, ',', '.') }}</p>
                 <p><strong>Custo com Material:</strong> R$ {{ number_format($projeto->custo_material, 2, ',', '.') }}</p>
                 <p><strong>Custo com Serviços:</strong> R$ {{ number_format($projeto->custo_servico, 2, ',', '.') }}</p>
@@ -58,6 +58,8 @@
             <x-slot name="theaders">
                 <th>Início</th>
                 <th>Término</th>
+                <th>CH Diária</th>
+                <th>Dias Letivos na Semana</th>
                 <th>Unidade</th>
                 <th>Qtd de Matriculados</th>
                 <th>Qtd de Concluintes</th>
@@ -73,6 +75,8 @@
                     <tr>
                         <td class="text-center">{{ date('d/m/Y', strtotime($turma->data_inicio)) }}</td>
                         <td class="text-center">{{ is_null($turma->data_fim) ? 'N/A' : date('d/m/Y', strtotime($turma->data_fim)) }}</td>
+                        <td class="text-center">{{ $turma->carga_horaria_diaria }}</td>
+                        <td class="text-center">{{ $turma->dias_de_aula_por_semana }}</td>
                         <td class="text-center">{{ $turma->unidade->sigla }}</td>
                         <td class="text-center">{{ $turma->quantidade_matriculados }}</td>
                         <td class="text-center">{{ $turma->quantidade_concluintes }}</td>
@@ -142,6 +146,16 @@
                     <x-label for="dataFim" value="Data de Fim" />
                     <x-input id="dataFim" type="date" class="mt-1 block w-full" wire:model.defer="dataFim" />
                     <x-input-error for="dataFim" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="cargaHorariaDiaria" value="Carga Horária Diária" />
+                    <x-input id="cargaHorariaDiaria" type="number" class="mt-1 block w-full" wire:model.defer="cargaHorariaDiaria" />
+                    <x-input-error for="cargaHorariaDiaria" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="diasDeAulaPorSemana" value="Dias de Aula por Semana" />
+                    <x-input id="diasDeAulaPorSemana" type="number" class="mt-1 block w-full" wire:model.defer="diasDeAulaPorSemana" />
+                    <x-input-error for="diasDeAulaPorSemana" class="mt-2" />
                 </div>
                 <div class="col-span-6 sm:col-span-4">
                     <x-label for="unidadeId" value="Unidade" />

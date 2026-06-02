@@ -61,7 +61,7 @@
                                                 {{ $projeto->quantidade_turmas }}
                                             </td>
                                             <td class="text-center">
-                                                {{ $projeto->disciplinas->sum('carga_horaria') }}
+                                                {{ $projeto->cargaHorariaTotal() }}
                                             </td>
                                             <td class="text-right">
                                                 R$ {{ number_format($projeto->custo_pessoal, 2, ',', '.') }}

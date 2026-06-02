@@ -29,6 +29,8 @@ class ProjetoDetail extends Component
     public $turmaId;
     public $dataInicio;
     public $dataFim;
+    public $diasDeAulaPorSemana;
+    public $cargaHorariaDiaria;
     public $unidadeId;
     public $quantidadeMatriculados;
     public $quantidadeConcluintes;
@@ -113,6 +115,8 @@ class ProjetoDetail extends Component
         $this->turmaId = $turma->id;
         $this->dataInicio = $turma->data_inicio;
         $this->dataFim = $turma->data_fim;
+        $this->diasDeAulaPorSemana = $turma->dias_de_aula_por_semana;
+        $this->cargaHorariaDiaria = $turma->carga_horaria_diaria;
         $this->unidadeId = $turma->unidade_id;
         $this->quantidadeMatriculados = $turma->quantidade_matriculados;
         $this->quantidadeConcluintes = $turma->quantidade_concluintes;
@@ -193,9 +197,11 @@ class ProjetoDetail extends Component
         $this->validate([
             'dataInicio' => 'required|date',
             'dataFim' => 'nullable|date|after_or_equal:dataInicio',
+            'diasDeAulaPorSemana' => 'required|integer|min:0|max:7',
+            'cargaHorariaDiaria' => 'required|integer|min:0|max:10',
             'unidadeId' => 'required|exists:unidades,id',
             'quantidadeMatriculados' => 'required|integer|min:0',
-            'quantidadeConcluintes' => 'nullable|integer|min:0|max:quantidadeMatriculados',
+            'quantidadeConcluintes' => 'nullable|integer|min:0|lte:quantidadeMatriculados',
             'editalDocente' => 'nullable|string|max:255',
             'editalDiscente' => 'nullable|string|max:255',
             'portariaDocente' => 'nullable|string|max:255',
@@ -206,6 +212,8 @@ class ProjetoDetail extends Component
         Turma::create([
             'data_inicio' => $this->dataInicio,
             'data_fim' => $this->dataFim,
+            'dias_de_aula_por_semana' => $this->diasDeAulaPorSemana,
+            'carga_horaria_diaria' => $this->cargaHorariaDiaria,
             'unidade_id' => $this->unidadeId,
             'quantidade_matriculados' => $this->quantidadeMatriculados,
             'quantidade_concluintes' => $this->quantidadeConcluintes,
@@ -228,6 +236,8 @@ class ProjetoDetail extends Component
         $this->validate([
             'dataInicio' => 'required|date',
             'dataFim' => 'nullable|date|after_or_equal:dataInicio',
+            'diasDeAulaPorSemana' => 'required|integer|min:0|max:7',
+            'cargaHorariaDiaria' => 'required|integer|min:0|max:10',
             'unidadeId' => 'required|exists:unidades,id',
             'quantidadeMatriculados' => 'required|integer|min:0',
             'quantidadeConcluintes' => 'nullable|integer|min:0|lte:quantidadeMatriculados',
@@ -242,6 +252,8 @@ class ProjetoDetail extends Component
         $turma->update([
             'data_inicio' => $this->dataInicio,
             'data_fim' => $this->dataFim,
+            'dias_de_aula_por_semana' => $this->diasDeAulaPorSemana,
+            'carga_horaria_diaria' => $this->cargaHorariaDiaria,
             'unidade_id' => $this->unidadeId,
             'quantidade_matriculados' => $this->quantidadeMatriculados,
             'quantidade_concluintes' => $this->quantidadeConcluintes,
@@ -309,6 +321,8 @@ class ProjetoDetail extends Component
             'turmaId',
             'dataInicio',
             'dataFim',
+            'diasDeAulaPorSemana',
+            'cargaHorariaDiaria',
             'unidadeId',
             'quantidadeMatriculados',
             'quantidadeConcluintes',

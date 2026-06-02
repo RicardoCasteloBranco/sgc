@@ -24,6 +24,8 @@ return new class extends Migration
             $table->id();
             $table->date('data_inicio');
             $table->date('data_fim')->nullable();
+            $table->integer('dias_de_aula_por_semana')->default(0);
+            $table->integer('carga_horaria_diaria')->default(0);
             $table->text('edital_docente')->nullable();
             $table->text('edital_discente')->nullable();
             $table->text('portaria_docente')->nullable();

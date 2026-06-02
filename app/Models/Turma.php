@@ -3,12 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use DateTime;
+use DateInterval;
 
 class Turma extends Model
 {
     protected $fillable = [
         'data_inicio',
         'data_fim',
+        'dias_de_aula_por_semana',
+        'carga_horaria_diaria',
         'edital_docente',
         'edital_discente',
         'portaria_docente',
@@ -70,6 +74,18 @@ class Turma extends Model
         }
         if(!is_null($this->edital_discente)) {
             return $this->edital_discente;
+        }
+        return null;
+    }
+
+    public function previsaoTermino(){
+        if(!is_null($this->data_inicio) && is_null($this->data_fim)) {
+            $date = new DateTime($this->data_inicio);
+            $inicio = $date->getTimestamp();
+            $dias_necessarios = ceil($this->projeto->cargaHorariaTotal() / $this->carga_horaria_diaria);
+            $qtd_semanas = ceil($dias_necessarios / $this->dias_de_aula_por_semana);
+            $dias_totais = new DateInterval('P' . ($qtd_semanas * 7) . 'D');
+            return $date->add($dias_totais)->format('Y-m-d');
         }
         return null;
     }
