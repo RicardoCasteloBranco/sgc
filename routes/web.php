@@ -15,7 +15,9 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
-
+    Route::get('/register', function () {
+        return view('auth.register');
+    })->name('register');
     Route::get('/centro', \App\Livewire\CentroEnsino::class)->name('centro-ensino');
     Route::get('/supervisor', \App\Livewire\Supervisor::class)->name('supervisor');
     Route::get('/curso', \App\Livewire\CursosTable::class)->name('curso');

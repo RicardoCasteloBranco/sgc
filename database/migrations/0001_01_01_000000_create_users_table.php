@@ -37,6 +37,12 @@ return new class extends Migration
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
+
+        DB::table('users')->insert([
+            'name' => 'Admin User',
+            'email' => 'admin@pm.pe.gov.br',
+            'password' => bcrypt('admin190'),
+        ]);
     }
 
     /**

@@ -1,7 +1,9 @@
 <x-guest-layout>
     <x-authentication-card>
         <x-slot name="logo">
-            <x-authentication-card-logo />
+            <div class="text-center text-2xl font-bold mt-4">
+                Adicionar Novos Usuários
+            </div>
         </x-slot>
 
         <x-validation-errors class="mb-4" />
@@ -53,6 +55,9 @@
 
                 <x-button class="ms-4">
                     {{ __('Register') }}
+                </x-button>
+                <x-button class="ms-4" onclick="window.location='{{ route('dashboard') }}'">
+                    {{ __('Voltar') }}
                 </x-button>
             </div>
         </form>

@@ -107,6 +107,9 @@
                             <x-dropdown-link href="{{ route('calendario') }}">
                                 {{ __('Calendário') }}
                             </x-dropdown-link>
+                            <x-dropdown-link href="{{ route('register') }}">
+                                {{ __('Adicionar Usuário') }}
+                            </x-dropdown-link>
 
                             @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                                 <x-dropdown-link href="{{ route('api-tokens.index') }}">
