@@ -55,8 +55,14 @@ class DashboardController extends Controller
         ->groupByRaw('MONTH(data_fim)')
         ->orderByRaw('MONTH(data_fim)')
         ->get();
+        for($i = 0; $i < 12; $i++){
+            $dados[$i] = [
+                'mes' => $this->getMes($i + 1),
+                'total' => 0
+            ];
+        }
         foreach($concluintes as $concluinte){
-            $dados[] = [
+            $dados[$concluinte->mes - 1] = [
                 'mes' => $this->getMes($concluinte->mes),
                 'total' => $concluinte->total
             ];
