@@ -25,13 +25,28 @@ class DashboardController extends Controller
 
     public function projetos()
     {
-        $projetosSemPT = \App\Models\Projeto::whereHas('pareceresTecnicos', function ($query) {
-            $query->whereNull('validade');
-            })->get();
+        $dentroDoPrazo = 0;
+        $foraDoPrazo = 0;
+
+        $projetosSemPT = \App\Models\Projeto::whereNotExists(function ($query) {
+            $query->select(\DB::raw(1))
+                  ->from('pareceres_tecnicos')
+                  ->whereColumn('pareceres_tecnicos.projeto_id', 'projetos.id');
+        })->get();
         $projetosComPT = \App\Models\Projeto::whereHas('pareceresTecnicos', function ($query) {
             $query->whereNotNull('validade')
-            ->whereYear('validade', '<=', date('Y-m-d'));
+            ->latest('created_at')
+            ->limit(1);
         })->get();
+        $projetosComPT->filter(function($projeto) use (&$dentroDoPrazo, &$foraDoPrazo) {
+            $parecer = $projeto->pareceresTecnicos()->latest('created_at')->first();
+            if ($parecer && $parecer->validade >= now()) {
+                $dentroDoPrazo++;
+            } else {
+                $foraDoPrazo++;
+            }
+        });
+    
         return response()->json([
             [
                 'status' => 'sem parecer técnico',
@@ -39,7 +54,11 @@ class DashboardController extends Controller
             ],
             [
                 'status' => 'com parecer técnico',
-                'total' => $projetosComPT->count()
+                'total' => $dentroDoPrazo
+            ],
+            [
+                'status' => 'fora de validade',
+                'total' => $foraDoPrazo
             ]
         ]);
     }

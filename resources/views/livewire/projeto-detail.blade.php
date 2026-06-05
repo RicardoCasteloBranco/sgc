@@ -1,7 +1,7 @@
 <div class="p-6">
     <div class="w-full">
         <div class="flex flex-col lg:flex-row gap-6 items-start">
-            <div class="w-full lg:w-1/2 bg-gray-600 text-black p-5 rounded-lg h-[600px]">
+            <div class="w-full lg:w-1/2 bg-gray-600 text-white p-5 rounded-lg h-[600px]">
                 <h3 class="text-2xl font-bold mb-4">Detalhes do Projeto</h3>
                 <p><strong>Nome:</strong> {{ $projeto->curso->nome }}</p>
                 <p><strong>Centro de Ensino:</strong> {{ $projeto->centroEnsino->nome }}</p>

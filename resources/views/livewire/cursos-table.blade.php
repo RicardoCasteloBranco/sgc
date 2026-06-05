@@ -129,6 +129,9 @@
                                                 <button wire:click="editProjeto({{ $projeto->id }})" class="text-blue-600">
                                                     Editar
                                                 </button>
+                                                <button wire:click="viewProjeto({{ $projeto->id }})" class="text-green-600 ml-2">
+                                                    Ver Detalhes
+                                                </button>
                                             </td>
                                         </tr>
                                     @endforeach
