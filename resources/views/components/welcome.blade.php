@@ -9,7 +9,7 @@
                 Alunos
             </h2>
 
-            <canvas id="chart1"></canvas>
+            <canvas id="chart1" style="max-height: 300px;"></canvas>
         </div>
 
         <!-- GRÁFICO 2 -->
@@ -56,6 +56,10 @@
                     label: 'Alunos Concluintes',
                     data: valores
                 }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
             }
         });
     }
