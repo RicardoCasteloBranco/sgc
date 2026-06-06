@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nome');
             $table->string('sigla');
+            $table->string('processo_eletronico');
             $table->text('objetivo_geral');
             $table->longText('objetivos_especificos');
             $table->text('publico_alvo');

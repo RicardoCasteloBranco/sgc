@@ -6,6 +6,7 @@
         <x-slot name="theaders">
             <th class="p-3 text-left">Curso</th>
             <th>Sigla</th>
+            <th>Processo Eletrônico</th>
             <th>Turmas Previstas</th>
             <th>Turmas em Andamento</th>
             <th>Turmas Encerradas</th>
@@ -18,6 +19,7 @@
                 <tr>
                     <td class="p-3 cursor-pointer" wire:click="toggle({{ $curso->id }})">{{ $curso->nome }}</td>
                     <td class="text-center">{{ $curso->sigla }}</td>
+                    <td class="text-center">{{ $curso->processo_eletronico }}</td>
                     <td class="text-center">{{ $curso->projetos->filter(fn($p) => $p->turmas()->whereNull('data_fim')->exists())->sum('quantidade_turmas') }}</td>
                     <td class="text-center">{{ $curso->projetos->filter(fn($p) => $p->turmas()->whereNull('data_fim')->exists())->count() }}</td>
                     <td class="text-center">{{ $curso->projetos->filter(fn($p) => $p->turmas()->whereNotNull('data_fim')->exists())->count() }}</td>
@@ -167,6 +169,11 @@
                     <x-label for="sigla" value="Sigla do Curso" />
                     <x-input id="sigla" wire:model.defer="sigla" class="w-full" type="text" />
                     <x-input-error for="sigla" class="mt-2" />
+                </div>
+                <div class="col-span-6 w-full">
+                    <x-label for="processo_eletronico" value="Processo Eletrônico" />
+                    <x-input id="processo_eletronico" wire:model.defer="processo_eletronico" class="w-full" type="text" />
+                    <x-input-error for="processo_eletronico" class="mt-2" />
                 </div>
                 <div class="col-span-6 w-full">
                     <x-label for="objetivo_geral" value="Objetivo Geral" />

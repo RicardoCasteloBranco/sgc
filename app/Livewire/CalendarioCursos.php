@@ -17,14 +17,16 @@ class CalendarioCursos extends Component
                 'id' => $turma->id,
                 'title' => $turma->projeto->curso->sigla,
                 'start' => $turma->data_inicio,
-                'end' => is_null($turma->data_fim)? $turma->previsaoTermino() : $turma->data_fim,
+                'end' => is_null($turma->data_fim)
+                    ? $turma->previsaoTermino()
+                    : $turma->data_fim,
             ];
-        });
+        })->toArray();
     }
 
     public function render()
     {
-        return view('livewire.calendario-cursos')->layout('layouts.app');
+        return view('livewire.calendario-cursos')
+            ->layout('layouts.app');
     }
 }
-

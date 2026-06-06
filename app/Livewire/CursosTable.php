@@ -17,6 +17,7 @@ class CursosTable extends Component
     public $cursoId;
     public $nome;
     public $sigla;
+    public $processo_eletronico;
     public $objetivo_geral;
     public $objetivos_especificos;
     public $publico_alvo;
@@ -57,6 +58,7 @@ class CursosTable extends Component
         $this->cursoId = $curso->id;
         $this->nome = $curso->nome;
         $this->sigla = $curso->sigla;
+        $this->processo_eletronico = $curso->processo_eletronico;
         $this->objetivo_geral = $curso->objetivo_geral;
         $this->objetivos_especificos = $curso->objetivos_especificos;
         $this->publico_alvo = $curso->publico_alvo;
@@ -82,9 +84,19 @@ class CursosTable extends Component
 
     public function saveCurso()
     {
+        $this->validate([
+            'nome' => 'required|string|max:255',
+            'sigla' => 'required|string|max:50',
+            'processo_eletronico' => 'required|string|max:25',
+            'objetivo_geral' => 'nullable|string',
+            'objetivos_especificos' => 'nullable|string',
+            'publico_alvo' => 'nullable|string',
+        ]);
+
         $data = [
             'nome' => $this->nome,
             'sigla' => $this->sigla,
+            'processo_eletronico' => $this->processo_eletronico,
             'objetivo_geral' => $this->objetivo_geral,
             'objetivos_especificos' => $this->objetivos_especificos,
             'publico_alvo' => $this->publico_alvo,
@@ -100,6 +112,16 @@ class CursosTable extends Component
 
     public function saveProjeto()
     {
+        $this->validate([
+            'curso_id' => 'required|exists:cursos,id',
+            'data_aprovacao' => 'required|date',
+            'quantidade_turmas' => 'required|integer|min:1',
+            'custo_pessoal' => 'required|numeric|min:0',
+            'custo_material' => 'required|numeric|min:0',
+            'custo_servicos' => 'required|numeric|min:0',
+            'centro_ensino_id' => 'required|exists:centro_ensinos,id',
+        ]);
+        
         $data = [
             'curso_id' => $this->curso_id,
             'data_aprovacao' => $this->data_aprovacao,
@@ -122,9 +144,19 @@ class CursosTable extends Component
     {
         $curso = Curso::findOrFail($this->cursoId);
 
+        $this->validate([
+            'nome' => 'required|string|max:255',
+            'sigla' => 'required|string|max:50',
+            'processo_eletronico' => 'required|string|max:25',
+            'objetivo_geral' => 'nullable|string',
+            'objetivos_especificos' => 'nullable|string',
+            'publico_alvo' => 'nullable|string',
+        ]);
+
         $data = [
             'nome' => $this->nome,
             'sigla' => $this->sigla,
+            'processo_eletronico' => $this->processo_eletronico,
             'objetivo_geral' => $this->objetivo_geral,
             'objetivos_especificos' => $this->objetivos_especificos,
             'publico_alvo' => $this->publico_alvo,
@@ -140,6 +172,16 @@ class CursosTable extends Component
 
     public function updateProjeto()
     {
+        $this->validate([
+            'curso_id' => 'required|exists:cursos,id',
+            'data_aprovacao' => 'required|date',
+            'quantidade_turmas' => 'required|integer|min:1',
+            'custo_pessoal' => 'required|numeric|min:0',
+            'custo_material' => 'required|numeric|min:0',
+            'custo_servicos' => 'required|numeric|min:0',
+            'centro_ensino_id' => 'required|exists:centro_ensinos,id',
+        ]);
+
         $data = [
             'curso_id' => $this->curso_id,
             'data_aprovacao' => $this->data_aprovacao,
@@ -166,7 +208,7 @@ class CursosTable extends Component
 
     public function resetFieldsCurso()
     {
-        $this->reset(['cursoId', 'nome', 'sigla', 'objetivo_geral', 'objetivos_especificos', 'publico_alvo']);
+        $this->reset(['cursoId', 'nome', 'sigla', 'processo_eletronico', 'objetivo_geral', 'objetivos_especificos', 'publico_alvo']);
     }
 
     public function resetFieldsProjeto()

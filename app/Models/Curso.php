@@ -9,6 +9,7 @@ class Curso extends Model
     protected $fillable = [
         'nome',
         'sigla',
+        'processo_eletronico',
         'objetivo_geral',
         'objetivos_especificos',
         'publico_alvo',
