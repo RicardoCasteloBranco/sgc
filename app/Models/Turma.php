@@ -89,4 +89,13 @@ class Turma extends Model
         }
         return null;
     }
+
+    public function numeroTurma(){
+        $ids = self::where('projeto_id', $this->projeto_id)
+            ->orderBy('data_inicio')
+            ->orderBy('id')
+            ->pluck('id')
+            ->values();
+        return $ids->search($this->id) + 1;
+    }
 }

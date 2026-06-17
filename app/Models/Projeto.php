@@ -50,4 +50,15 @@ class Projeto extends Model
     {
         return $this->disciplinas()->sum('carga_horaria');
     }
+
+    public function numeroProjeto()
+    {
+        $ids = $ids = self::where('curso_id', $this->curso_id)
+            ->orderBy('data_aprovacao')
+            ->orderBy('id')
+            ->pluck('id')
+            ->values();
+        $id = $ids->search($this->id) + 1;
+        return $this->curso->sigla." ".$id.'/'.date('Y',strtotime($this->data_aprovacao));
+    }
 }

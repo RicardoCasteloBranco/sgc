@@ -89,6 +89,9 @@
                             <x-secondary-button wire:click="editTurma({{ $turma->id }})">
                                 Editar
                             </x-secondary-button>
+                            <x-button wire:click="viewTurma({{ $turma->id }})">
+                                Detalhes
+                            </x-button>
                         </td>
                     </tr>
                 @endforeach

@@ -342,5 +342,10 @@ class ProjetoDetail extends Component
             'numero'
         ]);
     }
+
+    public function viewTurma($id)
+    {
+        return redirect('/turma/'.$id);
+    }
     
 }
