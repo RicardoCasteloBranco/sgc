@@ -67,7 +67,7 @@ class ProjetoDetail extends Component
     {
         $disciplinas = Disciplina::where('projeto_id', $this->projetoId)
         ->orderBy('nome')
-        ->paginate(4);
+        ->paginate(5);
 
         return view('livewire.projeto-detail',['disciplinas' => $disciplinas])->layout('layouts.app');
     }

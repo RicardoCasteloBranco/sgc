@@ -29,7 +29,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Db::table('graduacoes')->insert([
+        DB::table('graduacoes')->insert([
             ['extenso'=> "Coronel",'abreviado'=>"Cel"],
             ['extenso'=> "Tenente Coronel",'abreviado'=>"Ten Cel"],
             ['extenso'=> "Major",'abreviado'=>"Maj"],
