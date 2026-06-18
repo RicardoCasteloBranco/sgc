@@ -16,6 +16,16 @@ class Pessoa extends Model
          ];
 
     public function graduacao(){
-        return belongsTo(Graduacao::class);
+        return $this->belongsTo(Graduacao::class);
+    }
+
+    public function coordenador()
+    {
+        return $this->hasMany(Coordenador::class);
+    }
+
+    public function aluno()
+    {
+        return $this->hasMany(Aluno::class);
     }
 }

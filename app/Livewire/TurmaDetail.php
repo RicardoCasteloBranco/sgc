@@ -18,4 +18,24 @@ class TurmaDetail extends Component
     {
         return view('livewire.turma-detail')->layout('layouts.app');
     }
+
+    public function inserirCoordenador()
+    {
+
+    }
+
+    public function alterarCoordenador()
+    {
+
+    }
+
+    public function carregarTurma()
+    {
+
+    }
+
+    public function adicionarAluno()
+    {
+        
+    }
 }

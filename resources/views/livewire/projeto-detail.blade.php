@@ -42,16 +42,18 @@
                 <div class="mt-4">
                     {{ $disciplinas->links() }}
                 </div>
-                <x-secondary-button class="mt-4" wire:click="createDisciplina">
-                    Inserir Disciplina
-                </x-secondary-button>
+                <div>
+                    <x-button class="mt-4" wire:click="createDisciplina">
+                        Inserir Disciplina
+                    </x-button>
+                </div>
             </div>
         </div>
     </div>
     <!-- Tabela de Turmas -->
     <div>
         <x-section-title title="Turmas" description="Lista de turmas do projeto"/>
-        <x-button class="mb-4" wire:click="createTurma">
+        <x-button class="m-4" wire:click="createTurma">
             Nova Turma
         </x-button>
         <x-table>
@@ -102,7 +104,7 @@
     <!-- Tabela de Pareceres Técnicos -->
     <div class="mt-8">
         <x-section-title title="Pareceres Técnicos" description="Lista de pareceres técnicos do projeto"/>
-        <x-secondary-button wire:click="createParecerTecnico">Adicionar Parecer Tecnico</x-secondary-button>
+        <x-button wire:click="createParecerTecnico" class="m-4">Adicionar Parecer Tecnico</x-button>
         <x-table>
             <x-slot name="theaders">
                 <th>Número</th>

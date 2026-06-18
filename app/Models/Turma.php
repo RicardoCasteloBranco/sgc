@@ -44,6 +44,16 @@ class Turma extends Model
         return $this->whereNull('data_fim')->whereYear('data_inicio', date('Y'))->exists();
     }
 
+    public function coordenador()
+    {
+        return $this->hasOne(Coordenador::class);
+    }
+
+    public function alunos()
+    {
+        return $this->hasMany(Aluno::class);
+    }
+
     public function statusTurma()
     {
         if(!is_null($this->portaria_conclusao)) {

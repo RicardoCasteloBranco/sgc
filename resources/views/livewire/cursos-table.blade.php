@@ -1,5 +1,5 @@
 <div class="p-6">
-    <x-button wire:click="createCurso">Novo Curso</x-button>
+    <x-button wire:click="createCurso" class="m-4">Novo Curso</x-button>
     
     <!-- Tabela de Cursos -->
     <x-table>
@@ -51,33 +51,33 @@
                                     </tr>
                                     @foreach($curso->projetos->filter(fn($p)=>!$p->encerrado()) as $projeto)
                                         <tr>
-                                            <td class="border border-black">
+                                            <td class="border border-black p-2">
                                                 {{ $projeto->numeroProjeto() }}
                                             </td>
-                                            <td class="text-center border border-black">
+                                            <td class="text-center border border-black p-2">
                                                 @if(!is_null($projeto->data_aprovacao))
                                                     {{ date('d/m/Y', strtotime($projeto->data_aprovacao)) }}
                                                 @endif
                                             </td>
-                                            <td class="text-center border border-black">
+                                            <td class="text-center border border-black p-2">
                                                 {{ $projeto->quantidade_turmas }}
                                             </td>
-                                            <td class="text-center border border-black">
+                                            <td class="text-center border border-black p-2">
                                                 {{ $projeto->cargaHorariaTotal() }}
                                             </td>
-                                            <td class="text-right border border-black">
+                                            <td class="text-right border border-black p-2">
                                                 R$ {{ number_format($projeto->custo_pessoal, 2, ',', '.') }}
                                             </td>
-                                            <td class="text-right border border-black">
+                                            <td class="text-right border border-black p-2">
                                                 R$ {{ number_format($projeto->custo_material, 2, ',', '.') }}
                                             </td>
-                                            <td class="text-right border border-black">
+                                            <td class="text-right border border-black p-2">
                                                 R$ {{ number_format($projeto->custo_servicos, 2, ',', '.') }}
                                             </td>
-                                            <td class="text-center border border-black">
+                                            <td class="text-center border border-black p-2">
                                                 {{ $projeto->centroEnsino->sigla }}
                                             </td>
-                                            <td class="text-center border border-black">
+                                            <td class="text-center border border-black p-2">
                                                 <button wire:click="editProjeto({{ $projeto->id }})" class="text-blue-600">
                                                     Editar
                                                 </button>
@@ -104,30 +104,30 @@
                                     </tr>
                                     @foreach($curso->projetos->filter(fn($p)=>$p->encerrado()) as $projeto)
                                         <tr>
-                                            <td class="text-center border border-black">
+                                            <td class="text-center border border-black p-2">
                                                 {{ $projeto->numeroProjeto() }}
                                             </td>
-                                            <td class="text-center border border-black">
+                                            <td class="text-center border border-black p-2">
                                                 @if(!is_null($projeto->data_aprovacao))
                                                     {{ date('d/m/Y', strtotime($projeto->data_aprovacao)) }}
                                                 @endif
                                             </td>
-                                            <td class="text-center border border-black">
+                                            <td class="text-center border border-black p-2">
                                                 {{ $projeto->quantidade_turmas }}
                                             </td>
-                                            <td class="text-right border border-black">
+                                            <td class="text-right border border-black p-2">
                                                 R$ {{ number_format($projeto->custo_pessoal, 2, ',', '.') }}
                                             </td>
-                                            <td class="text-right border border-black">
+                                            <td class="text-right border border-black p-2">
                                                 R$ {{ number_format($projeto->custo_material, 2, ',', '.') }}
                                             </td>
-                                            <td class="text-right border border-black">
+                                            <td class="text-right border border-black p-2">
                                                 R$ {{ number_format($projeto->custo_servicos, 2, ',', '.') }}
                                             </td>
-                                            <td class="text-center border border-black">
+                                            <td class="text-center border border-black p-2">
                                                 {{ $projeto->centroEnsino->sigla }}
                                             </td>
-                                            <td class="text-center border border-black">
+                                            <td class="text-center border border-black p-2">
                                                 <button wire:click="editProjeto({{ $projeto->id }})" class="text-blue-600">
                                                     Editar
                                                 </button>
