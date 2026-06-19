@@ -1,6 +1,7 @@
-<div class="p-6">
-    <x-button wire:click="createCurso" class="m-4">Novo Curso</x-button>
-    
+<div class="p-6 w-full">
+    <div class="container mx-auto px-4 h-full">
+        <x-button wire:click="createCurso" class="m-4">Novo Curso</x-button>
+    </div>    
     <!-- Tabela de Cursos -->
     <x-table>
         <x-slot name="theaders">
@@ -16,14 +17,14 @@
         <x-slot name="tbody">
             <!-- Loop de Cursos -->
             @foreach($cursos as $curso)
-                <tr class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }} hover:bg-blue-100 transition">
+                <tr class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }} transition">
                     <td class="p-3 cursor-pointer" wire:click="toggle({{ $curso->id }})">{{ $curso->nome }}</td>
                     <td class="text-center">{{ $curso->sigla }}</td>
                     <td class="text-center">{{ $curso->processo_eletronico }}</td>
                     <td class="text-center">{{ $curso->projetos->filter(fn($p) => $p->turmas()->whereNull('data_fim')->exists())->sum('quantidade_turmas') }}</td>
                     <td class="text-center">{{ $curso->projetos->filter(fn($p) => $p->turmas()->whereNull('data_fim')->exists())->count() }}</td>
                     <td class="text-center">{{ $curso->projetos->filter(fn($p) => $p->turmas()->whereNotNull('data_fim')->exists())->count() }}</td>
-                    <td>
+                    <td class="text-center">
                         <button wire:click="editCurso({{ $curso->id }})" class="text-blue-600">Editar</button>
                         <button wire:click="toggle({{ $curso->id }})" class="ml-2 text-green-600">
                             {{ ($expanded[$curso->id] ?? false) ? 'Fechar' : 'Detalhes' }}
@@ -33,13 +34,14 @@
                 <!-- Relação dos projetos por curso -->
                 @if($expanded[$curso->id] ?? false)
                     <tr>
-                        <td colspan="7" class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }} hover:bg-blue-100 p-4">
-                        <button wire:model="openModalProjeto" wire:click="createProjeto({{ $curso->id }})" class="mb-4 text-green-600">Novo Projeto</button>
-                            <h4 class="font-bold">Projetos em andamento</h4>
+                        <td colspan="7" class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }} p-4">
+                        <x-success-button wire:model="openModalProjeto" 
+                            wire:click="createProjeto({{ $curso->id }})" >Novo Projeto</x-success-button>
+                            <h4 class="font-bold mt-6 mb-2">Projetos em andamento</h4>
                             <div>
                                 <table class="w-full border-collapse border border-gray-50">
-                                    <tr>
-                                        <th class="border border-black">Projeto</th>
+                                    <tr class="bg-gray-500 text-white uppercase">
+                                        <th class="border border-black p-3">Projeto</th>
                                         <th class="border border-black">Data de Aprovação</th>
                                         <th class="border border-black">Turmas Previstas</th>
                                         <th class="border border-black">Carga Horária</th>
@@ -89,11 +91,11 @@
                                     @endforeach
                                 </table>
                             </div>
-                            <h4 class="font-bold mt-4">Projetos encerrados</h4>
+                            <h4 class="font-bold mt-6 mb-2">Projetos encerrados</h4>
                             <div>
                                 <table class="w-full border-collapse border border-gray-50">
-                                    <tr>
-                                        <th class="border border-black">Projeto</th>
+                                    <tr class="bg-gray-500 text-white uppercase">
+                                        <th class="border border-black p-3">Projeto</th>
                                         <th class="border border-black">Data de Aprovação</th>
                                         <th class="border border-black">Turmas Previstas</th>
                                         <th class="border border-black">Custo Pessoal</th>

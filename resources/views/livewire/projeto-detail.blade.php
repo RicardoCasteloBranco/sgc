@@ -11,25 +11,26 @@
                 <p><strong>Custo com Material:</strong> R$ {{ number_format($projeto->custo_material, 2, ',', '.') }}</p>
                 <p><strong>Custo com Serviços:</strong> R$ {{ number_format($projeto->custo_servico, 2, ',', '.') }}</p>
             </div>
-            <div class="w-full lg:w-1/2 bg-white p-5 rounded-lg shadow h-[400px] flex flex-col">
+            <div class="w-full lg:w-1/2 bg-white p-5 rounded-lg shadow h-auto flex flex-col">
                 <!-- Tabela de Disciplinas -->
-                <x-section-title title="Disciplinas" description="Lista de disciplinas do projeto" />
                 <div class="flex-1 overflow-y-auto mt-4">
+                    <h1 class="ml-4 text-lg font-semibold">Disciplinas</h1>
+                    <h4 class="ml-4 mb-4 text-sm">Lista de Disciplinas do Projeto</h4>
                     <x-table>
                         <x-slot name="theaders">
-                            <th>Nome</th>
-                            <th>Abreviação</th>
-                            <th>Carga Horária</th>
-                            <th>Ação</th>
+                            <th class="p-3">Nome</th>
+                            <th class="p-3">Abreviação</th>
+                            <th class="p-3">Carga Horária</th>
+                            <th class="p-3">Ação</th>
                         </x-slot>
                         <x-slot name="tbody">
                             @foreach($disciplinas as $disciplina)
-                                <tr>
-                                    <td class="text-center">{{ $disciplina->nome }}</td>
-                                    <td class="text-center">{{ $disciplina->abreviacao }}</td>
-                                    <td class="text-center">{{ $disciplina->carga_horaria }}</td>
-                                    <td class="text-center">
-                                        <button wire:click="editDisciplina({{ $disciplina->id }})" class="text-green-300">
+                                <tr class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }} transition">
+                                    <td class="text-center p-2">{{ $disciplina->nome }}</td>
+                                    <td class="text-center p-2">{{ $disciplina->abreviacao }}</td>
+                                    <td class="text-center p-2">{{ $disciplina->carga_horaria }}</td>
+                                    <td class="text-center p-2">
+                                        <button wire:click="editDisciplina({{ $disciplina->id }})" class="text-green-700">
                                         Editar
                                         </button>
                                     </td>
@@ -39,11 +40,11 @@
                     </x-table>
                     <!-- Fim da Tabela de Disciplinas -->
                 </div>
-                <div class="mt-4">
+                <div class="m-4 px-1">
                     {{ $disciplinas->links() }}
                 </div>
-                <div>
-                    <x-button class="mt-4" wire:click="createDisciplina">
+                <div class="m-4 px-1">
+                    <x-button wire:click="createDisciplina">
                         Inserir Disciplina
                     </x-button>
                 </div>
