@@ -25,4 +25,5 @@ Route::middleware([
     Route::get('/parecer/{id}/visualizar', [\App\Http\Controllers\ParecerTecnicoController::class, 'visualizar'])->name('parecer.visualizar');
     Route::get('/calendario', \App\Livewire\CalendarioCursos::class)->name('calendario');
     Route::get('/turma/{turma}', \App\Livewire\TurmaDetail::class)->name('turma');
+    Route::get('/cadastro_material', \App\Livewire\CadastroMaterialBelico::class)->name('cadastro');
 });

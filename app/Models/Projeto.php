@@ -46,6 +46,11 @@ class Projeto extends Model
         return $this->hasMany(ParecerTecnico::class);
     }
 
+    public function materialBelico()
+    {
+        return $this->hasMany(MaterialBelico::class);
+    }
+
     public function cargaHorariaTotal()
     {
         return $this->disciplinas()->sum('carga_horaria');

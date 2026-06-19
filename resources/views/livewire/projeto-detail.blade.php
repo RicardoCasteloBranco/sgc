@@ -1,7 +1,7 @@
 <div class="p-6">
     <div class="w-full">
         <div class="flex flex-col lg:flex-row gap-6 items-start">
-            <div class="w-full lg:w-1/2 bg-gray-200 text-black p-5 rounded-lg h-[480px]">
+            <div class="w-full lg:w-1/2 bg-white text-black p-5 rounded-lg h-[480px]">
                 <h3 class="text-2xl font-bold mb-4">Detalhes do Projeto</h3>
                 <p><strong>Nome:</strong> {{ $projeto->curso->nome }}</p>
                 <p><strong>Centro de Ensino:</strong> {{ $projeto->centroEnsino->nome }}</p>
@@ -10,6 +10,37 @@
                 <p><strong>Custo com Pessoal:</strong> R$ {{ number_format($projeto->custo_pessoal, 2, ',', '.') }}</p>
                 <p><strong>Custo com Material:</strong> R$ {{ number_format($projeto->custo_material, 2, ',', '.') }}</p>
                 <p><strong>Custo com Serviços:</strong> R$ {{ number_format($projeto->custo_servico, 2, ',', '.') }}</p>
+                <p><strong>Material Bélico:</strong></p>
+                <div class="mt-4">
+                    <x-table>
+                        <x-slot name="theaders">
+                            <th class="p=3">Descrição</th>
+                            <th class="p-3">Qtd/Aluno</th>
+                            <th class="p-3">Ações</th>
+                        </x-slot>
+                        <x-slot name="tbody">
+                            @foreach($materialBelico as $material)
+                            <tr class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }} transition">
+                                <td class="p-3">{{ $material->tipoMaterialBelico->descricao }}</td>
+                                <td class="p-3">{{ $material->quantidade_por_aluno }}</td>
+                                <td class="p-3">
+                                    <button wire:click="editMaterial({{ $material->id }})" class="text-green-700">
+                                            Editar
+                                    </button>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </x-slot>
+                    </x-table>
+                    <div class="m-4 px-1">
+                        {{ $materialBelico->links() }}
+                    </div>
+                    <div class="m-4 px-1">
+                    <x-button wire:click="createMaterialBelico">
+                        Inserir Material
+                    </x-button>
+                </div>
+                </div>
             </div>
             <div class="w-full lg:w-1/2 bg-white p-5 rounded-lg shadow h-auto flex flex-col">
                 <!-- Tabela de Disciplinas -->
@@ -66,11 +97,6 @@
                 <th>Unidade</th>
                 <th>Qtd de Matriculados</th>
                 <th>Qtd de Concluintes</th>
-                <th>Editais de Docente</th>
-                <th>Editais de Discente</th>
-                <th>Port. de Docente</th>
-                <th>Port. de Matrícula</th>
-                <th>Port. de Conclusão</th>
                 <th>Ações</th>
             </x-slot>
             <x-slot name="tbody">
@@ -83,11 +109,7 @@
                         <td class="text-center">{{ $turma->unidade->sigla }}</td>
                         <td class="text-center">{{ $turma->quantidade_matriculados }}</td>
                         <td class="text-center">{{ $turma->quantidade_concluintes }}</td>
-                        <td class="text-center">{{ $turma->edital_docente }}</td>
-                        <td class="text-center">{{ $turma->edital_discente }}</td>
-                        <td class="text-center">{{ $turma->portaria_docente }}</td>
-                        <td class="text-center">{{ $turma->portaria_matricula }}</td>
-                        <td class="text-center">{{ $turma->portaria_conclusao }}</td>
+
                         <td class="text-center">
                             <button wire:click="editTurma({{ $turma->id }})" class="text-gray-600">
                                 Editar
@@ -287,6 +309,45 @@
         </x-form-section>
      </x-modal>
      <!-- Fim do Modal de Cadastro/Edicação de Disciplina -->
+    <!-- Modal de Cadastro/Edição de Material -->
+     <x-modal wire:model="openModalMaterial">
+        <x-form-section submit="{{ $isEditMaterial ? 'updateMaterialBelico' : 'saveMaterialBelico' }}">
+            <x-slot name="title">
+                {{ $isEditMaterial ? 'Editar Material' : 'Adicionar Material' }}
+            </x-slot>
+            <x-slot name="description">
+                {{ $isEditMaterial ? 'Edite a quantidade de Material por Alunos.' : 'Preencha a quantidade de materiais por aluno.' }}
+            </x-slot>
+            <x-slot name="form">
+                <x-input type="hidden" id="projetoID" wire:model="projetoId" />
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="tipoMaterialId" value="Tipo de Material Bélico" />
+                    <x-select id="tipoMaterialId" type="text" class="mt-1 block w-full" wire:model.defer="tipoMaterialId">
+                        <option>Selecione um dos Materiais</option>
+                        @foreach($tiposMateriais as $tipo)
+                        <option value="{{ $tipo->id }}">{{ $tipo->descricao }}</option>
+                        @endforeach
+                    </x-select>
+                    <x-input-error for="tipoMaterialId" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="quantidadePorAluno" value="Quantidade Por Aluno" />
+                    <x-input id="quantidadePorAluno" type="text" class="mt-1 block w-full" wire:model.defer="quantidadePorAluno" />
+                    <x-input-error for="quantidadePorAluno" class="mt-2" />
+                </div>
+            </x-slot>
+            <x-slot name="actions">
+                <x-secondary-button wire:click="$set('openModalMaterial', false)">
+                    Cancelar
+                </x-secondary-button>
+                <x-button class="ml-3" type="submit">
+                    {{ $isEditMaterial ? 'Atualizar' : 'Salvar' }}
+                </x-button>
+            </x-slot>
+        </x-form-section>
+     </x-modal>
+     <!-- Fim do Modal de Cadastro/Edicação de Material -->
+
     <!-- Modal de Cadastro de Parecer Técnico -->
     @if($openModalParecer)
         <div class="fixed inset-0 z-50 overflow-y-auto">

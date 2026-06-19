@@ -10,6 +10,8 @@ use App\Models\Unidade;
 use App\Models\Turma;
 use App\Models\Disciplina;
 use App\Models\ParecerTecnico;
+use App\Models\MaterialBelico;
+use App\Models\TipoMaterialBelico;
 
 class ProjetoDetail extends Component
 {
@@ -19,11 +21,14 @@ class ProjetoDetail extends Component
     public $openModalTurma = false;
     public $openModalDisciplina = false;
     public $openModalParecer = false;
+    public $openModalMaterial = false;
     public $isEditDisciplina = false;
+    public $isEditMaterial = false;
     public $projetoId;
     public Projeto $projeto;
     public $unidades;
     public $diretorias;
+    public $tiposMateriais;
 
     //campos do formulário de turma
     public $turmaId;
@@ -56,10 +61,16 @@ class ProjetoDetail extends Component
     public $validade;
     public $arquivo;
 
+    //campos do formulário Material Bélico
+    public $materialId;
+    public $quantidadePorAluno;
+    public $tipoMaterialId;
+
     
     public function mount(Projeto $projeto){
         $this->projeto = $projeto;
         $this->diretorias = Unidade::whereNull('unidade_gestora')->get();
+        $this->tiposMateriais = TipoMaterialBelico::all();
         $this->projetoId = $projeto->id;
     }
 
@@ -69,7 +80,12 @@ class ProjetoDetail extends Component
         ->orderBy('nome')
         ->paginate(5);
 
-        return view('livewire.projeto-detail',['disciplinas' => $disciplinas])->layout('layouts.app');
+        $materialBelico = MaterialBelico::where('projeto_id', $this->projetoId)
+        ->paginate(3);
+
+        return view('livewire.projeto-detail',
+        ['disciplinas' => $disciplinas,'materialBelico' => $materialBelico])
+        ->layout('layouts.app');
     }
 
     public function createDisciplina()
@@ -90,6 +106,13 @@ class ProjetoDetail extends Component
     {
         $this->openModalParecer = true;
         $this->resetFieldsParecer();
+    }
+
+    public function createMaterialBelico()
+    {
+        $this->openModalMaterial = true;
+        $this->isEditMaterial = false;
+        $this->resetFieldsMaterialBelico();
     }
 
     public function editDisciplina($id)
@@ -128,6 +151,17 @@ class ProjetoDetail extends Component
 
         $this->openModalTurma = true;
         $this->isEditTurma = true;
+    }
+
+    public function editMaterial($id)
+    {
+        $material = MaterialBelico::findOrFail($id);
+        $this->materialId = $material->id;
+        $this->projetoId = $material->projeto_id;
+        $this->quantidadePorAluno = $material->quantidade_por_aluno;
+
+        $this->openModalMaterial = true;
+        $this->isEditMaterial = true;
     }
 
     public function saveDisciplina()
@@ -300,6 +334,40 @@ class ProjetoDetail extends Component
         session()->flash('message','Arquivo apagado com sucesso');
     }
 
+    public function saveMaterialBelico()
+    {
+        $this->validate([
+            'quantidadePorAluno' => 'required|integer|min:1',
+            'tipoMaterialId' => 'required'
+        ]);
+
+        MaterialBelico::create([
+            'projeto_id' => $this->projetoId,
+            'tipo_material_belico_id' => $this->tipoMaterialId,
+            'quantidade_por_aluno' => $this->quantidadePorAluno,
+        ]);
+        session()->flash('message', 'Material Cadastrado com Sucesso');
+
+        $this->resetFieldsMaterialBelico();
+        $this->openModalMaterial = false;
+    }
+
+    public function updateMaterialBelico()
+    {
+        $this->validate([
+            'quantidadePorAluno' => 'required|integer|min:1',
+            'tipoMaterialId' => 'required'
+        ]);
+
+        $material = MaterialBelico::findOrFail($this->materialId);
+        $material->update([
+            'tipo_material_belico_id' => $this->tipoMaterialId,
+            'quantidade_por_aluno' => $this->quantidadePorAluno,
+        ]);
+        $this->resetFieldsMaterialBelico();
+        $this->openModalMaterial = false;
+    }
+
     public function resetFieldsDisciplina()
     {
         $this->reset([
@@ -340,6 +408,14 @@ class ProjetoDetail extends Component
             'arquivo',
             'validade',
             'numero'
+        ]);
+    }
+
+    public function resetFieldsMaterialBelico()
+    {
+        $this->reset([
+            'quantidadePorAluno',
+            'tipoMaterialId'
         ]);
     }
 

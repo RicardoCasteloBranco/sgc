@@ -107,6 +107,9 @@
                             <x-dropdown-link href="{{ route('calendario') }}">
                                 {{ __('Calendário') }}
                             </x-dropdown-link>
+                            <x-dropdown-linK href="{{route('cadastro')}}">
+                                {{ __('Cadastro de Material Bélico') }}
+                            </x-dropdown-link>
                             <x-dropdown-link href="{{ route('register') }}">
                                 {{ __('Adicionar Usuário') }}
                             </x-dropdown-link>
