@@ -5,7 +5,7 @@
    aria-hidden="true"
    width="35mm"
    height="49mm"
-   viewBox="0 0 210 297"
+   viewBox="0 0 230 297"
    id="svg1"
    xmlns="http://www.w3.org/2000/svg">
   <defs

@@ -1,5 +1,5 @@
 <div class="container mx-auto px-4 h-full">
-    <div class="flex justify-center items-center h-full rounded-lg overflow-hidden">
+    <div class="flex justify-center items-center h-full rounded-lg shadow overflow-hidden">
         <table class="w-full">
             <thead class="bg-black text-white">
                 <tr class="text-sm font-semibold uppercase">

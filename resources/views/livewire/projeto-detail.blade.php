@@ -1,16 +1,18 @@
 <div class="p-6">
     <div class="w-full">
-        <div class="flex flex-col lg:flex-row gap-6 items-start">
-            <div class="w-full lg:w-1/2 bg-white text-black p-5 rounded-lg h-[480px]">
-                <h3 class="text-2xl font-bold mb-4">Detalhes do Projeto</h3>
-                <p><strong>Nome:</strong> {{ $projeto->curso->nome }}</p>
-                <p><strong>Centro de Ensino:</strong> {{ $projeto->centroEnsino->nome }}</p>
-                <p><strong>Quantidade de Turmas Previstas:</strong> {{ $projeto->quantidade_turmas }}</p>
-                <p><strong>Carga Horária Total: </strong>{{ $projeto->cargaHorariaTotal() }} horas</p>
-                <p><strong>Custo com Pessoal:</strong> R$ {{ number_format($projeto->custo_pessoal, 2, ',', '.') }}</p>
-                <p><strong>Custo com Material:</strong> R$ {{ number_format($projeto->custo_material, 2, ',', '.') }}</p>
-                <p><strong>Custo com Serviços:</strong> R$ {{ number_format($projeto->custo_servico, 2, ',', '.') }}</p>
-                <p><strong>Material Bélico:</strong></p>
+        <div class="flex flex-col lg:flex-row gap-6 items-stretch h-auto">
+            <div class="w-full lg:w-1/2 bg-white text-black shadow p-5 rounded-lg">
+                <div class="ml-4">
+                    <h3 class="text-2xl font-bold mb-4 uppercase">Detalhes do Projeto</h3>
+                    <p><strong>Nome:</strong> {{ $projeto->curso->nome }}</p>
+                    <p><strong>Centro de Ensino:</strong> {{ $projeto->centroEnsino->nome }}</p>
+                    <p><strong>Quantidade de Turmas Previstas:</strong> {{ $projeto->quantidade_turmas }}</p>
+                    <p><strong>Carga Horária Total: </strong>{{ $projeto->cargaHorariaTotal() }} horas</p>
+                    <p><strong>Custo com Pessoal:</strong> R$ {{ number_format($projeto->custo_pessoal, 2, ',', '.') }}</p>
+                    <p><strong>Custo com Material:</strong> R$ {{ number_format($projeto->custo_material, 2, ',', '.') }}</p>
+                    <p><strong>Custo com Serviços:</strong> R$ {{ number_format($projeto->custo_servico, 2, ',', '.') }}</p>
+                    <p><strong>Material Bélico:</strong></p>
+                </div>
                 <div class="mt-4">
                     <x-table>
                         <x-slot name="theaders">
@@ -27,14 +29,14 @@
                                     <button wire:click="editMaterial({{ $material->id }})" class="text-green-700">
                                             Editar
                                     </button>
+                                    <button wire:click="apagaMaterial({{ $material->id }})" class="text-red-600">
+                                        Apagar
+                                    </button>
                                 </td>
                             </tr>
                             @endforeach
                         </x-slot>
                     </x-table>
-                    <div class="m-4 px-1">
-                        {{ $materialBelico->links() }}
-                    </div>
                     <div class="m-4 px-1">
                     <x-button wire:click="createMaterialBelico">
                         Inserir Material
@@ -42,10 +44,10 @@
                 </div>
                 </div>
             </div>
-            <div class="w-full lg:w-1/2 bg-white p-5 rounded-lg shadow h-auto flex flex-col">
+            <div class="w-full lg:w-1/2 bg-white p-5 rounded-lg shadow flex flex-col">
                 <!-- Tabela de Disciplinas -->
                 <div class="flex-1 overflow-y-auto mt-4">
-                    <h1 class="ml-4 text-lg font-semibold">Disciplinas</h1>
+                    <h1 class="ml-4 text-lg font-semibold uppercase">Disciplinas</h1>
                     <h4 class="ml-4 mb-4 text-sm">Lista de Disciplinas do Projeto</h4>
                     <x-table>
                         <x-slot name="theaders">
@@ -84,31 +86,38 @@
     </div>
     <!-- Tabela de Turmas -->
     <div>
-        <x-section-title title="Turmas" description="Lista de turmas do projeto"/>
-        <x-button class="m-4" wire:click="createTurma">
-            Nova Turma
-        </x-button>
+        <div class="container mx-auto px-4 mt-8 mb-2 flex flex-col lg:flex-row gap-6">
+            <div class="lg:w-1/2 w-full flex flex-col">
+                <h1 class="text-lg font-semibold uppercase">Turma</h1>
+                <h4 class="text-sm mb-2">Lista turmas do Projeto</h4>
+            </div>
+            <div class="lg:w-1/2 w-full items-end justify-end flex p-2">
+                <x-button wire:click="createTurma">
+                    Nova Turma
+                </x-button>
+            </div>
+        </div>
         <x-table>
             <x-slot name="theaders">
-                <th>Início</th>
-                <th>Término</th>
-                <th>CH Diária</th>
-                <th>Dias Letivos na Semana</th>
-                <th>Unidade</th>
-                <th>Qtd de Matriculados</th>
-                <th>Qtd de Concluintes</th>
-                <th>Ações</th>
+                <th class="p-3">Início</th>
+                <th class="p-3">Término</th>
+                <th class="p-3">CH Diária</th>
+                <th class="p-3">Dias Letivos na Semana</th>
+                <th class="p-3">Unidade</th>
+                <th class="p-3">Qtd de Matriculados</th>
+                <th class="p-3">Qtd de Concluintes</th>
+                <th class="p-3">Ações</th>
             </x-slot>
             <x-slot name="tbody">
                 @foreach($projeto->turmas as $turma)
                     <tr class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }}">
-                        <td class="text-center">{{ date('d/m/Y', strtotime($turma->data_inicio)) }}</td>
-                        <td class="text-center">{{ is_null($turma->data_fim) ? 'N/A' : date('d/m/Y', strtotime($turma->data_fim)) }}</td>
-                        <td class="text-center">{{ $turma->carga_horaria_diaria }}</td>
-                        <td class="text-center">{{ $turma->dias_de_aula_por_semana }}</td>
-                        <td class="text-center">{{ $turma->unidade->sigla }}</td>
-                        <td class="text-center">{{ $turma->quantidade_matriculados }}</td>
-                        <td class="text-center">{{ $turma->quantidade_concluintes }}</td>
+                        <td class="text-center p-2">{{ date('d/m/Y', strtotime($turma->data_inicio)) }}</td>
+                        <td class="text-center p-2">{{ is_null($turma->data_fim) ? 'N/A' : date('d/m/Y', strtotime($turma->data_fim)) }}</td>
+                        <td class="text-center p-2">{{ $turma->carga_horaria_diaria }}</td>
+                        <td class="text-center p-2">{{ $turma->dias_de_aula_por_semana }}</td>
+                        <td class="text-center p-2">{{ $turma->unidade->sigla }}</td>
+                        <td class="text-center p-2">{{ $turma->quantidade_matriculados }}</td>
+                        <td class="text-center p-2">{{ $turma->quantidade_concluintes }}</td>
 
                         <td class="text-center">
                             <button wire:click="editTurma({{ $turma->id }})" class="text-gray-600">
@@ -126,20 +135,29 @@
     <!-- Fim da Tabela de Turmas -->
     <!-- Tabela de Pareceres Técnicos -->
     <div class="mt-8">
-        <x-section-title title="Pareceres Técnicos" description="Lista de pareceres técnicos do projeto"/>
-        <x-button wire:click="createParecerTecnico" class="m-4">Adicionar Parecer Tecnico</x-button>
+        <div class="container mx-auto px-4 mt-8 mb-2 flex flex-col lg:flex-row gap-6">
+            <div class="lg:w-1/2 w-full flex flex-col">
+                <h1 class="text-lg font-semibold uppercase">Parecer Técnico</h1>
+                <h4 class="text-sm mb-2">Lista os Pareceres Técnicos do Projeto</h4>
+            </div>
+            <div class="lg:w-1/2 w-full items-end justify-end flex p-2">
+                <x-button wire:click="createParecerTecnico">
+                    Adicionar Parecer
+                </x-button>
+            </div>
+        </div>
         <x-table>
             <x-slot name="theaders">
-                <th>Número</th>
-                <th>Validade</th>
-                <th>Ação</th>
+                <th class="p-3">Número</th>
+                <th class="p-3">Validade</th>
+                <th class="p-3">Ação</th>
             </x-slot>
             <x-slot name="tbody">
                 @foreach($projeto->pareceresTecnicos as $parecer)
                     <tr class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }}">
-                        <td class="text-center">{{ $parecer->numero }}</td>
-                        <td class="text-center">{{ date('d/m/Y', strtotime($parecer->validade)) }}</td>
-                        <td class="text-center">
+                        <td class="text-center p-2">{{ $parecer->numero }}</td>
+                        <td class="text-center p-2">{{ date('d/m/Y', strtotime($parecer->validade)) }}</td>
+                        <td class="text-center p-2">
                             <a href="{{ route('parecer.visualizar',$parecer->id) }}" target="_blank">
                                 <button class="text-green-600">
                                     Visualizar
@@ -347,7 +365,16 @@
         </x-form-section>
      </x-modal>
      <!-- Fim do Modal de Cadastro/Edicação de Material -->
-
+    <!-- Modal para apagar Material -->
+    <!-- Fim do Modal para apagar material -->
+     <x-dialog-modal wire:model="openModalDeletaMaterial">
+        <x-slot name="title">Apagar Material</x-slot>
+        <x-slot name="content">Você tem certeza que deseja apagar o material ?</x-slot>
+        <x-slot name="footer">
+            <x-button wire:click="deleteMaterial">Confirma</x-button>
+            <x-secondary-button wire:click="$set('openModalDeletaMaterial', false)" class="ml-4">Cancela</x-secondary-button>
+        </x-slot>
+     </x-dialog-modal>
     <!-- Modal de Cadastro de Parecer Técnico -->
     @if($openModalParecer)
         <div class="fixed inset-0 z-50 overflow-y-auto">

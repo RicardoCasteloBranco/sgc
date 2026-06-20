@@ -2,9 +2,9 @@
    class="w-15 h-15"
    fill="currentColor"
    aria-hidden="true"
-   width="20mm"
-   height="25mm"
-   viewBox="0 0 210 297"
+   width="16mm"
+   height="19mm"
+   viewBox="0 0 230 297"
    id="svg1"
    xmlns="http://www.w3.org/2000/svg">
   <defs

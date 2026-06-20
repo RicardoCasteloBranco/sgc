@@ -22,6 +22,7 @@ class ProjetoDetail extends Component
     public $openModalDisciplina = false;
     public $openModalParecer = false;
     public $openModalMaterial = false;
+    public $openModalDeletaMaterial = false;
     public $isEditDisciplina = false;
     public $isEditMaterial = false;
     public $projetoId;
@@ -29,6 +30,7 @@ class ProjetoDetail extends Component
     public $unidades;
     public $diretorias;
     public $tiposMateriais;
+    public $material;
 
     //campos do formulário de turma
     public $turmaId;
@@ -66,6 +68,7 @@ class ProjetoDetail extends Component
     public $quantidadePorAluno;
     public $tipoMaterialId;
 
+
     
     public function mount(Projeto $projeto){
         $this->projeto = $projeto;
@@ -80,8 +83,7 @@ class ProjetoDetail extends Component
         ->orderBy('nome')
         ->paginate(5);
 
-        $materialBelico = MaterialBelico::where('projeto_id', $this->projetoId)
-        ->paginate(3);
+        $materialBelico = $this->projeto->materialBelico;
 
         return view('livewire.projeto-detail',
         ['disciplinas' => $disciplinas,'materialBelico' => $materialBelico])
@@ -366,6 +368,18 @@ class ProjetoDetail extends Component
         ]);
         $this->resetFieldsMaterialBelico();
         $this->openModalMaterial = false;
+    }
+
+    public function apagaMaterial($id){
+        $this->material = MaterialBelico::findOrFail($id);
+        $this->openModalDeletaMaterial = true;
+    }
+
+    public function deleteMaterial()
+    {
+        $this->material->delete();
+        session()->flash('message','Material Apagado com Sucesso');
+        $this->openModalDeletaMaterial = false;
     }
 
     public function resetFieldsDisciplina()
