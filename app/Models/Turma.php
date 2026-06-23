@@ -17,9 +17,7 @@ class Turma extends Model
         'edital_discente',
         'portaria_docente',
         'portaria_matricula',
-        'quantidade_matriculados',
         'portaria_conclusao',
-        'quantidade_concluintes',
         'unidade_id',
         'projeto_id'
     ];
@@ -107,5 +105,10 @@ class Turma extends Model
             ->pluck('id')
             ->values();
         return $ids->search($this->id) + 1;
+    }
+
+    public function quantidade_matriculados()
+    {
+        return count($this->alunos->where('situacao','Matriculado(a)'));
     }
 }

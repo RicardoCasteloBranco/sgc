@@ -39,8 +39,6 @@ class ProjetoDetail extends Component
     public $diasDeAulaPorSemana;
     public $cargaHorariaDiaria;
     public $unidadeId;
-    public $quantidadeMatriculados;
-    public $quantidadeConcluintes;
     public $editalDocente;
     public $editalDiscente;
     public $portariaDocente;
@@ -143,8 +141,6 @@ class ProjetoDetail extends Component
         $this->diasDeAulaPorSemana = $turma->dias_de_aula_por_semana;
         $this->cargaHorariaDiaria = $turma->carga_horaria_diaria;
         $this->unidadeId = $turma->unidade_id;
-        $this->quantidadeMatriculados = $turma->quantidade_matriculados;
-        $this->quantidadeConcluintes = $turma->quantidade_concluintes;
         $this->editalDocente = $turma->edital_docente;
         $this->editalDiscente = $turma->edital_discente;
         $this->portariaDocente = $turma->portaria_docente;
@@ -236,8 +232,6 @@ class ProjetoDetail extends Component
             'diasDeAulaPorSemana' => 'required|integer|min:0|max:7',
             'cargaHorariaDiaria' => 'required|integer|min:0|max:10',
             'unidadeId' => 'required|exists:unidades,id',
-            'quantidadeMatriculados' => 'required|integer|min:0',
-            'quantidadeConcluintes' => 'nullable|integer|min:0|lte:quantidadeMatriculados',
             'editalDocente' => 'nullable|string|max:255',
             'editalDiscente' => 'nullable|string|max:255',
             'portariaDocente' => 'nullable|string|max:255',
@@ -251,8 +245,6 @@ class ProjetoDetail extends Component
             'dias_de_aula_por_semana' => $this->diasDeAulaPorSemana,
             'carga_horaria_diaria' => $this->cargaHorariaDiaria,
             'unidade_id' => $this->unidadeId,
-            'quantidade_matriculados' => $this->quantidadeMatriculados,
-            'quantidade_concluintes' => $this->quantidadeConcluintes,
             'edital_docente' => $this->editalDocente,
             'edital_discente' => $this->editalDiscente,
             'portaria_docente' => $this->portariaDocente,
@@ -275,8 +267,6 @@ class ProjetoDetail extends Component
             'diasDeAulaPorSemana' => 'required|integer|min:0|max:7',
             'cargaHorariaDiaria' => 'required|integer|min:0|max:10',
             'unidadeId' => 'required|exists:unidades,id',
-            'quantidadeMatriculados' => 'required|integer|min:0',
-            'quantidadeConcluintes' => 'nullable|integer|min:0|lte:quantidadeMatriculados',
             'editalDocente' => 'nullable|string|max:255',
             'editalDiscente' => 'nullable|string|max:255',
             'portariaDocente' => 'nullable|string|max:255',
@@ -291,8 +281,6 @@ class ProjetoDetail extends Component
             'dias_de_aula_por_semana' => $this->diasDeAulaPorSemana,
             'carga_horaria_diaria' => $this->cargaHorariaDiaria,
             'unidade_id' => $this->unidadeId,
-            'quantidade_matriculados' => $this->quantidadeMatriculados,
-            'quantidade_concluintes' => $this->quantidadeConcluintes,
             'edital_docente' => $this->editalDocente,
             'edital_discente' => $this->editalDiscente,
             'portaria_docente' => $this->portariaDocente,
@@ -406,8 +394,6 @@ class ProjetoDetail extends Component
             'diasDeAulaPorSemana',
             'cargaHorariaDiaria',
             'unidadeId',
-            'quantidadeMatriculados',
-            'quantidadeConcluintes',
             'editalDocente',
             'editalDiscente',
             'portariaDocente',

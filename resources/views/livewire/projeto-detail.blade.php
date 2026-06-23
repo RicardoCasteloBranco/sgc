@@ -218,16 +218,6 @@
                     <x-input-error for="unidadeId" class="mt-2" />
                 </div>
                 <div class="col-span-6 sm:col-span-4">
-                    <x-label for="quantidadeMatriculados" value="Quantidade de Matriculados" />
-                    <x-input id="quantidadeMatriculados" type="number" class="mt-1 block w-full" wire:model.defer="quantidadeMatriculados" />
-                    <x-input-error for="quantidadeMatriculados" class="mt-2" />
-                </div>
-                <div class="col-span-6 sm:col-span-4">
-                    <x-label for="quantidadeConcluintes" value="Quantidade de Concluintes" />
-                    <x-input id="quantidadeConcluintes" type="number" class="mt-1 block w-full" wire:model.defer="quantidadeConcluintes" />
-                    <x-input-error for="quantidadeConcluintes" class="mt-2" />
-                </div>
-                <div class="col-span-6 sm:col-span-4">
                     <x-label for="editalDiscente" value="Edital de Discente" />
                     <x-input id="editalDiscente" type="text" class="mt-1 block w-full" wire:model.defer="editalDiscente" />
                     <x-input-error for="editalDiscente" class="mt-2" />

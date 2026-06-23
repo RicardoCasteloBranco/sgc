@@ -6,18 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pessoa extends Model
 {
-    private $table = "pessoas";
-    private $fillable = [
+    protected $table = "pessoas";
+    protected $fillable = [
         'nome',
-         'matricula',
-         'numfunc',
-         'cfp',
-         'graduacao_id'
+        'matricula',
+        'numfunc',
+        'cpf'
          ];
-
-    public function graduacao(){
-        return $this->belongsTo(Graduacao::class);
-    }
 
     public function coordenador()
     {

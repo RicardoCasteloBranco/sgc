@@ -30,9 +30,7 @@ return new class extends Migration
             $table->text('edital_discente')->nullable();
             $table->text('portaria_docente')->nullable();
             $table->text('portaria_matricula')->nullable();
-            $table->integer('quantidade_matriculados')->default(0);
             $table->text('portaria_conclusao')->nullable();
-            $table->integer('quantidade_concluintes')->default(0)->nullable();
             $table->unsignedBigInteger('projeto_id');
             $table->unsignedBigInteger('unidade_id');
             $table->foreign('projeto_id')->references('id')->on('projetos')->onDelete('cascade');

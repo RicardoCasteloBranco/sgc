@@ -58,7 +58,7 @@ class Projeto extends Model
 
     public function numeroProjeto()
     {
-        $ids = $ids = self::where('curso_id', $this->curso_id)
+        $ids = self::where('curso_id', $this->curso_id)
             ->orderBy('data_aprovacao')
             ->orderBy('id')
             ->pluck('id')

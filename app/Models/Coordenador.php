@@ -8,6 +8,7 @@ class Coordenador extends Model
 {
     public $table = "coordenadores";
     public $fillable = [
+        'graduacao',
         'data_designacao',
         'parecer_tecnico',
         'pessoa_id',

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('coordenadores', function (Blueprint $table) {
             $table->id();
+            $table->string('graduacao');
             $table->date('data_designacao')->nullable();
             $table->string('parecer_tecnico');
             $table->unsignedBigInteger('pessoa_id');

@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Aluno extends Model
 {
-    public $table = 'alunos';
-    public $fillable = [
+    protected $table = 'alunos';
+    protected $fillable = [
+        'graduacao',
         'pessoa_id',
         'situacao',
         'turma_id'
