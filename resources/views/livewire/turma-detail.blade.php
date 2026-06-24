@@ -36,10 +36,10 @@
                     <td>{{ $aluno->pessoa->matricula }}
                     <td>{{ $aluno->situacao }}</td>
                     <td>
-                        <button wire:click="editAluno({{ $aluno->id }})" class="text-green-700">
+                        <button wire:click="editarAluno({{ $aluno->id }})" class="text-green-700">
                             Editar
                         </button>
-                        <button wire:click="apagaAluno({{ $aluno->id }})" class="text-red-600">
+                        <button wire:click="apagarAluno({{ $aluno->id }})" class="text-red-600">
                             Apagar
                         </button>
                     </td>
@@ -75,7 +75,7 @@
 
                     <!-- Formulário -->
                     <form wire:submit.prevent="carregarTurma" enctype="multipart/form-data">
-                        <input type="hidden" name="turma_id" wire:model="{{ $turma->id }}"/>
+                        <input type="hidden" name="turma_id" value="{{ $turma->id }}"/>
 
                         <div class="p-6 space-y-4">
 
@@ -115,4 +115,57 @@
         </div>
     @endif
     <!-- Fim do formulário para carregar lista de alunos -->
+    <!-- Inicio do formulário para adicionar e editar um aluno -->
+     <x-modal wire:model="openModalAluno">
+        <x-form-section submit="{{ $isEditAluno ? 'updateAluno' : 'saveAluno' }}">
+            <x-slot name="title">
+                {{ $isEditAluno ? 'Editar Aluno' : 'Adicionar Aluno' }}
+            </x-slot>
+            <x-slot name="description">
+                {{ $isEditAluno ? 'Edite os dados do Alunos.' : 'Adicione uma aluno à Turma.' }}
+            </x-slot>
+            <x-slot name="form">
+                <x-input type="hidden" id="turmaId" value="{{$turma->id}}" />
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="graduacao" value="Graduação" />
+                    <x-select id="graduacao" class="mt-1 block w-full" wire:model.defer="graduacao">
+                        <option>Selecione a graduação</option>
+                        @foreach($graduacoes as $key => $value)
+                        <option value="{{ $value }}">{{ $value }}</option>
+                        @endforeach
+                    </x-select>
+                    <x-input-error for="graduacao" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="nome" value="Nome" />
+                    <x-input id="nome" type="text" class="mt-1 block w-full" wire:model.defer="nome" />
+                    <x-input-error for="nome" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="matricula" value="Matrícula" />
+                    <x-input id="matricula" type="text" class="mt-1 block w-full" wire:model.defer="matricula" />
+                    <x-input-error for="matricula" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="situacao" value="Situação" />
+                    <x-select id="situacao" class="mt-1 block w-full" wire:model.defer="situacao">
+                        <option>Selecione a situação</option>
+                        @foreach($situacoes as $key => $value)
+                        <option value="{{ $value }}">{{ $value }}</option>
+                        @endforeach
+                    </x-select>
+                    <x-input-error for="graduacao" class="mt-2" />
+                </div>
+            </x-slot>
+            <x-slot name="actions">
+                <x-secondary-button wire:click="$set('openModalAluno', false)">
+                    Cancelar
+                </x-secondary-button>
+                <x-button class="ml-3" type="submit">
+                    {{ $isEditAluno ? 'Atualizar' : 'Salvar' }}
+                </x-button>
+            </x-slot>
+        </x-form-section>
+     </x-modal>
+    <!-- Fim do formulário para adicionar e editar um aluno -->
 </div>

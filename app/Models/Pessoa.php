@@ -10,8 +10,6 @@ class Pessoa extends Model
     protected $fillable = [
         'nome',
         'matricula',
-        'numfunc',
-        'cpf'
          ];
 
     public function coordenador()

@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('nome');
             $table->bigInteger('matricula')->nullable();
-            $table->bigInteger('numfunc')->nullable();
-            $table->string('cpf',11)->unique()->nullable();
             $table->timestamps();
         });
     }

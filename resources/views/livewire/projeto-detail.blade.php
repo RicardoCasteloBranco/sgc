@@ -106,6 +106,8 @@
                 <th class="p-3">Unidade</th>
                 <th class="p-3">Qtd de Matriculados</th>
                 <th class="p-3">Qtd de Concluintes</th>
+                <th class="p-3">Qtd de Desistentes</th>
+                <th class="p-3">Qtd de Excluídos</th>
                 <th class="p-3">Ações</th>
             </x-slot>
             <x-slot name="tbody">
@@ -116,8 +118,10 @@
                         <td class="text-center p-2">{{ $turma->carga_horaria_diaria }}</td>
                         <td class="text-center p-2">{{ $turma->dias_de_aula_por_semana }}</td>
                         <td class="text-center p-2">{{ $turma->unidade->sigla }}</td>
-                        <td class="text-center p-2">{{ $turma->quantidade_matriculados }}</td>
-                        <td class="text-center p-2">{{ $turma->quantidade_concluintes }}</td>
+                        <td class="text-center p-2">{{ $turma->quantidadeMatriculados() }}</td>
+                        <td class="text-center p-2">{{ $turma->quantidadeAprovados() }}</td>
+                        <td class="text-center p-2">{{ $turma->quantidadeDesistentes() }}</td>
+                        <td class="text-center p-2">{{ $turma->quantidadeExcluidos() }}</td>
 
                         <td class="text-center">
                             <button wire:click="editTurma({{ $turma->id }})" class="text-gray-600">

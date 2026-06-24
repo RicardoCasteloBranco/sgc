@@ -107,8 +107,23 @@ class Turma extends Model
         return $ids->search($this->id) + 1;
     }
 
-    public function quantidade_matriculados()
+    public function quantidadeMatriculados()
     {
-        return count($this->alunos->where('situacao','Matriculado(a)'));
+        return $this->alunos()->count();
+    }
+
+    public function quantidadeAprovados()
+    {
+        return $this->alunos->where('situacao','Aprovado(a)')->count();
+    }
+
+    public function quantidadeDesistentes()
+    {
+        return $this->alunos->where('situacao','Desistentes')->count();
+    }
+
+    public function quantidadeExcluidos()
+    {
+        return $this->alunos->where('situacao','Excluído(a)')->count();
     }
 }
