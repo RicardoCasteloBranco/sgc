@@ -6,7 +6,7 @@
             <p><strong>Centro de Ensino:</strong> {{ $turma->projeto->centroEnsino->nome }}</p>
             <p><strong>Projeto:</strong> {{ $turma->projeto->numeroProjeto() }}</p>
             <p><strong>Turma:</strong> {{ $turma->numeroTurma() }}</p>
-            <p><strong>Coordenador:</strong>{{ $turma->coordenador }}
+            <p><strong>Coordenador: </strong>{{ $turma->coordenador->graduacao }} {{ $turma->coordenador->pessoa->nome }}
             <!-- Fim dos detalhes do Projeto -->
         </div>
         <div>
@@ -127,24 +127,24 @@
             <x-slot name="form">
                 <x-input type="hidden" id="turmaId" value="{{$turma->id}}" />
                 <div class="col-span-6 sm:col-span-4">
-                    <x-label for="graduacao" value="Graduação" />
-                    <x-select id="graduacao" class="mt-1 block w-full" wire:model.defer="graduacao">
+                    <x-label for="graduacaoAluno" value="Graduação" />
+                    <x-select id="graduacaoAluno" class="mt-1 block w-full" wire:model.defer="graduacaoAluno">
                         <option>Selecione a graduação</option>
                         @foreach($graduacoes as $key => $value)
                         <option value="{{ $value }}">{{ $value }}</option>
                         @endforeach
                     </x-select>
-                    <x-input-error for="graduacao" class="mt-2" />
+                    <x-input-error for="graduacaoAluno" class="mt-2" />
                 </div>
                 <div class="col-span-6 sm:col-span-4">
-                    <x-label for="nome" value="Nome" />
-                    <x-input id="nome" type="text" class="mt-1 block w-full" wire:model.defer="nome" />
-                    <x-input-error for="nome" class="mt-2" />
+                    <x-label for="nomeAluno" value="Nome" />
+                    <x-input id="nomeAluno" type="text" class="mt-1 block w-full" wire:model.defer="nomeAluno" />
+                    <x-input-error for="nomeAluno" class="mt-2" />
                 </div>
                 <div class="col-span-6 sm:col-span-4">
-                    <x-label for="matricula" value="Matrícula" />
-                    <x-input id="matricula" type="text" class="mt-1 block w-full" wire:model.defer="matricula" />
-                    <x-input-error for="matricula" class="mt-2" />
+                    <x-label for="matriculaAluno" value="Matrícula" />
+                    <x-input id="matriculaAluno" type="text" class="mt-1 block w-full" wire:model.defer="matriculaAluno" />
+                    <x-input-error for="matriculaAluno" class="mt-2" />
                 </div>
                 @if($isEditAluno)
                 <div class="col-span-6 sm:col-span-4">
@@ -170,6 +170,59 @@
         </x-form-section>
      </x-modal>
     <!-- Fim do formulário para adicionar e editar um aluno -->
+    <!-- Inicio do formulário para adicionar e editar o Coordenador -->
+     <x-modal wire:model="openModalCoordenador">
+        <x-form-section submit="saveCoordenador">
+            <x-slot name="title">
+                {{ $isEditCoordenador ? 'Alterar Coordenador' : 'Adicionar Coordenador' }}
+            </x-slot>
+            <x-slot name="description">
+                {{ $isEditCoordenador ? 'Alterar o Coordenador da Turma.' : 'Adicione o Coordenador da Turma.' }}
+            </x-slot>
+            <x-slot name="form">
+                <x-input type="hidden" id="turmaId" value="{{$turma->id}}" />
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="graduacaoCoordenador" value="Graduação" />
+                    <x-select id="graduacaoCoordenador" class="mt-1 block w-full" wire:model.defer="graduacaoCoordenador">
+                        <option>Selecione a graduação</option>
+                        @foreach($graduacoes as $key => $value)
+                        <option value="{{ $value }}">{{ $value }}</option>
+                        @endforeach
+                    </x-select>
+                    <x-input-error for="graduacaoCoordenador" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="nomeCoordenador" value="Nome" />
+                    <x-input id="nomeCoordenador" type="text" class="mt-1 block w-full" wire:model.defer="nomeCoordenador" />
+                    <x-input-error for="nomeCoodenador" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="matriculaCoordenador" value="Matrícula" />
+                    <x-input id="matriculaCoordenador" type="text" class="mt-1 block w-full" wire:model.defer="matriculaCoordenador" />
+                    <x-input-error for="matriculaCoordenador" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="dataDesignacao" value="Data de Designação" />
+                    <x-input id="dataDesignacao" type="date" class="mt-1 block w-full" wire:model.defer="dataDesignacao" />
+                    <x-input-error for="dataDesignacao" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="pareceTecnico" value="Parecer Técnico" />
+                    <x-input id="parecerTecnico" type="text" class="mt-1 block w-full" wire:model.defer="parecerTecnico" />
+                    <x-input-error for="parecerTecnico" class="mt-2" />
+                </div>
+            </x-slot>
+            <x-slot name="actions">
+                <x-secondary-button wire:click="$set('openModalCoordenador', false)">
+                    Cancelar
+                </x-secondary-button>
+                <x-button class="ml-3" type="submit">
+                    {{ $isEditCoordenador ? 'Atualizar' : 'Salvar' }}
+                </x-button>
+            </x-slot>
+        </x-form-section>
+     </x-modal>
+    <!-- Fim do formulário para adicionar e editar um Coordenador -->
     <!-- Modal para apagar Aluno -->
      <x-dialog-modal wire:model="openModalDeletaAluno">
         <x-slot name="title">Apagar Aluno</x-slot>

@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Turma;
 use App\Models\Pessoa;
 use App\Models\Aluno;
+use App\Models\Coordenador;
 use Livewire\WithFileUploads;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
@@ -32,12 +33,21 @@ class TurmaDetail extends Component
     public $openModalDeletaAluno = false;
     public $isEditAluno = false;
     public $idAluno;
-    public $graduacao;
-    public $nome;
-    public $matricula;
+    public $graduacaoAluno;
+    public $nomeAluno;
+    public $matriculaAluno;
     public $situacao;
     public $nomeDel;
     public $idDel;
+
+    //Variáveis para operações com Coordenador
+    public $openModalCoordenador = false;
+    public $isEditCoordenador = false;
+    public $graduacaoCoordenador;
+    public $nomeCoordenador;
+    public $matriculaCoordenador;
+    public $dataDesignacao;
+    public $parecerTecnico;
 
     public function mount(Turma $turma)
     {
@@ -51,12 +61,46 @@ class TurmaDetail extends Component
 
     public function inserirCoordenador()
     {
-
+        $this->isEditCoordenador = false;
+        $this->openModalCoordenador = true;
     }
 
     public function alterarCoordenador()
     {
+        $this->isEditCoordenador = true;
+        $this->openModalCoordenador = true;
+    }
 
+    public function saveCoordenador()
+    {
+         $this->validate([
+            'graduacaoCoordenador' => ['required','string',Rule::in($this->graduacoes)],
+            'nomeCoordenador' => ['required','string'],
+            'matriculaCoordenador' => ['required','integer'],
+            'dataDesignacao' => ['required','date'],
+        ],[
+            'matricula.integer'=> "Só pode haver números na matrícula"
+        ]);
+
+        $pessoa = Pessoa::where('matricula', $this->matriculaCoordenador)->first();
+
+        if(!$pessoa){
+            $pessoa = Pessoa::create([
+                'nome' => $this->nomeCoordenador,
+                'matricula' => $this->matriculaCoordenador,
+            ]);
+        }
+        Coordenador::create([
+            'graduacao' => $this->graduacaoCoordenador,
+            'pessoa_id' => $pessoa->id,
+            'turma_id' => $this->turma->id,
+            'parecer_tecnico' => $this->parecerTecnico,
+            'data_designacao' => $this->dataDesignacao
+        ]);
+        session()->flash('message','Coordenador Cadastrado com sucesso!');
+        $this->openModalCoordenador = false;
+        $this->isEditCoordenador = false;
+        $this->resetFieldsCoordenador();
     }
 
     public function carregarTurma()
@@ -99,10 +143,10 @@ class TurmaDetail extends Component
     {
         $aluno = Aluno::findOrFail($id);
         $this->idAluno = $aluno->id;
-        $this->graduacao = $aluno->graduacao;
-        $this->nome = $aluno->pessoa->nome;
-        $this->matricula = $aluno->pessoa->matricula;
-        $this->situacao = $aluno->situacao;
+        $this->graduacaoAluno = $aluno->graduacao;
+        $this->nomeAluno = $aluno->pessoa->nome;
+        $this->matriculaAluno = $aluno->pessoa->matricula;
+        $this->situacaoAluno = $aluno->situacao;
 
         $this->isEditAluno = true;
         $this->openModalAluno = true;
@@ -125,23 +169,23 @@ class TurmaDetail extends Component
     public function saveAluno()
     {
         $this->validate([
-            'graduacao' => ['required','string',Rule::in($this->graduacoes)],
-            'nome' => ['required','string'],
-            'matricula' => ['required','integer']
+            'graduacaoAluno' => ['required','string',Rule::in($this->graduacoes)],
+            'nomeAluno' => ['required','string'],
+            'matriculaAluno' => ['required','integer']
         ],[
             'matricula.integer'=> "Só pode haver números na matrícula"
         ]);
 
-        $pessoa = Pessoa::where('matricula', $this->matricula)->first();
+        $pessoa = Pessoa::where('matricula', $this->matriculaAluno)->first();
 
         if(!$pessoa){
             $pessoa = Pessoa::create([
-                'nome' => $this->nome,
-                'matricula' => $this->matricula,
+                'nome' => $this->nomeAluno,
+                'matricula' => $this->matriculaAluno,
             ]);
         }
         Aluno::create([
-            'graduacao' => $this->graduacao,
+            'graduacao' => $this->graduacaoAluno,
             'pessoa_id' => $pessoa->id,
             'turma_id' => $this->turma->id,
             'situacao' => "Matriculado(a)",
@@ -155,23 +199,23 @@ class TurmaDetail extends Component
     public function updateAluno()
     {
        $this->validate([
-            'graduacao' => ['required','string',Rule::in($this->graduacoes)],
-            'nome' => ['required','string'],
+            'graduacaoAluno' => ['required','string',Rule::in($this->graduacoes)],
+            'nomeAluno' => ['required','string'],
             'situacao' => ['required','string',Rule::in($this->situacoes)],
-            'matricula' => ['required','integer']
+            'matriculaAluno' => ['required','integer']
         ],[
-            'matricula.integer'=> "Só pode haver números na matrícula"
+            'matriculaAluno.integer'=> "Só pode haver números na matrícula"
         ]);
 
         $aluno = Aluno::findOrFail($this->idAluno);
         $aluno->update([
             'situacao' => $this->situacao,
-            'graduacao' => $this->graduacao,
+            'graduacao' => $this->graduacaoAluno,
         ]);
         $pessoa = Pessoa::findOrFail($aluno->pessoa->id);
         $pessoa->update([
-            'nome' => $this->nome,
-            'matricula' => $this->matricula
+            'nome' => $this->nomeAluno,
+            'matricula' => $this->matriculaAluno
         ]);
 
         session()->flash('message','Aluno Atualizado');
@@ -185,7 +229,7 @@ class TurmaDetail extends Component
     {
         $aluno = Aluno::findOrFail($this->idDel);
         $aluno->delete();
-        session()->flash('message', 'Aluno Apagado1');
+        session()->flash('message', 'Aluno Apagado');
         $this->openModalDeletaAluno = false;
         $this->reset(['nomeDel']);
     }
@@ -193,10 +237,21 @@ class TurmaDetail extends Component
     public function resetFieldsAluno()
     {
         $this->reset([
-            'graduacao',
+            'graduacaoAluno',
             'situacao',
-            'nome',
-            'matricula'
+            'nomeAluno',
+            'matriculaAluno'
+        ]);
+    }
+    
+    public function resetFieldsCoordenador()
+    {
+        $this->reset([
+            'graduacaoCoordenador',
+            'nomeCoordenador',
+            'matriculaCoordenador',
+            'parecerTecnico',
+            'dataDesignacao'
         ]);
     }
 

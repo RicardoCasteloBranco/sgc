@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('graduacao');
             $table->date('data_designacao')->nullable();
-            $table->string('parecer_tecnico');
+            $table->string('parecer_tecnico')->nullable();
             $table->unsignedBigInteger('pessoa_id');
             $table->unsignedBigInteger('turma_id');
             $table->foreign('pessoa_id')->references('id')->on('pessoas')->onDelete('cascade');
