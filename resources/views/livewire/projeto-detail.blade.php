@@ -360,7 +360,6 @@
      </x-modal>
      <!-- Fim do Modal de Cadastro/Edicação de Material -->
     <!-- Modal para apagar Material -->
-    <!-- Fim do Modal para apagar material -->
      <x-dialog-modal wire:model="openModalDeletaMaterial">
         <x-slot name="title">Apagar Material</x-slot>
         <x-slot name="content">Você tem certeza que deseja apagar o material ?</x-slot>
@@ -369,6 +368,7 @@
             <x-secondary-button wire:click="$set('openModalDeletaMaterial', false)" class="ml-4">Cancela</x-secondary-button>
         </x-slot>
      </x-dialog-modal>
+     <!-- Fim do Modal para apagar material -->
     <!-- Modal de Cadastro de Parecer Técnico -->
     @if($openModalParecer)
         <div class="fixed inset-0 z-50 overflow-y-auto">

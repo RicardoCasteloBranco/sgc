@@ -146,6 +146,7 @@
                     <x-input id="matricula" type="text" class="mt-1 block w-full" wire:model.defer="matricula" />
                     <x-input-error for="matricula" class="mt-2" />
                 </div>
+                @if($isEditAluno)
                 <div class="col-span-6 sm:col-span-4">
                     <x-label for="situacao" value="Situação" />
                     <x-select id="situacao" class="mt-1 block w-full" wire:model.defer="situacao">
@@ -154,8 +155,9 @@
                         <option value="{{ $value }}">{{ $value }}</option>
                         @endforeach
                     </x-select>
-                    <x-input-error for="graduacao" class="mt-2" />
+                    <x-input-error for="situacao" class="mt-2" />
                 </div>
+                @endif
             </x-slot>
             <x-slot name="actions">
                 <x-secondary-button wire:click="$set('openModalAluno', false)">
@@ -168,4 +170,17 @@
         </x-form-section>
      </x-modal>
     <!-- Fim do formulário para adicionar e editar um aluno -->
+    <!-- Modal para apagar Aluno -->
+     <x-dialog-modal wire:model="openModalDeletaAluno">
+        <x-slot name="title">Apagar Aluno</x-slot>
+        <x-slot name="content">
+            <p>Você tem certeza que deseja apagar o aluno?</p>
+            <x-input id="nomeDel" wire:model.defer="nomeDel" disabled class="border-none focus:border-none focus:ring-0 shadow-none w-full"/>
+        </x-slot>
+        <x-slot name="footer">
+            <x-button wire:click="deleteAluno">Confirma</x-button>
+            <x-secondary-button wire:click="$set('openModalDeletaAluno', false)" class="ml-4">Cancela</x-secondary-button>
+        </x-slot>
+     </x-dialog-modal>
+     <!-- Fim do Modal para apagar material -->
 </div>
