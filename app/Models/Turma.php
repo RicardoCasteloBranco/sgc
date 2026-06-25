@@ -119,7 +119,7 @@ class Turma extends Model
 
     public function quantidadeDesistentes()
     {
-        return $this->alunos->where('situacao','Desistentes')->count();
+        return $this->alunos->where('situacao','Desistente')->count();
     }
 
     public function quantidadeExcluidos()

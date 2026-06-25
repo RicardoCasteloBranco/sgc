@@ -49,7 +49,7 @@
         const valores = dados.map(item => item.total);
 
         new Chart(document.getElementById('chart1'), {
-            type: 'bar',
+            type: 'line',
             data: {
                 labels: labels,
                 datasets: [{
