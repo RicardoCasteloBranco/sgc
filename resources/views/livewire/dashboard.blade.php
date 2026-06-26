@@ -51,7 +51,7 @@
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Alunos Concluintes',
+                    label: 'Alunos Matriculados',
                     data: valores
                 }]
             },
@@ -65,9 +65,7 @@
     // GRÁFICO 2 COM API
     async function carregarGraficoPT() {
 
-        const response = await fetch('/api/projetos');
-
-        const dados = await response.json();
+       const dados = @json($this->projetos);
 
         const labels = dados.map(item => item.status);
         const valores = dados.map(item => item.total);
@@ -86,9 +84,7 @@
     // GRÁFICO 3 COM API
     async function carregarGraficoTurmas() {
 
-        const response = await fetch('/api/turmas');
-
-        const dados = await response.json();
+        const dados = @json($this->turmas);
 
         const labels = dados.map(item => item.status);
         const valores = dados.map(item => item.total);

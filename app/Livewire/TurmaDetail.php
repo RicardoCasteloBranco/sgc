@@ -146,7 +146,7 @@ class TurmaDetail extends Component
         $this->graduacaoAluno = $aluno->graduacao;
         $this->nomeAluno = $aluno->pessoa->nome;
         $this->matriculaAluno = $aluno->pessoa->matricula;
-        $this->situacaoAluno = $aluno->situacao;
+        $this->situacao = $aluno->situacao;
 
         $this->isEditAluno = true;
         $this->openModalAluno = true;
