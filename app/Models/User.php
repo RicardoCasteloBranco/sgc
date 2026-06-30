@@ -70,4 +70,9 @@ class User extends Authenticatable
     {
         return $this->hasOneThrough(CentroEnsino::class, Supervisor::class, 'user_id', 'id', 'id', 'centro_ensino_id');
     }
+
+    public function perfis()
+    {
+        return $this->belongsToMany(Perfil::class,'perfil_usuarios','user_id','perfil_id');
+    }
 }
