@@ -3,6 +3,10 @@
         <x-slot name="logo">
             <x-authentication-card-logo />
         </x-slot>
+        <div>
+            <h3 class="text-center font-bold uppercase">Bem-vindo ao Sistema de Gestão do Ensino</h3>
+            <p class="text-center text-sm">Por favor, faça login para continuar</p>
+        </div>
 
         <x-validation-errors class="mb-4" />
 

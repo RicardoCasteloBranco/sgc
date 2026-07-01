@@ -94,25 +94,16 @@
 
                         <x-slot name="content">
                             <!-- Account Management -->
+                            @foreach(Auth::user()->perfis as $perfil)
                             <div class="block px-4 py-2 text-xs text-gray-400">
-                                {{ __('Manage Account') }}
+                                {{ __($perfil->descricao) }}
                             </div>
-
-                            <x-dropdown-link href="{{ route('profile.show') }}">
-                                {{ __('Profile') }}
-                            </x-dropdown-link>
-                            <x-dropdown-link href="{{ route('curso') }}">
-                                {{ __('Curso') }}
-                            </x-dropdown-link>
-                            <x-dropdown-link href="{{ route('calendario') }}">
-                                {{ __('Calendário') }}
-                            </x-dropdown-link>
-                            <x-dropdown-linK href="{{route('cadastro')}}">
-                                {{ __('Cadastro de Material Bélico') }}
-                            </x-dropdown-link>
-                            <x-dropdown-link href="{{ route('register') }}">
-                                {{ __('Adicionar Usuário') }}
-                            </x-dropdown-link>
+                                @foreach($perfil->menus as $menu)
+                                    <x-dropdown-link href="{{ route($menu->rota) }}">
+                                        {{ __($menu->titulo) }}
+                                    </x-dropdown-link>
+                                @endforeach
+                            @endforeach
 
                             @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                                 <x-dropdown-link href="{{ route('api-tokens.index') }}">

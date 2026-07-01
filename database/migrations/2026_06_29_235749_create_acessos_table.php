@@ -19,6 +19,14 @@ return new class extends Migration
             $table->foreign('menu_id')->references('id')->on('menus')->onDelete('cascade');
             $table->timestamps();
         });
+        DB::table('acessos')->insert([
+            ['perfil_id' => 1, 'menu_id' => 1],
+            ['perfil_id' => 1, 'menu_id' => 2],
+            ['perfil_id' => 1, 'menu_id' => 3],
+            ['perfil_id' => 1, 'menu_id' => 4],
+            ['perfil_id' => 1, 'menu_id' => 5],
+            ['perfil_id' => 1, 'menu_id' => 6],
+        ]);
     }
 
     /**

@@ -11,4 +11,14 @@ class Acesso extends Model
         'perfil_id',
         'menu_id'
     ];
+
+    public function perfil()
+    {
+        return $this->belongsTo(Perfil::class);
+    }
+
+    public function menu()
+    {
+        return $this->belongsTo(Menu::class);
+    }
 }

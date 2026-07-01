@@ -16,6 +16,11 @@ return new class extends Migration
             $table->string('descricao');
             $table->timestamps();
         });
+        DB::table('perfils')->insert([
+            ['descricao' => 'Administrador'],
+            ['descricao' => 'Supervisor'],
+            ['descricao' => 'Coordenador'],
+        ]);
     }
 
     /**
