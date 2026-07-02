@@ -9,13 +9,18 @@ class DashboardComponent extends Component
     public $alunos;
     public $projetos;
     public $turmas;
+    public $cursos;
+    public $valorHoraAula;
+    public $alunosFormados;
 
     public function mount()
     {
         $this->alunos = $this->getAlunos();
         $this->projetos = $this->getProjetos();
         $this->turmas = $this->getTurmas();
-
+        $this->cursos = \App\Models\Curso::all()->count();
+        $this->valorHoraAula = \App\Models\Projeto::selectRaw('SUM(custo_pessoal) as total')->first()->total;
+        $this->alunosFormados = \App\Models\Aluno::where('situacao', 'Aprovado(a)')->count();
     }
 
     public function render()
@@ -26,7 +31,7 @@ class DashboardComponent extends Component
     private function getAlunos()
     {
         $dados = array();
-        $concluintes = \App\Models\Turma::selectRaw('
+        $matriculados = \App\Models\Turma::selectRaw('
             MONTH(data_inicio) as mes,
             COUNT(alunos.id) as total
         ')
@@ -35,16 +40,30 @@ class DashboardComponent extends Component
         ->groupByRaw('MONTH(data_inicio)')
         ->orderByRaw('MONTH(data_inicio)')
         ->get();
+
+        $desistentes = \App\Models\Turma::selectRaw('
+            MONTH(data_inicio) as mes,
+            COUNT(alunos.id) as total
+        ')
+        ->join('alunos','alunos.turma_id','=','turmas.id')
+        ->whereNotNull('data_inicio')
+        ->where('alunos.situacao','Desistente')
+        ->groupByRaw('MONTH(data_inicio)')
+        ->orderByRaw('MONTH(data_inicio)')
+        ->get();
+
         for($i = 0; $i < 12; $i++){
             $dados[$i] = [
                 'mes' => $this->getMes($i + 1),
-                'total' => 0
+                'matriculado' => 0,
+                'desistente' => 0
             ];
         }
-        foreach($concluintes as $concluinte){
-            $dados[$concluinte->mes - 1] = [
-                'mes' => $this->getMes($concluinte->mes),
-                'total' => $concluinte->total
+        for($i = 0; $i < count($matriculados); $i++){
+            $dados[$matriculados[$i]->mes - 1] = [
+                'mes' => $this->getMes($matriculados[$i]->mes),
+                'matriculado' => $matriculados[$i]->total,
+                'desistente' => $desistentes[$i]->total
             ];
         }
         return $dados;

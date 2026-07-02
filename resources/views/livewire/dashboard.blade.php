@@ -2,34 +2,51 @@
 
     <!-- GRID DOS GRÁFICOS -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
+        <div class="bg-gray-50 p-4 rounded-2xl shadow">
+            <h2 class="text-sm font-bold mb-4 text-center">
+                Quantidade de Cursos Cadastrados
+            </h2>
+            <h1 class="text-xl font-bold text-gray-800 text-center">
+                {{ $cursos }}
+            </h1>
+        </div>
+        <div class="bg-gray-50 p-4 rounded-2xl shadow">
+            <h2 class="text-sm font-bold mb-4 text-center">
+                Valor Total de Horas-Aula
+            </h2>
+            <h1 class="text-4xl font-bold text-gray-800 text-center">
+                R$ {{ number_format($valorHoraAula, 2, ',', '.') }}
+            </h1>
+        </div>
+        <div class="bg-gray-50 p-4 rounded-2xl shadow">
+            <h2 class="text-sm font-bold mb-4 text-center">
+                Valor Total de Alunos Formados
+            </h2>
+            <h1 class="text-4xl font-bold text-gray-800 text-center">
+                {{ $alunosFormados }}
+            </h1>
+        </div>
         <!-- GRÁFICO 1 -->
         <div class="bg-gray-50 p-4 rounded-2xl shadow">
             <h2 class="text-lg font-bold mb-4">
                 Alunos
             </h2>
-
             <canvas id="chart1" style="max-height: 300px;"></canvas>
         </div>
-
         <!-- GRÁFICO 2 -->
         <div class="bg-gray-50 p-4 rounded-2xl shadow">
             <h2 class="text-lg font-bold mb-4">
                 Parecer Técnico
             </h2>
-
             <canvas id="chart2"></canvas>
         </div>
-
         <!-- GRÁFICO 3 -->
         <div class="bg-gray-50 p-4 rounded-2xl shadow">
             <h2 class="text-lg font-bold mb-4">
                 Turmas
             </h2>
-
             <canvas id="chart3"></canvas>
         </div>
-
     </div>
 
 </div>
@@ -44,17 +61,19 @@
         const dados = @json($this->alunos)
 
         const labels = dados.map(item => item.mes);
-        const valores = dados.map(item => item.total);
+        const matriculados = dados.map(item => item.matriculado);
+        const desistentes = dados.map(item => item.desistente);
 
         new Chart(document.getElementById('chart1'), {
-            type: 'bar',
+            type: 'line',
             data: {
                 labels: labels,
-                datasets: [{
-                    label: 'Alunos Matriculados',
-                    data: valores
-                }]
-            },
+                datasets: [
+                    {label: 'Alunos Matriculados',
+                    data: matriculados},
+                    {label: 'Alunos Desistentes',
+                    data: desistentes},
+            ]},
             options: {
                 responsive: true,
                 maintainAspectRatio: false
