@@ -62,8 +62,8 @@ class DashboardComponent extends Component
         for($i = 0; $i < count($matriculados); $i++){
             $dados[$matriculados[$i]->mes - 1] = [
                 'mes' => $this->getMes($matriculados[$i]->mes),
-                'matriculado' => $matriculados[$i]->total,
-                'desistente' => $desistentes[$i]->total
+                'matriculado' => isset($matriculados[$i]) ? $matriculados[$i]->total : 0,
+                'desistente' => isset($desistentes[$i]) ? $desistentes[$i]->total : 0,
             ];
         }
         return $dados;

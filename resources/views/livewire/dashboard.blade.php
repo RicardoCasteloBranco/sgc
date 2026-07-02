@@ -6,7 +6,7 @@
             <h2 class="text-sm font-bold mb-4 text-center">
                 Quantidade de Cursos Cadastrados
             </h2>
-            <h1 class="text-xl font-bold text-gray-800 text-center">
+            <h1 class="text-9xl font-bold text-gray-800 text-center">
                 {{ $cursos }}
             </h1>
         </div>
@@ -14,7 +14,7 @@
             <h2 class="text-sm font-bold mb-4 text-center">
                 Valor Total de Horas-Aula
             </h2>
-            <h1 class="text-4xl font-bold text-gray-800 text-center">
+            <h1 class="text-9xl font-bold text-gray-800 text-center">
                 R$ {{ number_format($valorHoraAula, 2, ',', '.') }}
             </h1>
         </div>
@@ -22,9 +22,9 @@
             <h2 class="text-sm font-bold mb-4 text-center">
                 Valor Total de Alunos Formados
             </h2>
-            <h1 class="text-4xl font-bold text-gray-800 text-center">
+            <p class="text-9xl font-bold text-gray-800 text-center">
                 {{ $alunosFormados }}
-            </h1>
+            </p>
         </div>
         <!-- GRÁFICO 1 -->
         <div class="bg-gray-50 p-4 rounded-2xl shadow">
