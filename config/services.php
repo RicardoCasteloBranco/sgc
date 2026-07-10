@@ -34,5 +34,8 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'ldap' => [
+        'base_url' => env('LDAP_API_URL'),
+    ],
 
 ];
