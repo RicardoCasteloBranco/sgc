@@ -15,6 +15,8 @@ use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
 use Laravel\Fortify\Fortify;
 use App\Services\LdapApiService;
 use App\Models\User;
+use App\Models\Perfil;
+use App\Models\PerfilUsuario;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -39,21 +41,18 @@ class FortifyServiceProvider extends ServiceProvider
             $ldapService = new LdapApiService();
 
             $ldapData = $ldapService->authenticate($username, $password);
-
             if (!$ldapData) {
                 return null;
             }
 
             /*
-            * Procura um perfil pertencente ao sistema ECOP.
-            * Troque "ECOP" pelo sistema da sua aplicação.
+            * Procura um perfil pertencente ao sistema.
             */
             $ldapUser = collect($ldapData['data'])->first(function ($perfil) {
                 foreach ($perfil as $linha) {
 
                     if (str_starts_with($linha, 'Sistema:')) {
-
-                        return trim(substr($linha, 9)) === env('APP_NAME');
+                        return trim(substr($linha, 9)) === config('app.name');
                     }
                 }
 
@@ -76,17 +75,7 @@ class FortifyServiceProvider extends ServiceProvider
                 $usuario[$campo] = $valor;
             }
 
-            return User::updateOrCreate(
-                [
-                    'name' => $usuario['Nome de Guerra'] ?? null, //alterar aqui para CPF
-                
-                ],
-                [
-                    'name'     => $usuario['Nome de Guerra'],
-                    'email'    => $usuario['Email'] ?? null,
-                    'password' => bcrypt($usuario['Matricula'] ?? null),
-                ]
-            );
+            return $this->criarAcesso($usuario);
         });
 
         Fortify::createUsersUsing(CreateNewUser::class);
@@ -104,5 +93,37 @@ class FortifyServiceProvider extends ServiceProvider
         RateLimiter::for('two-factor', function (Request $request) {
             return Limit::perMinute(5)->by($request->session()->get('login.id'));
         });
+    }
+
+    private function criarAcesso($usuario)
+    {
+        $idPerfil = Perfil::where('descricao', strtoupper($usuario['Perfil'] ?? null))->value('id');
+        
+        $user = User::updateOrCreate(
+                [
+                    'login' => $usuario['Login'] ?? null, //alterar aqui para CPF
+                
+                ],
+                [
+                    'name'     => $usuario['Nome de Guerra'],
+                    'email'    => strtolower($usuario['Email']) ?? null,
+                    'matricula' => $usuario['Matricula'] ?? null,
+                    'cargo' => $usuario['Cargo'] ?? null,
+                    'ome_disposicao' => $usuario['Ome Disposição'] ?? null,
+                    'id_ome_disposicao' => (int)($usuario['Id Ome Disposição'] ?? null),
+                    'secao' => $usuario['Secao'] ?? null,
+                ]
+        );
+
+        PerfilUsuario::updateOrCreate(
+            [
+                    'user_id' => $user->id ?? null,
+            ],
+            [
+                'user_id' => $user->id,
+                'perfil_id' => $idPerfil,
+            ]
+        );
+        return $user;
     }
 }

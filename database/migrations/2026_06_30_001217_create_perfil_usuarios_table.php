@@ -19,9 +19,6 @@ return new class extends Migration
             $table->foreign('perfil_id')->references('id')->on('perfils')->onCascade('delete');
             $table->timestamps();
         });
-        DB::table('perfil_usuarios')->insert([
-            ['user_id' => 1, 'perfil_id' => 1],
-        ]);
     }
 
     /**

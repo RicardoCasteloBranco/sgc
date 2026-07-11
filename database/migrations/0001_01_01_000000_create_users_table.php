@@ -14,9 +14,14 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('login')->unique();
+            $table->string('cargo')->nullable();
+            $table->string('matricula')->nullable();
+            $table->string('ome_disposicao')->nullable();
+            $table->unsignedBigInteger('id_ome_disposicao')->nullable();
+            $table->string('secao')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
@@ -37,12 +42,6 @@ return new class extends Migration
             $table->longText('payload');
             $table->integer('last_activity')->index();
         });
-
-        DB::table('users')->insert([
-            'name' => 'Admin User',
-            'email' => 'admin@pm.pe.gov.br',
-            'password' => bcrypt('admin190'),
-        ]);
     }
 
     /**
