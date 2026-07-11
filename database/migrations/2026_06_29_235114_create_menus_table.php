@@ -24,7 +24,6 @@ return new class extends Migration
             ['titulo' => 'Cadastro de Material Bélico', 'rota' => 'cadastro'],
             ['titulo' => 'Adicionar Usuário', 'rota' => 'register'],
             ['titulo' => 'Perfil de Acesso ao Sistema', 'rota' => 'perfil'],
-            ['titulo' => 'Perfil de Usuários do Sistema', 'rota' => 'perfil_usuario'],
         ]);
     }
 

@@ -25,7 +25,6 @@ return new class extends Migration
             ['perfil_id' => 1, 'menu_id' => 3],
             ['perfil_id' => 1, 'menu_id' => 4],
             ['perfil_id' => 1, 'menu_id' => 5],
-            ['perfil_id' => 1, 'menu_id' => 6],
         ]);
     }
 
