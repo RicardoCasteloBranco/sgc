@@ -19,7 +19,7 @@
             </style>
         @endif
     </head>
-    <body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
+    <body class="bg-gray-100 dark:bg-[#0a0a0a] text-[#1b1b18] flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
         <header class="w-full lg:max-w-4xl max-w-[335px] text-sm mb-6 not-has-[nav]:hidden">
             @if (Route::has('login'))
                 <nav class="flex items-center justify-end gap-4">
@@ -51,17 +51,19 @@
                         align-items: center;
                         height: 100%;
                         flex-direction: column;">
-                     <h1 style="font-size: 110px; font-weight: bold; color: #D4AF37; margin-bottom=2px;">
+                     <h1 style="font-size: 110px; font-weight: bold; color: #D4AF37;">
                             SGE
                         </h1>
-                        <h2><strong>Sistema de Gestão de Ensino da PMPE</strong></h2>
+                        <h2 style="font-size: 16px; font-weight: bold; color: #321E69; margin-top: -12px;">
+                            <strong>Sistema de Gestão de Ensino da PMPE</strong>
+                        </h2>
                     </div>
                 </div>
                 <!-- Fim da Caixa da Esquerda -->
                 <!-- Caixa da Direita -->
                 <div style="background-color: #321E69;"
                     class="relative lg:-ml-px -mb-px lg:mb-0 rounded-t-lg lg:rounded-t-none lg:rounded-r-lg aspect-[335/376] lg:aspect-auto w-full lg:w-[438px] shrink-0 overflow-hidden flex items-center justify-center">
-                    <x-application-logo class="w-48 h-48" />
+                    <x-application-logo />
                 </div>
             </main>
         </div>

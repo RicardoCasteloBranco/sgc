@@ -5,6 +5,8 @@
    width="70mm"
    height="99mm"
    viewBox="0 0 230 297"
+   x=0
+   y=0
    id="svg1"
    xmlns="http://www.w3.org/2000/svg">
   <defs

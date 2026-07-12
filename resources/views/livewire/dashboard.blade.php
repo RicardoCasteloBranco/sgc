@@ -3,48 +3,48 @@
     <!-- GRID DOS GRÁFICOS -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="bg-gray-50 p-4 rounded-2xl shadow">
-            <h2 class="text-sm font-bold mb-4 text-center">
+            <h3 class="text-lg font-bold mb-4 text-center">
                 Quantidade de Cursos Cadastrados
-            </h2>
-            <h1 class="text-9xl font-bold text-gray-800 text-center">
+            </h3>
+            <h1 class="font-bold text-gray-800 text-center" style="font-size: 2.5rem;">
                 {{ $cursos }}
             </h1>
         </div>
         <div class="bg-gray-50 p-4 rounded-2xl shadow">
-            <h2 class="text-sm font-bold mb-4 text-center">
+            <h3 class="text-lg font-bold mb-4 text-center">
                 Valor Total de Horas-Aula
-            </h2>
-            <h1 class="text-9xl font-bold text-gray-800 text-center">
+            </h3>
+            <h1 class="font-bold text-gray-800 text-center" style="font-size: 2.5rem;">
                 R$ {{ number_format($valorHoraAula, 2, ',', '.') }}
             </h1>
         </div>
         <div class="bg-gray-50 p-4 rounded-2xl shadow">
-            <h2 class="text-sm font-bold mb-4 text-center">
+            <h3 class="text-lg font-bold mb-4 text-center">
                 Valor Total de Alunos Formados
-            </h2>
-            <p class="text-9xl font-bold text-gray-800 text-center">
+            </h3>
+            <h1 class="font-bold text-gray-800 text-center" style="font-size: 2.5rem;">
                 {{ $alunosFormados }}
-            </p>
+            </h1>
         </div>
         <!-- GRÁFICO 1 -->
         <div class="bg-gray-50 p-4 rounded-2xl shadow">
-            <h2 class="text-lg font-bold mb-4">
+            <h3 class="text-lg font-bold mb-4 text-center">
                 Alunos
-            </h2>
+            </h3>
             <canvas id="chart1" style="max-height: 300px;"></canvas>
         </div>
         <!-- GRÁFICO 2 -->
         <div class="bg-gray-50 p-4 rounded-2xl shadow">
-            <h2 class="text-lg font-bold mb-4">
+            <h3 class="text-lg font-bold mb-4 text-center">
                 Parecer Técnico
-            </h2>
+            </h3>
             <canvas id="chart2"></canvas>
         </div>
         <!-- GRÁFICO 3 -->
         <div class="bg-gray-50 p-4 rounded-2xl shadow">
-            <h2 class="text-lg font-bold mb-4">
+            <h3 class="text-lg font-bold mb-4 text-center">
                 Turmas
-            </h2>
+            </h3>
             <canvas id="chart3"></canvas>
         </div>
     </div>
