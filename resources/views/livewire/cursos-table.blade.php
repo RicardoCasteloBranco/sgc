@@ -45,7 +45,7 @@
                                         <th class="border border-black">Data de Aprovação</th>
                                         <th class="border border-black">Turmas Previstas</th>
                                         <th class="border border-black">Carga Horária</th>
-                                        <th class="border border-black">Custo Pessoal</th>
+                                        <th class="border border-black">Custo de Hora-aula</th>
                                         <th class="border border-black">Custo Material</th>
                                         <th class="border border-black">Custo Serviços</th>
                                         <th class="border border-black">Centro de Ensino</th>
@@ -98,7 +98,7 @@
                                         <th class="border border-black p-3">Projeto</th>
                                         <th class="border border-black">Data de Aprovação</th>
                                         <th class="border border-black">Turmas Previstas</th>
-                                        <th class="border border-black">Custo Pessoal</th>
+                                        <th class="border border-black">Custo de Hora-aula</th>
                                         <th class="border border-black">Custo Material</th>
                                         <th class="border border-black">Custo Serviços</th>
                                         <th class="border border-black">Centro de Ensino</th>
@@ -227,7 +227,7 @@
                     <x-input-error for="quantidade_turmas" class="mt-2" />
                 </div>
                 <div class="col-span-6 w-full">
-                    <x-label for="custo_pessoal" value="Custo Pessoal" />
+                    <x-label for="custo_pessoal" value="Custo de Hora-aula" />
                     <x-input id="custo_pessoal" wire:model.defer="custo_pessoal" class="w-full" type="number" step="0.01" />
                     <x-input-error for="custo_pessoal" class="mt-2" />
                 </div>

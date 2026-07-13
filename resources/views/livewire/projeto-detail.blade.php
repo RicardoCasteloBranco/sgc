@@ -8,7 +8,7 @@
                     <p><strong>Centro de Ensino:</strong> {{ $projeto->centroEnsino->nome }}</p>
                     <p><strong>Quantidade de Turmas Previstas:</strong> {{ $projeto->quantidade_turmas }}</p>
                     <p><strong>Carga Horária Total: </strong>{{ $projeto->cargaHorariaTotal() }} horas</p>
-                    <p><strong>Custo com Pessoal:</strong> R$ {{ number_format($projeto->custo_pessoal, 2, ',', '.') }}</p>
+                    <p><strong>Custo com Hora-aula:</strong> R$ {{ number_format($projeto->custo_pessoal, 2, ',', '.') }}</p>
                     <p><strong>Custo com Material:</strong> R$ {{ number_format($projeto->custo_material, 2, ',', '.') }}</p>
                     <p><strong>Custo com Serviços:</strong> R$ {{ number_format($projeto->custo_servico, 2, ',', '.') }}</p>
                     <p><strong>Material Bélico:</strong></p>

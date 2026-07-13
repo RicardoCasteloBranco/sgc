@@ -14,7 +14,7 @@ class Pessoa extends Model
 
     public function coordenador()
     {
-        return $this->hasMany(Coordenador::class);
+        return $this->hasOne(Coordenador::class);
     }
 
     public function aluno()

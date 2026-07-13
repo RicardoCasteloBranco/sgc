@@ -6,7 +6,7 @@
             <p><strong>Centro de Ensino:</strong> {{ $turma->projeto->centroEnsino->nome }}</p>
             <p><strong>Projeto:</strong> {{ $turma->projeto->numeroProjeto() }}</p>
             <p><strong>Turma:</strong> {{ $turma->numeroTurma() }}</p>
-            <p><strong>Coordenador: </strong>{{ $turma->coordenador->graduacao }} {{ $turma->coordenador->pessoa->nome }}
+            <p><strong>Coordenador: </strong>@if($turma->coordenador){{ $turma->coordenador->graduacao }} {{ $turma->coordenador->pessoa->nome }}@endif
             <!-- Fim dos detalhes do Projeto -->
         </div>
         <div>

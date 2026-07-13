@@ -99,8 +99,18 @@
                                 {{ __($perfil->descricao) }}
                             </div>
                                 @foreach($perfil->menus as $menu)
-                                    <x-dropdown-link href="{{ route($menu->rota) }}">
-                                        {{ __($menu->titulo) }}
+                                @php
+                                    $title = __($menu->titulo);
+                                    $url = '';
+                                    $coordenador = Auth::user()->pessoa->coordenador ?? null;
+                                    if($menu->rota == 'turma' && $coordenador){
+                                        $url = route($menu->rota, ['turma' => $coordenador->turma_id]);
+                                    }else{
+                                        $url = route($menu->rota);
+                                    }
+                                @endphp
+                                    <x-dropdown-link href="{{ $url }}" >
+                                        {{ $title }}
                                     </x-dropdown-link>
                                 @endforeach
                             @endforeach

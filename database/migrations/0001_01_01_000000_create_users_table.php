@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('login')->unique();
             $table->string('cargo')->nullable();
-            $table->string('matricula')->nullable();
+            $table->bigInteger('matricula')->nullable();
             $table->string('ome_disposicao')->nullable();
             $table->unsignedBigInteger('id_ome_disposicao')->nullable();
             $table->string('secao')->nullable();
