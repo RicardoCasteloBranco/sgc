@@ -8,23 +8,25 @@
                     <p><strong>Centro de Ensino:</strong> {{ $projeto->centroEnsino->nome }}</p>
                     <p><strong>Quantidade de Turmas Previstas:</strong> {{ $projeto->quantidade_turmas }}</p>
                     <p><strong>Carga Horária Total: </strong>{{ $projeto->cargaHorariaTotal() }} horas</p>
-                    <p><strong>Custo com Hora-aula:</strong> R$ {{ number_format($projeto->custo_pessoal, 2, ',', '.') }}</p>
-                    <p><strong>Custo com Material:</strong> R$ {{ number_format($projeto->custo_material, 2, ',', '.') }}</p>
-                    <p><strong>Custo com Serviços:</strong> R$ {{ number_format($projeto->custo_servico, 2, ',', '.') }}</p>
-                    <p><strong>Material Bélico:</strong></p>
+                    <p><strong>Custo com Hora-aula:</strong> R$ {{ number_format($projeto->custo_hora_aula_por_turma, 2, ',', '.') }}</p>
+                    <p><strong>Custo com Bolsa de Formação:</strong> R$ {{ number_format($projeto->custo_bolsa_formacao_por_turma, 2, ',', '.') }}</p>
+                    <p><strong>Custo com Serviços:</strong> R$ {{ number_format($projeto->custo_servico_por_turma, 2, ',', '.') }}</p>
+                    <p><strong>Materiais:</strong></p>
                 </div>
                 <div class="mt-4">
                     <x-table>
                         <x-slot name="theaders">
                             <th class="p=3">Descrição</th>
-                            <th class="p-3">Qtd/Aluno</th>
+                            <th class="p-3">Qtd/Turma</th>
+                            <th class="p-3">Custo/Turma</th>
                             <th class="p-3">Ações</th>
                         </x-slot>
                         <x-slot name="tbody">
-                            @foreach($materialBelico as $material)
+                            @foreach($materiais as $material)
                             <tr class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }} transition">
-                                <td class="p-3">{{ $material->tipoMaterialBelico->descricao }}</td>
-                                <td class="p-3">{{ $material->quantidade_por_aluno }}</td>
+                                <td class="p-3">{{ $material->tipoMaterial->descricao }}</td>
+                                <td class="p-3">{{ $material->quantidade_por_turma }}</td>
+                                <td class="p-3">R$ {{ number_format($material->custo_unitario, 2, ',', '.') }}</td>
                                 <td class="p-3">
                                     <button wire:click="editMaterial({{ $material->id }})" class="text-green-700">
                                             Editar
@@ -38,7 +40,7 @@
                         </x-slot>
                     </x-table>
                     <div class="m-4 px-1">
-                    <x-button wire:click="createMaterialBelico">
+                    <x-button wire:click="createMaterial">
                         Inserir Material
                     </x-button>
                 </div>
@@ -323,12 +325,12 @@
      <!-- Fim do Modal de Cadastro/Edicação de Disciplina -->
     <!-- Modal de Cadastro/Edição de Material -->
      <x-modal wire:model="openModalMaterial">
-        <x-form-section submit="{{ $isEditMaterial ? 'updateMaterialBelico' : 'saveMaterialBelico' }}">
+        <x-form-section submit="{{ $isEditMaterial ? 'updateMaterial' : 'saveMaterial' }}">
             <x-slot name="title">
                 {{ $isEditMaterial ? 'Editar Material' : 'Adicionar Material' }}
             </x-slot>
             <x-slot name="description">
-                {{ $isEditMaterial ? 'Edite a quantidade de Material por Alunos.' : 'Preencha a quantidade de materiais por aluno.' }}
+                {{ $isEditMaterial ? 'Edite a quantidade de Material por Turma.' : 'Preencha a quantidade de materiais por turma.' }}
             </x-slot>
             <x-slot name="form">
                 <x-input type="hidden" id="projetoID" wire:model="projetoId" />
@@ -343,9 +345,14 @@
                     <x-input-error for="tipoMaterialId" class="mt-2" />
                 </div>
                 <div class="col-span-6 sm:col-span-4">
-                    <x-label for="quantidadePorAluno" value="Quantidade Por Aluno" />
-                    <x-input id="quantidadePorAluno" type="text" class="mt-1 block w-full" wire:model.defer="quantidadePorAluno" />
-                    <x-input-error for="quantidadePorAluno" class="mt-2" />
+                    <x-label for="quantidadePorTurma" value="Quantidade Por Turma" />
+                    <x-input id="quantidadePorTurma" type="text" class="mt-1 block w-full" wire:model.defer="quantidadePorTurma" />
+                    <x-input-error for="quantidadePorTurma" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="custoUnitario" value="Custo Total" />
+                    <x-input id="custoUnitario" type="text" class="mt-1 block w-full" wire:model.defer="custoUnitario"  />
+                    <x-input-error for="custoUnitario" class="mt-2" />
                 </div>
             </x-slot>
             <x-slot name="actions">

@@ -19,7 +19,7 @@ class DashboardComponent extends Component
         $this->projetos = $this->getProjetos();
         $this->turmas = $this->getTurmas();
         $this->cursos = \App\Models\Curso::all()->count();
-        $this->valorHoraAula = \App\Models\Projeto::selectRaw('SUM(custo_pessoal) as total')->first()->total;
+        $this->valorHoraAula = \App\Models\Projeto::selectRaw('SUM(custo_hora_aula_por_turma * quantidade_turmas) as total')->first()->total;
         $this->alunosFormados = \App\Models\Aluno::where('situacao', 'Aprovado(a)')->count();
     }
 

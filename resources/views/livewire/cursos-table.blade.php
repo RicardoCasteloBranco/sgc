@@ -98,9 +98,9 @@
                                         <th class="border border-black p-3">Projeto</th>
                                         <th class="border border-black">Data de Aprovação</th>
                                         <th class="border border-black">Turmas Previstas</th>
-                                        <th class="border border-black">Custo de Hora-aula</th>
-                                        <th class="border border-black">Custo Material</th>
-                                        <th class="border border-black">Custo Serviços</th>
+                                        <th class="border border-black">Custo com Hora-aula</th>
+                                        <th class="border border-black">Custo com Bolsa de Formação</th>
+                                        <th class="border border-black">Custo com Serviços</th>
                                         <th class="border border-black">Centro de Ensino</th>
                                         <th class="border border-black">Ações</th>
                                     </tr>
@@ -118,13 +118,13 @@
                                                 {{ $projeto->quantidade_turmas }}
                                             </td>
                                             <td class="text-right border border-black p-2">
-                                                R$ {{ number_format($projeto->custo_pessoal, 2, ',', '.') }}
+                                                R$ {{ number_format($projeto->custo_hora_aula_por_turma, 2, ',', '.') }}
                                             </td>
                                             <td class="text-right border border-black p-2">
-                                                R$ {{ number_format($projeto->custo_material, 2, ',', '.') }}
+                                                R$ {{ number_format($projeto->custo_bolsa_formacao_por_turma, 2, ',', '.') }}
                                             </td>
                                             <td class="text-right border border-black p-2">
-                                                R$ {{ number_format($projeto->custo_servicos, 2, ',', '.') }}
+                                                R$ {{ number_format($projeto->custo_servico_por_turma, 2, ',', '.') }}
                                             </td>
                                             <td class="text-center border border-black p-2">
                                                 {{ $projeto->centroEnsino->sigla }}
@@ -227,19 +227,19 @@
                     <x-input-error for="quantidade_turmas" class="mt-2" />
                 </div>
                 <div class="col-span-6 w-full">
-                    <x-label for="custo_pessoal" value="Custo de Hora-aula" />
-                    <x-input id="custo_pessoal" wire:model.defer="custo_pessoal" class="w-full" type="number" step="0.01" />
-                    <x-input-error for="custo_pessoal" class="mt-2" />
+                    <x-label for="custo_hora_aula_por_turma" value="Custo com Hora-aula" />
+                    <x-input id="custo_hora_aula_por_turma" wire:model.defer="custo_hora_aula_por_turma" class="w-full" type="number" step="0.01" />
+                    <x-input-error for="custo_hora_aula_por_turma" class="mt-2" />
                 </div>
                 <div class="col-span-6 w-full">
-                    <x-label for="custo_material" value="Custo Material" />
-                    <x-input id="custo_material" wire:model.defer="custo_material" class="w-full" type="number" step="0.01" />
-                    <x-input-error for="custo_material" class="mt-2" />
+                    <x-label for="custo_bolsa_formacao_por_turma" value="Custo com Bolsa de Formação" />
+                    <x-input id="custo_bolsa_formacao_por_turma" wire:model.defer="custo_bolsa_formacao_por_turma" class="w-full" type="number" step="0.01" />
+                    <x-input-error for="custo_bolsa_formacao_por_turma" class="mt-2" />
                 </div>
                 <div class="col-span-6 w-full">
-                    <x-label for="custo_servicos" value="Custo Serviços" />
-                    <x-input id="custo_servicos" wire:model.defer="custo_servicos" class="w-full" type="number" step="0.01" />
-                    <x-input-error for="custo_servicos" class="mt-2" />
+                    <x-label for="custo_servico_por_turma" value="Custo com Serviços" />
+                    <x-input id="custo_servico_por_turma" wire:model.defer="custo_servico_por_turma" class="w-full" type="number" step="0.01" />
+                    <x-input-error for="custo_servico_por_turma" class="mt-2" />
                 </div>
                 <div class="col-span-6 w-full">
                     <x-label for="centro_ensino_id" value="Centro de Ensino" />

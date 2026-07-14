@@ -10,9 +10,9 @@ class Projeto extends Model
         'curso_id',
         'data_aprovacao',
         'quantidade_turmas',
-        'custo_pessoal',
-        'custo_material',
-        'custo_servicos',
+        'custo_hora_aula_por_turma',
+        'custo_bolsa_formacao_por_turma',
+        'custo_servico_por_turma',
         'centro_ensino_id',
     ];
 
@@ -46,9 +46,9 @@ class Projeto extends Model
         return $this->hasMany(ParecerTecnico::class);
     }
 
-    public function materialBelico()
+    public function material()
     {
-        return $this->hasMany(MaterialBelico::class);
+        return $this->hasMany(Material::class);
     }
 
     public function cargaHorariaTotal()

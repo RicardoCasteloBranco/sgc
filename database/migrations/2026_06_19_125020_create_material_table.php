@@ -11,19 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tipo_materiais_belicos', function (Blueprint $table){
+        Schema::create('tipo_materiais', function (Blueprint $table){
             $table->id();
             $table->string('descricao');
+            $table->boolean('material_belico')->default(false);
             $table->timestamps();
         });
 
-        Schema::create('materiais_belicos', function (Blueprint $table) {
+        Schema::create('materiais', function (Blueprint $table) {
             $table->id();
-            $table->integer('quantidade_por_aluno');
+            $table->integer('quantidade_por_turma')->default(1);
             $table->unsignedBigInteger('projeto_id');
-            $table->unsignedBigInteger('tipo_material_belico_id');
+            $table->unsignedBigInteger('tipo_material_id');
+            $table->double('custo_unitario', 15, 2)->default(0);
             $table->foreign('projeto_id')->references('id')->on('projetos')->onDelete('cascade');
-            $table->foreign('tipo_material_belico_id')->references('id')->on('tipo_materiais_belicos')->onDelete('cascade');
+            $table->foreign('tipo_material_id')->references('id')->on('tipo_materiais')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -33,7 +35,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tipo_materiais_belicos');
-        Schema::dropIfExists('materiais_belicos');
+        Schema::dropIfExists('tipo_materiais');
+        Schema::dropIfExists('materiais');
     }
 };

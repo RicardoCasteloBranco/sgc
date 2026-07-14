@@ -25,9 +25,9 @@ class CursosTable extends Component
     public $projetoId;
     public $data_aprovacao;
     public $quantidade_turmas;
-    public $custo_pessoal=0.00;
-    public $custo_material=0.00;
-    public $custo_servicos=0.00;
+    public $custo_hora_aula_por_turma=0.00;
+    public $custo_bolsa_formacao_por_turma=0.00;
+    public $custo_servico_por_turma=0.00;
     public $centro_ensino_id;
     public $curso_id;
 
@@ -72,9 +72,9 @@ class CursosTable extends Component
         $this->curso_id = $projeto->curso_id;
         $this->data_aprovacao = $projeto->data_aprovacao;
         $this->quantidade_turmas = $projeto->quantidade_turmas;
-        $this->custo_pessoal = $projeto->custo_pessoal;
-        $this->custo_material = $projeto->custo_material;
-        $this->custo_servicos = $projeto->custo_servicos;
+        $this->custo_hora_aula_por_turma = $projeto->custo_hora_aula_por_turma;
+        $this->custo_bolsa_formacao_por_turma = $projeto->custo_bolsa_formacao_por_turma;
+        $this->custo_servico_por_turma = $projeto->custo_servico_por_turma;
         $this->centro_ensino_id = $projeto->centro_ensino_id;
         $this->projetoId = $projeto->id;
         
@@ -116,9 +116,9 @@ class CursosTable extends Component
             'curso_id' => 'required|exists:cursos,id',
             'data_aprovacao' => 'required|date',
             'quantidade_turmas' => 'required|integer|min:1',
-            'custo_pessoal' => 'required|numeric|min:0',
-            'custo_material' => 'required|numeric|min:0',
-            'custo_servicos' => 'required|numeric|min:0',
+            'custo_hora_aula_por_turma' => 'required|numeric|min:0',
+            'custo_bolsa_formacao_por_turma' => 'required|numeric|min:0',
+            'custo_servico_por_turma' => 'required|numeric|min:0',
             'centro_ensino_id' => 'required|exists:centro_ensinos,id',
         ]);
         
@@ -126,9 +126,9 @@ class CursosTable extends Component
             'curso_id' => $this->curso_id,
             'data_aprovacao' => $this->data_aprovacao,
             'quantidade_turmas' => $this->quantidade_turmas,
-            'custo_pessoal' => $this->custo_pessoal,
-            'custo_material' => $this->custo_material,
-            'custo_servicos' => $this->custo_servicos,
+            'custo_hora_aula_por_turma' => $this->custo_hora_aula_por_turma,
+            'custo_bolsa_formacao_por_turma' => $this->custo_bolsa_formacao_por_turma,
+            'custo_servico_por_turma' => $this->custo_servico_por_turma,
             'centro_ensino_id' => $this->centro_ensino_id,
         ];
 
@@ -176,9 +176,9 @@ class CursosTable extends Component
             'curso_id' => 'required|exists:cursos,id',
             'data_aprovacao' => 'required|date',
             'quantidade_turmas' => 'required|integer|min:1',
-            'custo_pessoal' => 'required|numeric|min:0',
-            'custo_material' => 'required|numeric|min:0',
-            'custo_servicos' => 'required|numeric|min:0',
+            'custo_hora_aula_por_turma' => 'required|numeric|min:0',
+            'custo_bolsa_formacao_por_turma' => 'required|numeric|min:0',
+            'custo_servico_por_turma' => 'required|numeric|min:0',
             'centro_ensino_id' => 'required|exists:centro_ensinos,id',
         ]);
 
@@ -186,9 +186,9 @@ class CursosTable extends Component
             'curso_id' => $this->curso_id,
             'data_aprovacao' => $this->data_aprovacao,
             'quantidade_turmas' => $this->quantidade_turmas,
-            'custo_pessoal' => $this->custo_pessoal,
-            'custo_material' => $this->custo_material,
-            'custo_servicos' => $this->custo_servicos,
+            'custo_hora_aula_por_turma' => $this->custo_hora_aula_por_turma,
+            'custo_bolsa_formacao_por_turma' => $this->custo_bolsa_formacao_por_turma,
+            'custo_servico_por_turma' => $this->custo_servico_por_turma,
             'centro_ensino_id' => $this->centro_ensino_id,
         ];
         $projeto = Projeto::findOrFail($this->projetoId);
@@ -213,7 +213,7 @@ class CursosTable extends Component
 
     public function resetFieldsProjeto()
     {
-        $this->reset(['projetoId', 'curso_id', 'data_aprovacao', 'quantidade_turmas', 'custo_pessoal', 'custo_material', 'custo_servicos', 'centro_ensino_id']);
+        $this->reset(['projetoId', 'curso_id', 'data_aprovacao', 'quantidade_turmas', 'custo_hora_aula_por_turma', 'custo_bolsa_formacao_por_turma', 'custo_servico_por_turma', 'centro_ensino_id']);
     }
 
     public function render()
