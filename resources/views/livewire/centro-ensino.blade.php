@@ -15,7 +15,7 @@
         </x-slot>
         <x-slot name="tbody">
             @foreach($centros as $centro)
-                <tr>
+                <tr wire:key="centro-ensino-{{ $centro->id }}">
                     <td>{{ $centro->nome }}</td>
                     <td>{{ $centro->sigla }}</td>
                     <td>{{ $centro->centroEnsino?->nome ?? 'Nenhuma' }}</td>

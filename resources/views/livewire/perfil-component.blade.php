@@ -13,7 +13,7 @@
                         </x-slot>
                         <x-slot name="tbody">
                             @foreach($perfis as $perfil)
-                            <tr  class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }} transition">
+                            <tr  class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }} transition" wire:key="perfil-{{ $perfil->id }}">
                                 <td>{{ $perfil->descricao }}</td>
                                 <td class="text-center">
                                     <button wire:click="editPerfil({{ $perfil->id }})" class="text-blue-600">Editar</button>
@@ -43,7 +43,7 @@
                         </x-slot>
                         <x-slot name="tbody">
                            @foreach($menus as $menu)
-                            <tr  class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }} transition">
+                            <tr  class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }} transition" wire:key="menu-{{ $menu->id }}">
                                 <td>{{ $menu->titulo }}</td>
                                 <td>{{ $menu->rota }}</td>
                                 <td class="text-center">
@@ -85,7 +85,7 @@
             </x-slot>
             <x-slot name="tbody">
                @foreach($acessos as $acesso)
-                <tr  class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }} transition">
+                <tr  class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }} transition" wire:key="acesso-{{$acesso->id}}">
                     <td>{{ $acesso->perfil->descricao }}</td>
                     <td>{{ $acesso->menu->titulo }}</td>
                     <td class="text-center">

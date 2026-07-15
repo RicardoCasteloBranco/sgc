@@ -66,4 +66,9 @@ class Projeto extends Model
         $id = $ids->search($this->id) + 1;
         return $this->curso->sigla." ".$id.'/'.date('Y',strtotime($this->data_aprovacao));
     }
+
+    public function custoMaterial()
+    {
+        return $this->hasMany(Material::class)->sum('custo_unitario');
+    }
 }

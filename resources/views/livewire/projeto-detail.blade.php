@@ -9,14 +9,15 @@
                     <p><strong>Custo com Hora-aula:</strong> R$ {{ number_format($projeto->custo_hora_aula_por_turma, 2, ',', '.') }}</p>
                     <p><strong>Custo com Bolsa de Formação:</strong> R$ {{ number_format($projeto->custo_bolsa_formacao_por_turma, 2, ',', '.') }}</p>
                     <p><strong>Custo com Serviços:</strong> R$ {{ number_format($projeto->custo_servico_por_turma, 2, ',', '.') }}</p>
+                    <p><strong>Custo com Materiais:</strong> R$ {{ number_format($projeto->custoMaterial(), 2, ',','.') }}
         </div>
         <div class="flex flex-col lg:flex-row gap-6 items-stretch h-auto">
             <div class="w-full lg:w-1/2 bg-white text-black shadow p-5 rounded-lg">
-                <div class="rounded-lg shadow border max-h-64 overflow-y-auto">
+                <div class="h-72 overflow-y-auto" style="max-height: 20rem" >
                     <h1 class="ml-4 text-lg font-semibold uppercase">Materiais</h1>
                     <h4 class="ml-4 mb-4 text-sm">Lista de Materiais para o Projeto</h4>
-                    <table class="w-full" >
-                        <thead class="bg-black text-white sticky top-0">
+                    <x-table class="max-h-28">
+                        <x-slot name="theaders">
                             <tr class="text-sm font-semibold uppercase">
                                 <th class="p-3">Descrição</th>
                                 <th class="p-3">Unidade</th>
@@ -24,10 +25,10 @@
                                 <th class="p-3">Custo/Turma</th>
                                 <th class="p-3">Ações</th>
                             </tr>
-                        </thead>
-                        <tbody class="text-sm">
+                        </x-slot>
+                        <x-slot name="tbody">
                             @foreach($materiais as $material)
-                            <tr class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }} transition">
+                            <tr class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }} transition" wire:key="material-{{ $material->id }}">
                                 <td class="p-3">{{ $material->tipoMaterial->descricao }}</td>
                                 <td class="p-3">{{ $material->tipoMaterial->unidade_medida }}</td>
                                 <td class="p-3">{{ $material->quantidade_por_turma }}</td>
@@ -42,8 +43,8 @@
                                 </td>
                             </tr>
                             @endforeach
-                        </tbody>
-                    </table>
+                        </x-slot>
+                    </x-table>
                 </div>
                 <div class="m-4 px-1">
                     <x-button wire:click="createMaterial">
@@ -65,7 +66,7 @@
                         </x-slot>
                         <x-slot name="tbody">
                             @foreach($disciplinas as $disciplina)
-                                <tr class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }} transition">
+                                <tr class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }} transition" wire:key="disciplina-{{ $disciplina->id }}">
                                     <td class="text-center p-2">{{ $disciplina->nome }}</td>
                                     <td class="text-center p-2">{{ $disciplina->abreviacao }}</td>
                                     <td class="text-center p-2">{{ $disciplina->carga_horaria }}</td>
@@ -119,7 +120,7 @@
             </x-slot>
             <x-slot name="tbody">
                 @foreach($projeto->turmas as $turma)
-                    <tr class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }}">
+                    <tr class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }}" wire:key="turma-{{ $turma->id }}">
                         <td class="text-center p-2">{{ date('d/m/Y', strtotime($turma->data_inicio)) }}</td>
                         <td class="text-center p-2">{{ is_null($turma->data_fim) ? 'N/A' : date('d/m/Y', strtotime($turma->data_fim)) }}</td>
                         <td class="text-center p-2">{{ $turma->carga_horaria_diaria }}</td>
@@ -165,7 +166,7 @@
             </x-slot>
             <x-slot name="tbody">
                 @foreach($projeto->pareceresTecnicos as $parecer)
-                    <tr class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }}">
+                    <tr class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }}" wire:key="parecer-tecnico-{{ $parecer->id }}">
                         <td class="text-center p-2">{{ $parecer->numero }}</td>
                         <td class="text-center p-2">{{ date('d/m/Y', strtotime($parecer->validade)) }}</td>
                         <td class="text-center p-2">

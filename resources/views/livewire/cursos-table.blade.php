@@ -17,7 +17,7 @@
         <x-slot name="tbody">
             <!-- Loop de Cursos -->
             @foreach($cursos as $curso)
-                <tr class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }} transition">
+                <tr class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }} transition" wire:key="curso-{{ $curso->id }}">
                     <td class="p-3 cursor-pointer" wire:click="toggle({{ $curso->id }})">{{ $curso->nome }}</td>
                     <td class="text-center">{{ $curso->sigla }}</td>
                     <td class="text-center">{{ $curso->processo_eletronico }}</td>
@@ -52,7 +52,7 @@
                                         <th class="border border-black">Ações</th>
                                     </tr>
                                     @foreach($curso->projetos->filter(fn($p)=>!$p->encerrado()) as $projeto)
-                                        <tr>
+                                        <tr wire:key="projeto-andamento-{{ $projeto->id }}">
                                             <td class="border border-black p-2">
                                                 {{ $projeto->numeroProjeto() }}
                                             </td>
@@ -106,7 +106,7 @@
                                         <th class="border border-black">Ações</th>
                                     </tr>
                                     @foreach($curso->projetos->filter(fn($p)=>$p->encerrado()) as $projeto)
-                                        <tr>
+                                        <tr wire:key="projeto-encerrado-{{ $projeto->id }}">
                                             <td class="text-center border border-black p-2">
                                                 {{ $projeto->numeroProjeto() }}
                                             </td>

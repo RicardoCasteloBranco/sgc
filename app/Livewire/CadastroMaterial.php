@@ -64,7 +64,7 @@ class CadastroMaterial extends Component
             'descricao' => 'required',
         ]);
         
-        $tipo = TipoMaterial::findOrFail($this->id);
+        $tipo = TipoMaterial::findOrFail($this->tipoMaterialId);
         $tipo->update([
             'descricao' => $this->descricao,
             'material_belico' => $this->material_belico ?? false,

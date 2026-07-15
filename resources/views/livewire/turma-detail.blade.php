@@ -4,7 +4,7 @@
             <!-- Detalhes do Projeto -->
             <h3 class="text-2xl font-bold mb-4 uppercase">Gerenciar Turma</h3>
             <p><strong>Centro de Ensino:</strong> {{ $turma->projeto->centroEnsino->nome }}</p>
-            <p><strong>Projeto:</strong> {{ $turma->projeto->numeroProjeto() }}</p>
+            <p><strong>Projeto:</strong> <a href="{{ route('projeto',['projeto'=>$turma->projeto->id]) }}" >{{ $turma->projeto->numeroProjeto() }}</a></p>
             <p><strong>Turma:</strong> {{ $turma->numeroTurma() }}</p>
             <p><strong>Coordenador: </strong>@if($turma->coordenador){{ $turma->coordenador->graduacao }} {{ $turma->coordenador->pessoa->nome }}@endif
             <!-- Fim dos detalhes do Projeto -->
@@ -30,7 +30,7 @@
             </x-slot>
             <x-slot name="tbody">
                 @foreach($turma->alunos as $aluno)
-                <tr class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }}">
+                <tr class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }}" wire:key="aluno-{{$aluno->id}}">
                     <td>{{ $aluno->graduacao }}</td>
                     <td>{{ $aluno->pessoa->nome }}</td>
                     <td>{{ $aluno->pessoa->matricula }}
