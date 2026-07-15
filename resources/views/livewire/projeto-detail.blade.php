@@ -1,8 +1,6 @@
 <div class="p-6">
     <div class="w-full">
-        <div class="flex flex-col lg:flex-row gap-6 items-stretch h-auto">
-            <div class="w-full lg:w-1/2 bg-white text-black shadow p-5 rounded-lg">
-                <div class="ml-4">
+        <div class="ml-4">
                     <h3 class="text-2xl font-bold mb-4 uppercase">Detalhes do Projeto</h3>
                     <p><strong>Nome:</strong> {{ $projeto->curso->nome }}</p>
                     <p><strong>Centro de Ensino:</strong> {{ $projeto->centroEnsino->nome }}</p>
@@ -11,20 +9,27 @@
                     <p><strong>Custo com Hora-aula:</strong> R$ {{ number_format($projeto->custo_hora_aula_por_turma, 2, ',', '.') }}</p>
                     <p><strong>Custo com Bolsa de Formação:</strong> R$ {{ number_format($projeto->custo_bolsa_formacao_por_turma, 2, ',', '.') }}</p>
                     <p><strong>Custo com Serviços:</strong> R$ {{ number_format($projeto->custo_servico_por_turma, 2, ',', '.') }}</p>
-                    <p><strong>Materiais:</strong></p>
-                </div>
-                <div class="mt-4">
-                    <x-table>
-                        <x-slot name="theaders">
-                            <th class="p=3">Descrição</th>
-                            <th class="p-3">Qtd/Turma</th>
-                            <th class="p-3">Custo/Turma</th>
-                            <th class="p-3">Ações</th>
-                        </x-slot>
-                        <x-slot name="tbody">
+        </div>
+        <div class="flex flex-col lg:flex-row gap-6 items-stretch h-auto">
+            <div class="w-full lg:w-1/2 bg-white text-black shadow p-5 rounded-lg">
+                <div class="rounded-lg shadow border max-h-64 overflow-y-auto">
+                    <h1 class="ml-4 text-lg font-semibold uppercase">Materiais</h1>
+                    <h4 class="ml-4 mb-4 text-sm">Lista de Materiais para o Projeto</h4>
+                    <table class="w-full" >
+                        <thead class="bg-black text-white sticky top-0">
+                            <tr class="text-sm font-semibold uppercase">
+                                <th class="p-3">Descrição</th>
+                                <th class="p-3">Unidade</th>
+                                <th class="p-3">Qtd/Turma</th>
+                                <th class="p-3">Custo/Turma</th>
+                                <th class="p-3">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm">
                             @foreach($materiais as $material)
                             <tr class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }} transition">
                                 <td class="p-3">{{ $material->tipoMaterial->descricao }}</td>
+                                <td class="p-3">{{ $material->tipoMaterial->unidade_medida }}</td>
                                 <td class="p-3">{{ $material->quantidade_por_turma }}</td>
                                 <td class="p-3">R$ {{ number_format($material->custo_unitario, 2, ',', '.') }}</td>
                                 <td class="p-3">
@@ -37,13 +42,13 @@
                                 </td>
                             </tr>
                             @endforeach
-                        </x-slot>
-                    </x-table>
-                    <div class="m-4 px-1">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="m-4 px-1">
                     <x-button wire:click="createMaterial">
                         Inserir Material
                     </x-button>
-                </div>
                 </div>
             </div>
             <div class="w-full lg:w-1/2 bg-white p-5 rounded-lg shadow flex flex-col">

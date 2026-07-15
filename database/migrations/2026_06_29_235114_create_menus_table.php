@@ -21,7 +21,7 @@ return new class extends Migration
         DB::table('menus')->insert([
             ['titulo' => 'Cursos', 'rota' => 'curso'],
             ['titulo' => 'Calendário', 'rota' => 'calendario'],
-            ['titulo' => 'Cadastro de Material Bélico', 'rota' => 'cadastro'],
+            ['titulo' => 'Cadastro de Material', 'rota' => 'cadastro'],
             ['titulo' => 'Adicionar Usuário', 'rota' => 'register'],
             ['titulo' => 'Perfil de Acesso ao Sistema', 'rota' => 'perfil'],
         ]);

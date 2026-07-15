@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('descricao');
             $table->boolean('material_belico')->default(false);
+            $table->string('unidade_medida')->nullable();
             $table->timestamps();
         });
 

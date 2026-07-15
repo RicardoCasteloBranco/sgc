@@ -6,6 +6,7 @@
     <x-table>
         <x-slot name="theaders">
             <th class="p-3 text-center">Descrição</th>
+            <th class="p-3 text-center">Unidade de Medida</th>
             <th class="p-3 text-center">Material Bélico</th>
             <th class="p-3 text-center">Ações</th> 
         </x-slot>
@@ -13,12 +14,17 @@
         <x-slot name="tbody">
             <!-- Loop de Cursos -->
             @foreach($tiposMateriais as $tipo)
-                <tr class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }} transition">
+                <tr wire:key="tipo-material-{{ $tipo->id }}"
+                    class="{{ $loop->even ? 'bg-blue-100' : 'bg-white' }}">
                     <td class="p-3 text-center">{{ $tipo->descricao }}</td>
+                    <td class="p-3 text-center">{{ $tipo->unidade_medida }}</td>
                     <td class="p-3 text-center">{{ $tipo->material_belico ? 'Sim' : 'Não' }}</td>
                     <td class="p-3 text-center">
-                        <button wire:click="editTipoMaterial({{ $tipo->id }})" class="text-blue-600">Editar</button>
+                        <button wire:click="editTipoMaterial({{ $tipo->id }})">
+                            Editar
+                        </button>
                     </td>
+                </tr>
             @endforeach
             <!-- Fim do loop de Cursos -->
         </x-slot>
@@ -36,9 +42,14 @@
             </x-slot>
             <x-slot name="form">
                 <div class="col-span-6 w-full">
-                    <x-label for="descricao" value="descricao" />
+                    <x-label for="descricao" value="Descricao" />
                     <x-input id="descricao" wire:model.defer="descricao" class="w-full" type="text" />
                     <x-input-error for="descricao" class="mt-2" />
+                </div>
+                <div class="col-span-6 w-full">
+                    <x-label for="unidade_medida" value="Unidade de Medida" />
+                    <x-input id="unidade_medida" wire:model.defer="unidade_medida" class="w-full" type="text" />
+                    <x-input-error for="unidade_medida" class="mt-2" />
                 </div>
                 <div class="col-span-6 w-full">
                     <x-label for="material_belico" value="Material Bélico" />

@@ -9,7 +9,8 @@ class TipoMaterial extends Model
     protected $table = "tipo_materiais";
     protected $fillable = [
         'descricao',
-        'material_belico'
+        'material_belico',
+        'unidade_medida',
     ];
 
     public function materiais()

@@ -153,6 +153,7 @@ class ProjetoDetail extends Component
     {
         $material = Material::findOrFail($id);
         $this->materialId = $material->id;
+        $this->tipoMaterialId = $material->tipo_material_id;
         $this->projetoId = $material->projeto_id;
         $this->quantidadePorTurma = $material->quantidade_por_turma;
         $this->custoUnitario = $material->custo_unitario;
