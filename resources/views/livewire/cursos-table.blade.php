@@ -40,17 +40,24 @@
                             <h4 class="font-bold mt-6 mb-2">Projetos em andamento</h4>
                             <div>
                                 <table class="w-full border-collapse border border-gray-50">
+                                   <thead> 
                                     <tr class="bg-gray-500 text-white uppercase">
-                                        <th class="border border-black p-3">Projeto</th>
-                                        <th class="border border-black">Data de Aprovação</th>
-                                        <th class="border border-black">Turmas Previstas</th>
-                                        <th class="border border-black">Carga Horária</th>
-                                        <th class="border border-black">Custo com Hora-aula</th>
-                                        <th class="border border-black">Custo com Serviços</th>
-                                        <th class="border border-black">Custo com Bolsa Formação</th>
-                                        <th class="border border-black">Centro de Ensino</th>
-                                        <th class="border border-black">Ações</th>
+                                        <th class="border border-black p-3" rowspan="2">Projeto</th>
+                                        <th class="border border-black" rowspan="2">Data de Aprovação</th>
+                                        <th class="border border-black" rowspan="2">Turmas Previstas</th>
+                                        <th class="border border-black" rowspan="2">Carga Horária</th>
+                                        <th class="border border-black p-3" colspan="4">Custos</th>
+                                        <th class="border border-black" rowspan="2">Centro de Ensino</th>
+                                        <th class="border border-black" rowspan="2">Ações</th>
                                     </tr>
+                                    <tr class="bg-gray-500 text-white uppercase">
+                                        <th class="border border-black p-2">Hora-aula</th>
+                                        <th class="border border-black">Serviços</th>
+                                        <th class="border border-black">Bolsa Formação</th>
+                                        <th class="border border-black">Material</th>
+                                    <tr>
+                                    </thead>
+                                    <tbody>
                                     @foreach($curso->projetos->filter(fn($p)=>!$p->encerrado()) as $projeto)
                                         <tr wire:key="projeto-andamento-{{ $projeto->id }}">
                                             <td class="border border-black p-2">
@@ -76,6 +83,9 @@
                                             <td class="text-right border border-black p-2">
                                                 R$ {{ number_format($projeto->custo_servicos_por_turma, 2, ',', '.') }}
                                             </td>
+                                            <td class="text-right border border-black p-2">
+                                                R$ {{ number_format($projeto->custoMaterial(), 2, ',', '.') }}
+                                            </td>
                                             <td class="text-center border border-black p-2">
                                                 {{ $projeto->centroEnsino->sigla }}
                                             </td>
@@ -89,22 +99,30 @@
                                             </td>
                                         </tr>
                                     @endforeach
+                                    </tbody>
                                 </table>
                             </div>
                             <h4 class="font-bold mt-6 mb-2">Projetos encerrados</h4>
                             <div>
                                 <table class="w-full border-collapse border border-gray-50">
+                                    <thead> 
                                     <tr class="bg-gray-500 text-white uppercase">
-                                        <th class="border border-black p-3">Projeto</th>
-                                        <th class="border border-black">Data de Aprovação</th>
-                                        <th class="border border-black">Turmas Executadas</th>
-                                        <th class="border border-black">Carga Horária</th>
-                                        <th class="border border-black">Custo com Hora-aula</th>
-                                        <th class="border border-black">Custo com Serviços</th>
-                                        <th class="border border-black">Custo com Bolsa de Formação</th>
-                                        <th class="border border-black">Centro de Ensino</th>
-                                        <th class="border border-black">Ações</th>
+                                        <th class="border border-black p-3" rowspan="2">Projeto</th>
+                                        <th class="border border-black" rowspan="2">Data de Aprovação</th>
+                                        <th class="border border-black" rowspan="2">Turmas Executadas</th>
+                                        <th class="border border-black" rowspan="2">Carga Horária</th>
+                                        <th class="border border-black p-3" colspan="4">Custos</th>
+                                        <th class="border border-black" rowspan="2">Centro de Ensino</th>
+                                        <th class="border border-black" rowspan="2">Ações</th>
                                     </tr>
+                                    <tr class="bg-gray-500 text-white uppercase">
+                                        <th class="border border-black p-2">Hora-aula</th>
+                                        <th class="border border-black">Serviços</th>
+                                        <th class="border border-black">Bolsa Formação</th>
+                                        <th class="border border-black">Material</th>
+                                    <tr>
+                                    </thead>
+                                    <tbody>
                                     @foreach($curso->projetos->filter(fn($p)=>$p->encerrado()) as $projeto)
                                         <tr wire:key="projeto-encerrado-{{ $projeto->id }}">
                                             <td class="text-center border border-black p-2">
@@ -129,6 +147,9 @@
                                             </td>
                                             <td class="text-right border border-black p-2">
                                                 R$ {{ number_format($projeto->custo_bolsa_formacao_por_turma, 2, ',', '.') }}
+                                            </td>
+                                            <td class="text-right border border-black p-2">
+                                                R$ {{ number_format($projeto->custoMaterial(), 2, ',', '.') }}
                                             </td>
                                             <td class="text-center border border-black p-2">
                                                 {{ $projeto->centroEnsino->sigla }}

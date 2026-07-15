@@ -1,6 +1,6 @@
 <div class="p-6">
     <div class="w-full">
-        <div class="ml-4">
+        <div class="mb-6 p-4 bg-white rounded-lg">
                     <h3 class="text-2xl font-bold mb-4 uppercase">Detalhes do Projeto</h3>
                     <p><strong>Nome:</strong> {{ $projeto->curso->nome }}</p>
                     <p><strong>Centro de Ensino:</strong> {{ $projeto->centroEnsino->nome }}</p>
@@ -13,9 +13,9 @@
         </div>
         <div class="flex flex-col lg:flex-row gap-6 items-stretch h-auto">
             <div class="w-full lg:w-1/2 bg-white text-black shadow p-5 rounded-lg">
-                <div class="h-72 overflow-y-auto" style="max-height: 20rem" >
-                    <h1 class="ml-4 text-lg font-semibold uppercase">Materiais</h1>
-                    <h4 class="ml-4 mb-4 text-sm">Lista de Materiais para o Projeto</h4>
+                <h1 class="ml-6 text-lg font-semibold uppercase">Materiais</h1>
+                <h4 class="ml-6 mb-4 text-sm">Lista de Materiais para o Projeto</h4>
+                <div class="h-72 overflow-y-auto" style="max-height: 25rem" >
                     <x-table class="max-h-28">
                         <x-slot name="theaders">
                             <tr class="text-sm font-semibold uppercase">
