@@ -8,20 +8,22 @@
     <!-- Tabela de centros de ensino -->
     <x-table>
         <x-slot name="theaders">
-            <x-table.heading>Supervisor</x-table.heading>
-            <x-table.heading>Centro</x-table.heading>
-            <x-table.heading>Ações</x-table.heading>
+            <tr>
+                <th>Supervisor</th>
+                <th>Centro</th>
+                <th>Ações</th>
+            </tr>
         </x-slot>
         <x-slot name="tbody">
             @foreach($supervisores as $supervisor)
-                <x-table.row>
-                    <x-table.cell>{{ $supervisor->user->name }}</x-table.cell>
-                    <x-table.cell>{{ $supervisor->centroEnsino->sigla }}</x-table.cell>
-                    <x-table.cell>
+                <tr>
+                    <td>{{ $supervisor->user->name }}</td>
+                    <td>{{ $supervisor->centroEnsino->sigla }}</td>
+                    <td>
                         <x-secondary-button wire:click="edit({{ $supervisor->id }})">Editar</x-secondary-button>
                         <x-danger-button wire:click="delete({{ $supervisor->id }})">Excluir</x-danger-button>
-                    </x-table.cell>
-                </x-table.row>
+                    </td>
+                </tr>
             @endforeach
         </x-slot>
     </x-table>
