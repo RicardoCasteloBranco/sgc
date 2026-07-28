@@ -44,7 +44,7 @@ class Turma extends Model
 
     public function coordenador()
     {
-        return $this->hasOne(Coordenador::class);
+        return $this->hasOne(Coordenador::class)->latestOfMany('data_designacao');
     }
 
     public function alunos()
