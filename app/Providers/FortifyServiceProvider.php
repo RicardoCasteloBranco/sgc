@@ -49,10 +49,13 @@ class FortifyServiceProvider extends ServiceProvider
             * Procura um perfil pertencente ao sistema.
             */
             $ldapUser = collect($ldapData['data'])->first(function ($perfil) {
-                foreach ($perfil as $linha) {
+                foreach ($perfil as $key => $linha) {
 
                     if (str_starts_with($linha, 'Sistema:')) {
-                        return trim(substr($linha, 9)) === config('app.name');
+                        if (trim(substr($linha, 9)) === config('app.name')
+                            && trim(substr($perfil[$key + 1],8)) === "ATIVO") {
+                            return true;
+                        }
                     }
                 }
 

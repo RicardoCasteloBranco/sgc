@@ -42,19 +42,14 @@
             @endif
         </header>
         <div class="flex items-center justify-center w-full transition-opacity opacity-100 duration-750 lg:grow starting:opacity-0">
-            <main class="flex max-w-[335px] w-full flex-col-reverse lg:max-w-4xl lg:flex-row h-full">
+            <main class="flex max-w-[335px] w-full flex-col-reverse lg:max-w-4xl lg:flex-row items-stretch">
                 <!-- Caixa da Esquerda -->
-                <div class="text-[13px] leading-[20px] flex-1 p-6 pb-12 lg:p-20 bg-white dark:bg-[#161615] dark:text-[#EDEDEC] shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d] rounded-bl-lg rounded-br-lg lg:rounded-tl-lg lg:rounded-br-none h-full">
-                   <div style="
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        height: 100%;
-                        flex-direction: column;">
-                     <h1 style="font-size: 110px; font-weight: bold; color: #D4AF37;">
+                <div class="text-[13px] leading-[20px] flex-1 w-full lg:w-1/2 aspect-[335/376] p-6 lg:p-12 bg-white dark:bg-[#161615] dark:text-[#EDEDEC] shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d] rounded-b-lg lg:rounded-b-none lg:rounded-l-lg overflow-hidden flex items-center justify-center">
+                   <div class="flex flex-col items-center justify-center text-center">
+                     <h1 style="font-size: 100px; font-weight: bold; color: #D4AF37; line-height: 1;">
                             SGE
                         </h1>
-                        <h2 style="font-size: 16px; font-weight: bold; color: #321E69; margin-top: -12px;">
+                        <h2 style="font-size: 16px; font-weight: bold; color: #321E69; margin-top: 8px;">
                             <strong>Sistema de Gestão de Ensino da PMPE</strong>
                         </h2>
                     </div>
@@ -62,7 +57,7 @@
                 <!-- Fim da Caixa da Esquerda -->
                 <!-- Caixa da Direita -->
                 <div style="background-color: #321E69;"
-                    class="relative lg:-ml-px -mb-px lg:mb-0 rounded-t-lg lg:rounded-t-none lg:rounded-r-lg aspect-[335/376] lg:aspect-auto w-full lg:w-[438px] shrink-0 overflow-hidden flex items-center justify-center">
+                    class="relative lg:-ml-px -mb-px lg:mb-0 rounded-t-lg lg:rounded-t-none lg:rounded-r-lg aspect-[335/376] flex-1 w-full lg:w-1/2 shrink-0 overflow-hidden flex items-center justify-center">
                     <x-application-logo />
                 </div>
             </main>
