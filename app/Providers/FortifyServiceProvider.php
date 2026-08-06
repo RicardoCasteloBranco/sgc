@@ -50,10 +50,9 @@ class FortifyServiceProvider extends ServiceProvider
             */
             $ldapUser = collect($ldapData['data'])->first(function ($perfil) {
                 foreach ($perfil as $key => $linha) {
-
                     if (str_starts_with($linha, 'Sistema:')) {
                         if (trim(substr($linha, 9)) === config('app.name')
-                            && trim(substr($perfil[$key + 1],8)) === "ATIVO") {
+                            && trim(substr($perfil[$key + 1],8)) == "ATIVO") {
                             return true;
                         }
                     }

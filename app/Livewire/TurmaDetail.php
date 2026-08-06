@@ -7,14 +7,12 @@ use App\Models\Turma;
 use App\Models\Pessoa;
 use App\Models\Aluno;
 use App\Models\Coordenador;
-use Livewire\WithFileUploads;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
+use Livewire\Attributes\On;
 
 class TurmaDetail extends Component
 {
-    use WithFileUploads;
-
     public $turma;
     public $alunos;
     public $turmaId;
@@ -26,7 +24,6 @@ class TurmaDetail extends Component
     
     //Variáveis do arquivo da lista de alunos
     public $openModalListaAlunos = false;
-    public $arquivo;
 
     //Variáveis para operações com alunos
     public $openModalAluno = false;
@@ -103,34 +100,48 @@ class TurmaDetail extends Component
         $this->resetFieldsCoordenador();
     }
 
-    public function carregarTurma()
+    #[On('carregarTurma')]
+    public function carregarTurma($dados = [])
     {
-        $this->validate([
-            'arquivo' => 'required|file|max:2048|mimes:csv',
-        ]);
-
-        $caminho = $this->arquivo->getRealPath();
-
-        $arrayDados = array_map('str_getcsv', file($caminho));
-        $cabecalhoArquivo = array_shift($arrayDados);
-        foreach($arrayDados as $linha){
-            $pessoa = Pessoa::where('matricula', preg_replace("/[^0-9]/","",$linha[1]))->first();
-            if(!$pessoa){
-                $pessoa = Pessoa::create([
-                    'matricula' => preg_replace("/[^0-9]/", "", $linha[1]),
-                    'nome' => $linha[2],
-                ]);
-            }
-            Aluno::create([
-                'graduacao' => $linha[0],
-                'pessoa_id' => $pessoa->id,
-                'turma_id' => $this->turma->id,
-                'situacao' => "Matriculado(a)"
-            ]);
+        if (empty($dados) || !is_array($dados)) {
+            session()->flash('message', 'Nenhum dado foi recebido do arquivo.');
+            return;
         }
-        session()->flash('message','Arquivo carregado com êxito');
+
+        $contador = 0;
+        foreach ($dados as $linha) {
+            if (!isset($linha['matricula'], $linha['nome'], $linha['graduacao'])) {
+                continue;
+            }
+
+            $matricula = preg_replace("/[^0-9]/", "", $linha['matricula']);
+
+            // Pula linhas sem matrícula válida
+            if ($matricula === '') {
+                continue;
+            }
+
+            $pessoa = Pessoa::firstOrCreate(
+                ['matricula' => $matricula],
+                ['nome' => $linha['nome']]
+            );
+
+            Aluno::firstOrCreate(
+                [
+                    'pessoa_id' => $pessoa->id,
+                    'turma_id' => $this->turma->id,
+                ],
+                [
+                    'graduacao' => $linha['graduacao'],
+                    'situacao' => "Matriculado(a)",
+                ]
+            );
+
+            $contador++;
+        }
+
+        session()->flash('message', "Arquivo carregado com êxito: {$contador} aluno(s) cadastrado(s).");
         $this->openModalListaAlunos = false;
-        $this->reset(['arquivo']);
     }
 
     public function adicionarAluno()

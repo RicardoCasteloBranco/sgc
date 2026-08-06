@@ -74,7 +74,7 @@
                     </div>
 
                     <!-- Formulário -->
-                    <form wire:submit.prevent="carregarTurma" enctype="multipart/form-data">
+                    <form enctype="multipart/form-data">
                         <input type="hidden" name="turma_id" value="{{ $turma->id }}"/>
 
                         <div class="p-6 space-y-4">
@@ -84,18 +84,12 @@
                                     Arquivo CSV
                                 </label>
 
-                                <input id="arquivo" type="file" wire:model="arquivo"
-                                    accept=".csv" class="mt-1 block w-full border border-gray-300 rounded-md p-2" >
+                                <input id="arquivo" type="file"
+                                    accept=".csv" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
 
-                                <div wire:loading wire:target="arquivo" class="text-blue-500 text-sm mt-2">
-                                    Enviando arquivo...
-                                </div>
-
-                                @error('arquivo')
-                                    <span class="text-red-500 text-sm">
-                                        {{ $message }}
-                                    </span>
-                                @enderror
+                                <p class="text-sm text-gray-500 mt-2">
+                                    Selecione o arquivo CSV; os dados serão lidos no navegador e enviados ao servidor.
+                                </p>
                             </div>
 
                         </div>
@@ -105,8 +99,8 @@
                             <x-secondary-button wire:click="$set('openModalListaAlunos', false)">
                                 Cancelar
                             </x-secondary-button>
-                            <x-button type="submit" wire:loading.attr="disabled" wire:target="arquivo">
-                                Salvar
+                            <x-button type="button" wire:click="$set('openModalListaAlunos', false)">
+                                Fechar
                             </x-button>
                         </div>
                     </form>
@@ -237,3 +231,108 @@
      </x-dialog-modal>
      <!-- Fim do Modal para apagar material -->
 </div>
+<script>
+if (!window.__sgcHandleArquivoChange) {
+    window.__sgcHandleArquivoChange = function (e) {
+
+        const input = e.target;
+
+        if (!input || input.id !== 'arquivo') return;
+
+        const file = input.files[0];
+
+        if (!file) return;
+
+        const reader = new FileReader();
+
+        reader.onload = function (event) {
+
+            // Remove BOM se existir
+            const texto = String(event.target.result).replace(/^\uFEFF/, '');
+
+            const linhas = texto.trim().split(/\r?\n/).filter(l => l.trim() !== '');
+
+            if (linhas.length < 2) {
+                alert('O arquivo precisa ter um cabeçalho e pelo menos uma linha de dados.');
+                return;
+            }
+
+            // Detecta o delimitador (vírgula ou ponto e vírgula)
+            const primeiraLinha = linhas[0];
+            const contagemVirgula = (primeiraLinha.match(/,/g) || []).length;
+            const contagemPontoVirgula = (primeiraLinha.match(/;/g) || []).length;
+            const delimitador = contagemPontoVirgula > contagemVirgula ? ';' : ',';
+
+            const normalizar = s => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+            const colunas = primeiraLinha.split(delimitador).map(c => c.trim());
+
+            // Descobre os índices das colunas esperadas no cabeçalho (apenas como dica)
+            let idxMatricula, idxNome, idxGraduacao;
+
+            colunas.forEach((coluna, index) => {
+                const n = normalizar(coluna);
+                if (n.includes('matric')) idxMatricula = index;
+                else if (n === 'nome' || n.includes('nome')) idxNome = index;
+                else if (n.includes('graduac')) idxGraduacao = index;
+            });
+
+            let dados = [];
+
+            for (let i = 1; i < linhas.length; i++) {
+
+                const valores = linhas[i].split(delimitador).map(v => v.trim());
+
+                if (valores.length < 3) continue;
+
+                // SEMPRE detecta a coluna numérica (matrícula) por linha
+                let idxNum = -1;
+                for (let j = 0; j < valores.length; j++) {
+                    if (/^\d+$/.test(valores[j])) { idxNum = j; break; }
+                }
+
+                if (idxNum === -1) continue; // linha sem matrícula válida
+
+                const matricula = valores[idxNum];
+
+                // Usa o cabeçalho se reconhecido, senão detecta por heurística
+                let nome, graduacao;
+
+                if (idxNome !== undefined && idxGraduacao !== undefined && idxNome !== idxNum && idxGraduacao !== idxNum) {
+                    nome = valores[idxNome] !== undefined ? valores[idxNome] : '';
+                    graduacao = valores[idxGraduacao] !== undefined ? valores[idxGraduacao] : '';
+                } else {
+                    // Heurística: entre as colunas não numéricas, a graduação contém "PM" ou é a mais curta
+                    const restantes = valores.filter((_, j) => j !== idxNum);
+                    let idxGrad = restantes.findIndex(v => /PM|Ten|Maj|Cap|Asp|Cad|Sgt|Cb|Sd|Al/i.test(v));
+                    if (idxGrad === -1) {
+                        let menor = 0;
+                        for (let j = 1; j < restantes.length; j++) {
+                            if (restantes[j].length < restantes[menor].length) menor = j;
+                        }
+                        idxGrad = menor;
+                    }
+                    graduacao = restantes[idxGrad] || '';
+                    nome = restantes.filter((_, j) => j !== idxGrad)[0] || '';
+                }
+
+                if (matricula !== '' && nome !== '') {
+                    dados.push({ matricula, nome, graduacao });
+                }
+            }
+
+            if (dados.length === 0) {
+                alert('Nenhuma linha válida encontrada. Verifique se o CSV possui cabeçalho com as colunas: graduacao, nome, matricula (separadas por vírgula ou ponto e vírgula).');
+                return;
+            }
+
+            Livewire.dispatch('carregarTurma', { dados: dados });
+
+        };
+
+        reader.readAsText(file, 'UTF-8');
+    };
+
+    document.addEventListener('change', window.__sgcHandleArquivoChange);
+}
+</script>
