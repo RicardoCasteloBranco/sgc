@@ -11,9 +11,7 @@ class ParecerTecnico extends Model
     protected $fillable = [
         'numero',
         'validade',
-        'file_data',
-        'name',
-        'mime_type',
+        'protocolo_eletronico',
         'projeto_id',
     ];
 

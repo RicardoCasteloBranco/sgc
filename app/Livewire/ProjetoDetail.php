@@ -3,7 +3,6 @@
 namespace App\Livewire;
 
 use Livewire\Component;
-use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use App\Models\Projeto;
 use App\Models\Unidade;
@@ -15,7 +14,7 @@ use App\Models\TipoMaterial;
 
 class ProjetoDetail extends Component
 {
-    use WithFileUploads, WithPagination;
+    use WithPagination;
 
     public $isEditTurma = false;
     public $openModalTurma = false;
@@ -25,6 +24,7 @@ class ProjetoDetail extends Component
     public $openModalDeletaMaterial = false;
     public $isEditDisciplina = false;
     public $isEditMaterial = false;
+    public $isEditParecer = false;
     public $projetoId;
     public Projeto $projeto;
     public $unidades;
@@ -56,9 +56,10 @@ class ProjetoDetail extends Component
     public $referencias;
 
     //campos do parecerTécnico
+    public $parecerId;
     public $numero;
     public $validade;
-    public $arquivo;
+    public $protocoloEletronico;
 
     //campos do formulário Material
     public $materialId;
@@ -159,6 +160,18 @@ class ProjetoDetail extends Component
         $this->custoUnitario = $material->custo_unitario;
         $this->openModalMaterial = true;
         $this->isEditMaterial = true;
+    }
+
+    public function editParecer($id)
+    {
+        $parecer = ParecerTecnico::findOrFail($id);
+        $this->numero = $parecer->numero;
+        $this->validade = $parecer->validade;
+        $this->protocoloEletronico = $parecer->protocolo_eletronico;
+        $this->projetoId = $parecer->projeto_id;
+
+        $this->openModalParecer = true;
+        $this->isEditParecer = true;
     }
 
     public function saveDisciplina()
@@ -296,7 +309,7 @@ class ProjetoDetail extends Component
     public function saveParecer()
     {
         $this->validate([
-            'arquivo' => 'required|file|max:2048|mimes:pdf',
+            'protocoloEletronico' => 'required',
             'validade' => 'required|date',
             'numero' => 'required'
         ]);
@@ -305,14 +318,33 @@ class ProjetoDetail extends Component
             'numero' => $this->numero,
             'validade' => $this->validade,
             'projeto_id' => $this->projetoId,
-            'name' => $this->arquivo->getClientOriginalName(),
-            'mime_type' => $this->arquivo->getMimeType(),
-            'file_data' => file_get_contents($this->arquivo->getRealPath()),
+            'protocolo_eletronico' => $this->protocoloEletronico,
         ]);
 
-        session()->flash('message','Arquivo criado com sucesso');
+        session()->flash('message','Parecer registrado com sucesso');
         $this->resetFieldsParecer();
         $this->openModalParecer = false;
+    }
+
+    public function updateParecer()
+    {
+        $this->validate([
+            'protocoloEletronico' => 'required',
+            'validade' => 'required|date',
+            'numero' => 'required'
+        ]);
+
+        $parecer = ParecerTecnico::findOrFail($this->parecerId);
+        $parecer->update([
+            'numero' => $this->numero,
+            'validade' => $this->validade,
+            'protocolo_eletronico' => $this->protocoloEletronico
+        ]);
+
+        session()->flash('message','Parecer Atualizado');
+        $this->resetFieldsParecer();
+        $this->openModalParecer = false;
+        $this->isEditParecer = false;
     }
 
     public function deleteParecer($id)
@@ -408,9 +440,9 @@ class ProjetoDetail extends Component
     public function resetFieldsParecer()
     {
         $this->reset([
-            'arquivo',
+            'protocoloEletronico',
             'validade',
-            'numero'
+            'numero',
         ]);
     }
 

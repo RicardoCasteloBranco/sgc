@@ -383,114 +383,41 @@
      </x-dialog-modal>
      <!-- Fim do Modal para apagar material -->
     <!-- Modal de Cadastro de Parecer Técnico -->
-    @if($openModalParecer)
-        <div class="fixed inset-0 z-50 overflow-y-auto">
-            
-            <!-- Fundo escuro -->
-            <div class="fixed inset-0 bg-black opacity-50"></div>
-
-            <!-- Modal -->
-            <div class="flex items-center justify-center min-h-screen p-4">
-                
-                <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl relative z-50">
-                    
-                    <!-- Cabeçalho -->
-                    <div class="flex items-center justify-between border-b px-6 py-4">
-                        <h2 class="text-xl font-semibold">
-                            Adicionar Parecer Técnico
-                        </h2>
-
-                        <button
-                            type="button"
-                            wire:click="$set('openModalParecer', false)"
-                            class="text-gray-500 hover:text-gray-700 text-2xl"
-                        >
-                            &times;
-                        </button>
-                    </div>
-
-                    <!-- Formulário -->
-                    <form wire:submit.prevent="saveParecer" enctype="multipart/form-data">
-
-                        <div class="p-6 space-y-4">
-
-                            <div>
-                                <label for="numero" class="block text-sm font-medium text-gray-700">
-                                    Número
-                                </label>
-
-                                <input
-                                    id="numero"
-                                    type="text"
-                                    wire:model="numero"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                                >
-
-                                @error('numero')
-                                    <span class="text-red-500 text-sm">
-                                        {{ $message }}
-                                    </span>
-                                @enderror
-                            </div>
-
-                            <div>
-                                <label for="validade" class="block text-sm font-medium text-gray-700">
-                                    Validade
-                                </label>
-
-                                <input
-                                    id="validade"
-                                    type="date"
-                                    wire:model="validade"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                                >
-
-                                @error('validade')
-                                    <span class="text-red-500 text-sm">
-                                        {{ $message }}
-                                    </span>
-                                @enderror
-                            </div>
-
-                            <div>
-                                <label for="arquivo" class="block text-sm font-medium text-gray-700">
-                                    Arquivo PDF
-                                </label>
-
-                                <input
-                                    id="arquivo"
-                                    type="file"
-                                    wire:model="arquivo"
-                                    accept=".pdf"
-                                    class="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                                >
-
-                                <div wire:loading wire:target="arquivo" class="text-blue-500 text-sm mt-2">
-                                    Enviando arquivo...
-                                </div>
-
-                                @error('arquivo')
-                                    <span class="text-red-500 text-sm">
-                                        {{ $message }}
-                                    </span>
-                                @enderror
-                            </div>
-
-                        </div>
-
-                        <!-- Rodapé -->
-                        <div class="flex justify-end gap-3 border-t px-6 py-4 bg-gray-50">
-                            <x-secondary-button wire:click="$set('openModalParecer', false)">
-                                Cancelar
-                            </x-secondary-button>
-                            <x-button type="submit" wire:loading.attr="disabled" wire:target="arquivo">
-                                Salvar
-                            </x-button>
-                        </div>
-                    </form>
+    <x-modal wire:model="openModalParecer">
+        <x-form-section submit="{{ $isEditParecer ? 'updateParecer' : 'saveParecer' }}">
+            <x-slot name="title">
+                {{ $isEditParecer ? 'Editar Parecer' : 'Adicionar Parecer' }}
+            </x-slot>
+            <x-slot name="description">
+                {{ $isEditParecer ? 'Edite o Parecer Técnico da Turma.' : 'Preencha os dados do Parecer Técnico da turma.' }}
+            </x-slot>
+            <x-slot name="form">
+                <x-input type="hidden" id="projetoID" wire:model="projetoId" />
+                <div class="col-span-6 sm:col-span-4">
+                    <x-lable for="numero" value="Número do PT" />
+                    <x-input id="numero" type="text" class="mt-1 block w-full" wire:model.defer="numero">
+                    <x-input-error for="numero" class="mt-2" />
                 </div>
-            </div>
-        </div>
-    @endif
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="validade" value="Validade" />
+                    <x-input id="validade" type="date" class="mt-1 block w-full" wire:model.defer="validade" />
+                    <x-input-error for="validade" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="protocoloEletronico" value="Número do Protocolo Eletrônico" />
+                    <x-input id="protocoloEletronico" type="text" class="mt-1 block w-full" wire:model.defer="protocoloEletronico"  />
+                    <x-input-error for="protocoloEletronico" class="mt-2" />
+                </div>
+            </x-slot>
+            <x-slot name="actions">
+                <x-secondary-button wire:click="$set('openModalParecer', false)">
+                    Cancelar
+                </x-secondary-button>
+                <x-button class="ml-3" type="submit">
+                    {{ $isEditParecer ? 'Atualizar' : 'Salvar' }}
+                </x-button>
+            </x-slot>
+        </x-form-section>
+     </x-modal>
     <!-- Fim do Modal de Cadastro de Parecer Técnico -->
 </div>
