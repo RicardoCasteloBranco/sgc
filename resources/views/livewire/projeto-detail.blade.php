@@ -9,7 +9,7 @@
                     <p><strong>Custo com Hora-aula:</strong> R$ {{ number_format($projeto->custo_hora_aula_por_turma, 2, ',', '.') }}</p>
                     <p><strong>Custo com Bolsa de Formação:</strong> R$ {{ number_format($projeto->custo_bolsa_formacao_por_turma, 2, ',', '.') }}</p>
                     <p><strong>Custo com Serviços:</strong> R$ {{ number_format($projeto->custo_servico_por_turma, 2, ',', '.') }}</p>
-                    <p><strong>Custo com Materiais:</strong> R$ {{ number_format($projeto->custoMaterial(), 2, ',','.') }}
+                    <p><strong>Custo com Materiais:</strong> R$ {{ number_format($projeto->custoMaterial(), 2, ',','.') }}</p>
         </div>
         <div class="flex flex-col lg:flex-row gap-6 items-stretch h-auto">
             <div class="w-full lg:w-1/2 bg-white text-black shadow p-5 rounded-lg">
@@ -37,7 +37,8 @@
                                     <button wire:click="editMaterial({{ $material->id }})" class="text-green-700">
                                             Editar
                                     </button>
-                                    <button wire:click="apagaMaterial({{ $material->id }})" class="text-red-600">
+                                    <button wire:click="apagaMaterial({{ $material->id }})" 
+                                        wire:confirm="Tem certeza que deseja apagar o material {{$material->tipoMaterial->descricao}}?" class="text-red-600">
                                         Apagar
                                     </button>
                                 </td>
@@ -73,6 +74,10 @@
                                     <td class="text-center p-2">
                                         <button wire:click="editDisciplina({{ $disciplina->id }})" class="text-green-700">
                                         Editar
+                                        </button>
+                                        <button wire:click="apagaDisciplina({{ $disciplina->id }})"
+                                         wire:confirm="Tem certeza que deseja apagar a disciplina {{$disciplina->nome}}?" class="text-red-600">
+                                            Apagar
                                         </button>
                                     </td>
                                 </tr>
@@ -175,7 +180,8 @@
                                     Visualizar
                                 </button>
                             </a>
-                            <button wire:click="deleteParecer({{ $parecer->id }})" class="text-red-600">
+                            <button wire:click="deleteParecer({{ $parecer->id }})"
+                             wire:confirm="Tem certeza que deseja deletar o parecer {{$parecer->numero}}?" class="text-red-600">
                                 Apagar
                             </button>
                         </td>
@@ -372,16 +378,6 @@
         </x-form-section>
      </x-modal>
      <!-- Fim do Modal de Cadastro/Edicação de Material -->
-    <!-- Modal para apagar Material -->
-     <x-dialog-modal wire:model="openModalDeletaMaterial">
-        <x-slot name="title">Apagar Material</x-slot>
-        <x-slot name="content">Você tem certeza que deseja apagar o material ?</x-slot>
-        <x-slot name="footer">
-            <x-button wire:click="deleteMaterial">Confirma</x-button>
-            <x-secondary-button wire:click="$set('openModalDeletaMaterial', false)" class="ml-4">Cancela</x-secondary-button>
-        </x-slot>
-     </x-dialog-modal>
-     <!-- Fim do Modal para apagar material -->
     <!-- Modal de Cadastro de Parecer Técnico -->
     <x-modal wire:model="openModalParecer">
         <x-form-section submit="{{ $isEditParecer ? 'updateParecer' : 'saveParecer' }}">
@@ -394,8 +390,8 @@
             <x-slot name="form">
                 <x-input type="hidden" id="projetoID" wire:model="projetoId" />
                 <div class="col-span-6 sm:col-span-4">
-                    <x-lable for="numero" value="Número do PT" />
-                    <x-input id="numero" type="text" class="mt-1 block w-full" wire:model.defer="numero">
+                    <x-label for="numero" value="Número do PT" />
+                    <x-input id="numero" type="text" class="mt-1 block w-full" wire:model.defer="numero" />
                     <x-input-error for="numero" class="mt-2" />
                 </div>
                 <div class="col-span-6 sm:col-span-4">

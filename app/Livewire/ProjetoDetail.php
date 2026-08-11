@@ -21,7 +21,6 @@ class ProjetoDetail extends Component
     public $openModalDisciplina = false;
     public $openModalParecer = false;
     public $openModalMaterial = false;
-    public $openModalDeletaMaterial = false;
     public $isEditDisciplina = false;
     public $isEditMaterial = false;
     public $isEditParecer = false;
@@ -236,6 +235,14 @@ class ProjetoDetail extends Component
         $this->resetFieldsDisciplina();
     }
 
+    public function apagaDisciplina($id)
+    {
+        $material = Material::findOrFail($id);
+        $material->delete();
+
+        $this->dispatch('showAlert', message: 'Disciplina apagada com sucesso!');
+    }
+
     public function saveTurma()
     {
         $this->validate([
@@ -394,15 +401,8 @@ class ProjetoDetail extends Component
     }
 
     public function apagaMaterial($id){
-        $this->material = Material::findOrFail($id);
-        $this->openModalDeletaMaterial = true;
-    }
-
-    public function deleteMaterial()
-    {
         $this->material->delete();
         session()->flash('message','Material Apagado com Sucesso');
-        $this->openModalDeletaMaterial = false;
     }
 
     public function resetFieldsDisciplina()
