@@ -23,5 +23,10 @@ class Disciplina extends Model
        return $this->belongsTo(Projeto::class);
     }
 
+    public function disciplina()
+    {
+        return $this->hasMany(Instrutor::class);
+    }
+
 
 }

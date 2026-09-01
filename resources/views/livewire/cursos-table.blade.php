@@ -58,7 +58,7 @@
                                     <tr>
                                     </thead>
                                     <tbody>
-                                    @foreach($curso->projetos->filter(fn($p)=>!$p->encerrado()) as $projeto)
+                                    @foreach($curso->projetos->filter(fn($p)=>$p->projetoNaoEncerrado() == true) as $projeto)
                                         <tr wire:key="projeto-andamento-{{ $projeto->id }}">
                                             <td class="border border-black p-2">
                                                 {{ $projeto->numeroProjeto() }}
@@ -123,7 +123,7 @@
                                     <tr>
                                     </thead>
                                     <tbody>
-                                    @foreach($curso->projetos->filter(fn($p)=>$p->encerrado()) as $projeto)
+                                    @foreach($curso->projetos->filter(fn($p)=>$p->projetoNaoEncerrado()==false) as $projeto)
                                         <tr wire:key="projeto-encerrado-{{ $projeto->id }}">
                                             <td class="text-center border border-black p-2">
                                                 {{ $projeto->numeroProjeto() }}

@@ -36,9 +36,9 @@ class Projeto extends Model
         return $this->belongsTo(CentroEnsino::class);
     }
 
-    public function encerrado()
+    public function projetoNaoEncerrado()
     {
-        return $this->turmas()->whereNotNull('data_fim')->exists();
+        return $this->turmas()->whereNull('data_fim')->exists();
     }
 
     public function pareceresTecnicos()

@@ -19,6 +19,7 @@
         </div>
     </div>
     <div>
+        <x-section-title title="Alunos" description=""></x-section-title>
         <!-- Tabela com os alunos -->
         <x-table>
             <x-slot name="theaders">
@@ -48,6 +49,21 @@
             </x-slot>
         </x-table>
         <!-- Fim da tabela com os alunos -->
+    </div>
+    <!-- Tabela de Instutores -->
+    <div>
+        <x-section-title title="Instrutores" description=""></x-section-title>
+        <x-table>
+            <x-slot name="theaders">
+                <th>Posto/Graduação</th>
+                <th>Nome</th>
+                <th>Disciplina</th>
+                <th>Instrutor</th>
+                <th>Ações</th>
+            </x-slot>
+            <x-slot name="tbody">
+            </x-slot>
+        </x-table>
     </div>
     <!-- Formulário para carregar lista de alunos -->
       @if($openModalListaAlunos)
@@ -231,6 +247,7 @@
      </x-dialog-modal>
      <!-- Fim do Modal para apagar material -->
 </div>
+<!-- Script para carregar um arquivo com os alunos da turma -->
 <script>
 if (!window.__sgcHandleArquivoChange) {
     window.__sgcHandleArquivoChange = function (e) {

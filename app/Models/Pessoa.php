@@ -21,4 +21,9 @@ class Pessoa extends Model
     {
         return $this->hasMany(Aluno::class);
     }
+
+    public function instrutor()
+    {
+        return $this->hasMany(Instrutor::class);
+    }
 }

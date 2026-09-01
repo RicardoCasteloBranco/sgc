@@ -52,6 +52,11 @@ class Turma extends Model
         return $this->hasMany(Aluno::class);
     }
 
+    public function instrutores()
+    {
+        return $this->hasMany(Instrutor::class);
+    }
+
     public function statusTurma()
     {
         if(!is_null($this->portaria_conclusao)) {
