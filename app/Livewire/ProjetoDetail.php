@@ -237,8 +237,8 @@ class ProjetoDetail extends Component
 
     public function apagaDisciplina($id)
     {
-        $material = Material::findOrFail($id);
-        $material->delete();
+        $disciplina = Disciplina::findOrFail($id);
+        $disciplina->delete();
 
         $this->dispatch('showAlert', message: 'Disciplina apagada com sucesso!');
     }
