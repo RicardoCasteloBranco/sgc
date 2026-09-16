@@ -12,11 +12,14 @@
                     <p><strong>Custo com Materiais:</strong> R$ {{ number_format($projeto->custoMaterial(), 2, ',','.') }}</p>
         </div>
         <div class="flex flex-col lg:flex-row gap-6 items-stretch h-auto">
-            <div class="w-full lg:w-1/2 bg-white text-black shadow p-5 rounded-lg">
+
+            <!-- bloco de Materiais -->
+            <div class="w-full lg:w-1/2 bg-white text-black shadow p-5 rounded-lg flex flex-col">
                 <h1 class="ml-6 text-lg font-semibold uppercase">Materiais</h1>
                 <h4 class="ml-6 mb-4 text-sm">Lista de Materiais para o Projeto</h4>
-                <div class="h-72 overflow-y-auto" style="max-height: 25rem" >
-                    <x-table class="max-h-28">
+                <!-- Container com scroll e altura flexivel para igualar a coluna vizinha -->
+                <div class="flex-1 overflow-y-auto max-h-[25rem]" >
+                    <x-table>
                         <x-slot name="theaders">
                             <tr class="text-sm font-semibold uppercase">
                                 <th class="p-3">Descrição</th>
@@ -53,11 +56,11 @@
                     </x-button>
                 </div>
             </div>
+            <!-- bloco de Disciplinas -->
             <div class="w-full lg:w-1/2 bg-white p-5 rounded-lg shadow flex flex-col">
-                <!-- Tabela de Disciplinas -->
-                <div class="flex-1 overflow-y-auto mt-4">
                     <h1 class="ml-4 text-lg font-semibold uppercase">Disciplinas</h1>
                     <h4 class="ml-4 mb-4 text-sm">Lista de Disciplinas do Projeto</h4>
+                <div class="flex-1 overflow-y-auto max-h-[25rem]">
                     <x-table>
                         <x-slot name="theaders">
                             <th class="p-3">Nome</th>
@@ -85,9 +88,6 @@
                         </x-slot>
                     </x-table>
                     <!-- Fim da Tabela de Disciplinas -->
-                </div>
-                <div class="m-4 px-1">
-                    {{ $disciplinas->links() }}
                 </div>
                 <div class="m-4 px-1">
                     <x-button wire:click="createDisciplina">
