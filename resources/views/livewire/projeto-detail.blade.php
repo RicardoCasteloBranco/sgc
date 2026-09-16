@@ -14,87 +14,104 @@
         <div class="flex flex-col lg:flex-row gap-6 items-stretch h-auto">
 
             <!-- bloco de Materiais -->
-            <div class="w-full lg:w-1/2 bg-white text-black shadow p-5 rounded-lg flex flex-col">
-                <h1 class="ml-6 text-lg font-semibold uppercase">Materiais</h1>
-                <h4 class="ml-6 mb-4 text-sm">Lista de Materiais para o Projeto</h4>
-                <!-- Container com scroll e altura flexivel para igualar a coluna vizinha -->
-                <div class="flex-1 overflow-y-auto max-h-[25rem]" >
-                    <x-table>
-                        <x-slot name="theaders">
-                            <tr class="text-sm font-semibold uppercase">
-                                <th class="p-3">Descrição</th>
-                                <th class="p-3">Unidade</th>
-                                <th class="p-3">Qtd/Turma</th>
-                                <th class="p-3">Custo/Turma</th>
-                                <th class="p-3">Ações</th>
-                            </tr>
-                        </x-slot>
-                        <x-slot name="tbody">
-                            @foreach($materiais as $material)
-                            <tr class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }} transition" wire:key="material-{{ $material->id }}">
-                                <td class="p-3">{{ $material->tipoMaterial->descricao }}</td>
-                                <td class="p-3">{{ $material->tipoMaterial->unidade_medida }}</td>
-                                <td class="p-3">{{ $material->quantidade_por_turma }}</td>
-                                <td class="p-3">R$ {{ number_format($material->custo_unitario, 2, ',', '.') }}</td>
-                                <td class="p-3">
-                                    <button wire:click="editMaterial({{ $material->id }})" class="text-green-700">
-                                            Editar
-                                    </button>
-                                    <button wire:click="apagaMaterial({{ $material->id }})" 
-                                        wire:confirm="Tem certeza que deseja apagar o material {{$material->tipoMaterial->descricao}}?" class="text-red-600">
-                                        Apagar
-                                    </button>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </x-slot>
-                    </x-table>
+            <div class="w-full lg:w-1/2 bg-white text-black shadow p-5 rounded-lg flex flex-col justify-between">
+                <div>
+                    <h1 class="ml-6 text-lg font-semibold uppercase">Materiais</h1>
+                    <h4 class="ml-6 mb-4 text-sm">Lista de Materiais para o Projeto</h4>
+                    
+                    <!-- Container com altura estrita e scroll ativado por style -->
+                    <div style="height: 280px; max-height: 280px; overflow-y: auto; position: relative;" class="border border-gray-100 rounded-lg">
+                        <div style="min-height: 100%;">
+                            <x-table>
+                                <x-slot name="theaders">
+                                    <tr class="bg-black text-white sticky top-0">
+                                        <th class="p-3">Descrição</th>
+                                        <th class="p-3">Unidade</th>
+                                        <th class="p-3">Qtd/Turma</th>
+                                        <th class="p-3">Custo/Turma</th>
+                                        <th class="p-3">Ações</th>
+                                    </tr>
+                                </x-slot>
+                                <x-slot name="tbody">
+                                    @foreach($materiais as $material)
+                                    <tr class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }} transition" wire:key="material-{{ $material->id }}">
+                                        <td class="p-3">{{ $material->tipoMaterial->descricao }}</td>
+                                        <td class="p-3">{{ $material->tipoMaterial->unidade_medida }}</td>
+                                        <td class="p-3">{{ $material->quantidade_por_turma }}</td>
+                                        <td class="p-3">R$ {{ number_format($material->custo_unitario, 2, ',', '.') }}</td>
+                                        <td class="p-3">
+                                            <button wire:click="editMaterial({{ $material->id }})" class="text-green-700">
+                                                    Editar
+                                            </button>
+                                            <button wire:click="apagaMaterial({{ $material->id }})" 
+                                                wire:confirm="Tem certeza que deseja apagar o material {{$material->tipoMaterial->descricao}}?" class="text-red-600">
+                                                Apagar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </x-slot>
+                            </x-table>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="m-4 px-1">
                     <x-button wire:click="createMaterial">
                         Inserir Material
                     </x-button>
                 </div>
             </div>
+
             <!-- bloco de Disciplinas -->
-            <div class="w-full lg:w-1/2 bg-white p-5 rounded-lg shadow flex flex-col">
+            <div class="w-full lg:w-1/2 bg-white p-5 rounded-lg shadow flex flex-col justify-between">
+                <div>
                     <h1 class="ml-4 text-lg font-semibold uppercase">Disciplinas</h1>
                     <h4 class="ml-4 mb-4 text-sm">Lista de Disciplinas do Projeto</h4>
-                <div class="flex-1 overflow-y-auto max-h-[25rem]">
-                    <x-table>
-                        <x-slot name="theaders">
-                            <th class="p-3">Nome</th>
-                            <th class="p-3">Abreviação</th>
-                            <th class="p-3">Carga Horária</th>
-                            <th class="p-3">Ação</th>
-                        </x-slot>
-                        <x-slot name="tbody">
-                            @foreach($disciplinas as $disciplina)
-                                <tr class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }} transition" wire:key="disciplina-{{ $disciplina->id }}">
-                                    <td class="text-center p-2">{{ $disciplina->nome }}</td>
-                                    <td class="text-center p-2">{{ $disciplina->abreviacao }}</td>
-                                    <td class="text-center p-2">{{ $disciplina->carga_horaria }}</td>
-                                    <td class="text-center p-2">
-                                        <button wire:click="editDisciplina({{ $disciplina->id }})" class="text-green-700">
-                                        Editar
-                                        </button>
-                                        <button wire:click="apagaDisciplina({{ $disciplina->id }})"
-                                         wire:confirm="Tem certeza que deseja apagar a disciplina {{$disciplina->nome}}?" class="text-red-600">
-                                            Apagar
-                                        </button>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </x-slot>
-                    </x-table>
+                    
+                    <!-- Container com altura estrita e scroll ativado por style -->
+                    <div style="height: 280px; max-height: 280px; overflow-y: auto; position: relative;" class="border border-gray-100 rounded-lg">
+                        <div style="min-height: 100%;">
+                            <x-table>
+                                <x-slot name="theaders">
+                                    <tr class="bg-black text-white sticky top-0">
+                                        <th class="p-3">Nome</th>
+                                        <th class="p-3">Abreviação</th>
+                                        <th class="p-3">Carga Horária</th>
+                                        <th class="p-3">Ação</th>
+                                    </tr>
+                                </x-slot>
+                                <x-slot name="tbody">
+                                    @foreach($disciplinas as $disciplina)
+                                        <tr class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }} transition" wire:key="disciplina-{{ $disciplina->id }}">
+                                            <td class="text-center p-2">{{ $disciplina->nome }}</td>
+                                            <td class="text-center p-2">{{ $disciplina->abreviacao }}</td>
+                                            <td class="text-center p-2">{{ $disciplina->carga_horaria }}</td>
+                                            <td class="text-center p-2">
+                                                <button wire:click="editDisciplina({{ $disciplina->id }})" class="text-green-700">
+                                                Editar
+                                                </button>
+                                                <button wire:click="apagaDisciplina({{ $disciplina->id }})"
+                                                wire:confirm="Tem certeza que deseja apagar a disciplina {{$disciplina->nome}}?" class="text-red-600">
+                                                    Apagar
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </x-slot>
+                            </x-table>
+                        </div>
+                    </div>
                     <!-- Fim da Tabela de Disciplinas -->
                 </div>
+
                 <div class="m-4 px-1">
                     <x-button wire:click="createDisciplina">
                         Inserir Disciplina
                     </x-button>
                 </div>
             </div>
+
         </div>
     </div>
     <!-- Tabela de Turmas -->
