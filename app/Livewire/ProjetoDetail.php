@@ -78,10 +78,7 @@ class ProjetoDetail extends Component
     public function render()
     {
         return view('livewire.projeto-detail', [
-            'disciplinas' => Disciplina::where('projeto_id', $this->projetoId)
-                ->orderBy('nome')
-                ->paginate(5),
-
+            'disciplinas' => $this->projeto->disciplinas,
             'materiais' => $this->projeto->material,
         ])->layout('layouts.app');
     }
@@ -249,7 +246,7 @@ class ProjetoDetail extends Component
             'dataInicio' => 'required|date',
             'dataFim' => 'nullable|date|after_or_equal:dataInicio',
             'diasDeAulaPorSemana' => 'required|integer|min:0|max:7',
-            'cargaHorariaDiaria' => 'required|integer|min:0|max:10',
+            'cargaHorariaDiaria' => 'required|integer|min:0|max:12',
             'unidadeId' => 'required|exists:unidades,id',
             'editalDocente' => 'nullable|string|max:255',
             'editalDiscente' => 'nullable|string|max:255',
@@ -284,7 +281,7 @@ class ProjetoDetail extends Component
             'dataInicio' => 'required|date',
             'dataFim' => 'nullable|date|after_or_equal:dataInicio',
             'diasDeAulaPorSemana' => 'required|integer|min:0|max:7',
-            'cargaHorariaDiaria' => 'required|integer|min:0|max:10',
+            'cargaHorariaDiaria' => 'required|integer|min:0|max:12',
             'unidadeId' => 'required|exists:unidades,id',
             'editalDocente' => 'nullable|string|max:255',
             'editalDiscente' => 'nullable|string|max:255',

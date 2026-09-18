@@ -15,13 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('numero');
             $table->date('validade');
-            $table->string('protocolo_eletronico');
+            $table->string('mime_type');
+            $table->string('name');
+            $table->string('file_data');
             $table->unsignedBigInteger('projeto_id');
             $table->foreign('projeto_id')->references('id')->on('projetos')->onDelete('cascade');
             $table->timestamps();
         });
-
-        DB::statement("ALTER TABLE pareceres_tecnicos ADD file_data MEDIUMBLOB");
     }
 
     /**

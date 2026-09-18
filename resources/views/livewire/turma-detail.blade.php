@@ -138,12 +138,7 @@
                 <x-input type="hidden" id="turmaId" value="{{$turma->id}}" />
                 <div class="col-span-6 sm:col-span-4">
                     <x-label for="graduacaoAluno" value="Graduação" />
-                    <x-select id="graduacaoAluno" class="mt-1 block w-full" wire:model.defer="graduacaoAluno">
-                        <option>Selecione a graduação</option>
-                        @foreach($graduacoes as $key => $value)
-                        <option value="{{ $value }}">{{ $value }}</option>
-                        @endforeach
-                    </x-select>
+                    <x-input id="graduacaoAluno" type="text" class="mt-1 block w-full" wire:model.defer="graduacaoAluno" />
                     <x-input-error for="graduacaoAluno" class="mt-2" />
                 </div>
                 <div class="col-span-6 sm:col-span-4">
