@@ -288,7 +288,7 @@ class TurmaDetail extends Component
             'graduacaoInstrutor' => ['required','string'],
             'nomeInstrutor' => ['required','string'],
             'matriculaInstrutor' => ['required','integer'],
-            'dataDesignacao' => ['required','date'],
+            'dataDesignacaoInstrutor' => ['required','date'],
             'disciplinaInstrutor' => ['required'],
             'tipoInstrutor' => ['required']
         ],[
@@ -308,7 +308,7 @@ class TurmaDetail extends Component
             'pessoa_id' => $pessoa->id,
             'turma_id' => $this->turma->id,
             'parecer_tecnico' => $this->parecerTecnicoInstrutor,
-            'data_designacao' => $this->dataDesignacaoInstrutor,
+            'designacao' => $this->dataDesignacaoInstrutor,
             'disciplina_id' => $this->disciplinaInstrutor,
             'tipo_instrutor' => $this->tipoInstrutor
         ]);
@@ -324,7 +324,8 @@ class TurmaDetail extends Component
             'graduacaoInstrutor' => ['required','string'],
             'nomeInstrutor' => ['required','string'],
             'matriculaInstrutor' => ['required','integer'],
-            'dataDesignacao' => ['required','date'],
+            'dataDesignacaoInstrutor' => ['required','date'],
+            'dataSubstituicaoInstrutor' => ['required','date'],
             'disciplinaInstrutor' => ['required'],
             'tipoInstrutor' => ['required']
         ],[
@@ -345,7 +346,8 @@ class TurmaDetail extends Component
             'pessoa_id' => $pessoa->id,
             'turma_id' => $this->turma->id,
             'parecer_tecnico' => $this->parecerTecnicoInstrutor,
-            'data_designacao' => $this->dataDesignacaoInstrutor,
+            'designacao' => $this->dataDesignacaoInstrutor,
+            'substituicao' => $this->dataSubstituicaoInstrutor,
             'disciplina_id' => $this->disciplinaInstrutor,
             'tipo_instrutor' => $this->tipoInstrutor
         ]);

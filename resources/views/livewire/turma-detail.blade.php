@@ -70,7 +70,7 @@
                     <td>{{$instrutor->pessoa->nome}}</td>
                     <td>{{$instrutor->disciplina->nome}}</td>
                     <td>{{$instrutor->tipo_instrutor}}</td>
-                    <td>{{$instrutor->designacao}}</td>
+                    <td>{{date('d/m/Y', strtotime($instrutor->designacao))}}</td>
                     <td>
                         <button wire:click="editarInstrutor({{ $instrutor->id }})" class="text-green-700">
                             Editar
@@ -260,13 +260,13 @@
                 <x-input type="hidden" id="turmaId" value="{{$turma->id}}" />
                 <div class="col-span-6 sm:col-span-4">
                     <x-label for="graduacaoInstrutor" value="Grduação" />
-                    <x-input  type="text" id="graduacaoCoordenador" class="mt-1 block w-full" wire:model.defer="graduacaoInstrutor">
+                    <x-input  type="text" id="graduacaoInstrutor" class="mt-1 block w-full" wire:model.defer="graduacaoInstrutor" />
                     <x-input-error for="graduacaoInstrutor" class="mt-2" />
                 </div>
                 <div class="col-span-6 sm:col-span-4">
                     <x-label for="nomeInstrutor" value="Nome" />
                     <x-input id="nomeInstrutor" type="text" class="mt-1 block w-full" wire:model.defer="nomeInstrutor" />
-                    <x-input-error for="nomeCoodenador" class="mt-2" />
+                    <x-input-error for="nomeInstrutor" class="mt-2" />
                 </div>
                 <div class="col-span-6 sm:col-span-4">
                     <x-label for="matriculaInstrutor" value="Matrícula" />
@@ -285,8 +285,8 @@
                 </div>
                 @if($isEditInstrutor)
                     <div class="col-span-6 sm:col-span-4">
-                        <x-label for="dataSubstituicaoInstrutor" value="Parecer Técnico" />
-                        <x-input id="dataSubstituicaoInstrutor" type="text" class="mt-1 block w-full" wire:model.defer="dataSubstituicaoInstrutor" />
+                        <x-label for="dataSubstituicaoInstrutor" value="Data de Substituição" />
+                        <x-input id="dataSubstituicaoInstrutor" type="date" class="mt-1 block w-full" wire:model.defer="dataSubstituicaoInstrutor" />
                         <x-input-error for="dataSubstituicaoInstrutor" class="mt-2" />
                     </div>
                 @endif
@@ -302,9 +302,9 @@
                 </div>
                 <div class="col-span-6 sm:col-span-4">
                     <x-label for="tipoInstrutor" value="Titular" />
-                    <x-input id="tipoInstrutor" type="radio" class="mt-1 block w-full" wire:model.defer="tipoInstrutor" value="Titular"/>
+                    <x-input id="tipoInstrutor" type="radio" class="mt-1" wire:model.defer="tipoInstrutor" value="Titular"/>
                     <x-label for="tipoInstrutor" value="Secundário" />
-                    <x-input id="tipoInstrutor" type="radio" class="mt-1 block w-full" wire:model.defer="tipoInstrutor" value="Secundário"/>
+                    <x-input id="tipoInstrutor" type="radio" class="mt-1" wire:model.defer="tipoInstrutor" value="Secundário"/>
                     <x-input-error for="tipoInstrutor" class="mt-2" />
                 </div>
             </x-slot>
