@@ -6,7 +6,7 @@
             <p><strong>Centro de Ensino:</strong> {{ $turma->projeto->centroEnsino->nome }}</p>
             <p><strong>Projeto:</strong> <a href="{{ route('projeto',['projeto'=>$turma->projeto->id]) }}" >{{ $turma->projeto->numeroProjeto() }}</a></p>
             <p><strong>Turma:</strong> {{ $turma->numeroTurma() }}</p>
-            <p><strong>Coordenador: </strong>@if($turma->coordenador){{ $turma->coordenador->graduacao }} {{ $turma->coordenador->pessoa->nome }}@endif
+            <p><strong>Coordenador: </strong>@if($turma->coordenador){{ $turma->coordenador->graduacao }} {{ $turma->coordenador->pessoa->nome }}@endif</p>
             <!-- Fim dos detalhes do Projeto -->
         </div>
         <div>
@@ -15,6 +15,7 @@
             class="m-4">{{ empty($turma->coordenador) ? 'Inserir Coordenador' : 'Alterar Coordenador' }}</x-button>
             <x-button wire:click="carregarLista()" class="m-4">Carrregar Turma</x-button>
             <x-button wire:click="adicionarAluno()" class="m-4">Adicionar Aluno</x-button>
+            <x-button wire:click="adicionarInstrutor()" class="m-4">Adicionar Instrutor</x-button>
             <!-- Fim dos botões de ações --->
         </div>
     </div>
@@ -55,13 +56,31 @@
         <x-section-title title="Instrutores" description=""></x-section-title>
         <x-table>
             <x-slot name="theaders">
-                <th>Posto/Graduação</th>
-                <th>Nome</th>
-                <th>Disciplina</th>
-                <th>Instrutor</th>
-                <th>Ações</th>
+                <th class="p-3">Posto/Graduação</th>
+                <th class="p-3">Nome</th>
+                <th class="p-3">Disciplina</th>
+                <th class="p-3">Instrutor</th>
+                <th class="p-3">Data de Designação</th>
+                <th class="p-3">Ações</th>
             </x-slot>
             <x-slot name="tbody">
+                @foreach($turma->instrutores as $instrutor)
+                <tr class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }}" wire:key="instrutor-{{$instrutor->id}}">
+                    <td>{{$instrutor->posto_graduacao}}</td>
+                    <td>{{$instrutor->pessoa->nome}}</td>
+                    <td>{{$instrutor->disciplina->nome}}</td>
+                    <td>{{$instrutor->tipo_instrutor}}</td>
+                    <td>{{$instrutor->designacao}}</td>
+                    <td>
+                        <button wire:click="editarInstrutor({{ $instrutor->id }})" class="text-green-700">
+                            Editar
+                        </button>
+                        <button wire:click="apagarInstrutor({{ $instrutor->id }})" class="text-red-600">
+                            Apagar
+                        </button>
+                    </td>
+                </tr>
+                @endforeach
             </x-slot>
         </x-table>
     </div>
@@ -228,6 +247,79 @@
         </x-form-section>
      </x-modal>
     <!-- Fim do formulário para adicionar e editar um Coordenador -->
+    <!-- Inicio do formulário para adicionar e editar Instrutor -->
+     <x-modal wire:model="openModalInstrutor">
+        <x-form-section submit="{{ $isEditInstrutor ? 'updateInstrutor' : 'saveInstrutor' }}">
+            <x-slot name="title">
+                {{ $isEditInstrutor ? 'Alterar Instrutor' : 'Adicionar Instrutor' }}
+            </x-slot>
+            <x-slot name="description">
+                {{ $isEditInstrutor ? 'Alterar um Instrutor para a Turma.' : 'Adicione um Instrutor para a Turma.' }}
+            </x-slot>
+            <x-slot name="form">
+                <x-input type="hidden" id="turmaId" value="{{$turma->id}}" />
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="graduacaoInstrutor" value="Grduação" />
+                    <x-input  type="text" id="graduacaoCoordenador" class="mt-1 block w-full" wire:model.defer="graduacaoInstrutor">
+                    <x-input-error for="graduacaoInstrutor" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="nomeInstrutor" value="Nome" />
+                    <x-input id="nomeInstrutor" type="text" class="mt-1 block w-full" wire:model.defer="nomeInstrutor" />
+                    <x-input-error for="nomeCoodenador" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="matriculaInstrutor" value="Matrícula" />
+                    <x-input id="matriculaInstrutor" type="text" class="mt-1 block w-full" wire:model.defer="matriculaInstrutor" />
+                    <x-input-error for="matriculaInstrutor" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="dataDesignacaoInstrutor" value="Data de Designação" />
+                    <x-input id="dataDesignacaoInstrutor" type="date" class="mt-1 block w-full" wire:model.defer="dataDesignacaoInstrutor" />
+                    <x-input-error for="dataDesignacaoInstrutor" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="parecerTecnicoInstrutor" value="Parecer Técnico" />
+                    <x-input id="parecerTecnicoInstrutor" type="text" class="mt-1 block w-full" wire:model.defer="parecerTecnicoInstrutor" />
+                    <x-input-error for="parecerTecnicoInstrutor" class="mt-2" />
+                </div>
+                @if($isEditInstrutor)
+                    <div class="col-span-6 sm:col-span-4">
+                        <x-label for="dataSubstituicaoInstrutor" value="Parecer Técnico" />
+                        <x-input id="dataSubstituicaoInstrutor" type="text" class="mt-1 block w-full" wire:model.defer="dataSubstituicaoInstrutor" />
+                        <x-input-error for="dataSubstituicaoInstrutor" class="mt-2" />
+                    </div>
+                @endif
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="disciplinaInstrutor" value="Disciplina" />
+                    <x-select id="disciplinaInstrutor" type="text" class="mt-1 block w-full" wire:model.defer="disciplinaInstrutor">
+                        <option>Selecione uma disciplina:</option>
+                        @foreach($turma->projeto->disciplinas as $disciplina)
+                        <option value="{{$disciplina->id}}">{{$disciplina->nome}}</option>
+                        @endforeach
+                    </x-select> 
+                    <x-input-error for="disciplinaInstrutor" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="tipoInstrutor" value="Titular" />
+                    <x-input id="tipoInstrutor" type="radio" class="mt-1 block w-full" wire:model.defer="tipoInstrutor" value="Titular"/>
+                    <x-label for="tipoInstrutor" value="Secundário" />
+                    <x-input id="tipoInstrutor" type="radio" class="mt-1 block w-full" wire:model.defer="tipoInstrutor" value="Secundário"/>
+                    <x-input-error for="tipoInstrutor" class="mt-2" />
+                </div>
+            </x-slot>
+            <x-slot name="actions">
+                <x-secondary-button wire:click="$set('openModalInstrutor', false)">
+                    Cancelar
+                </x-secondary-button>
+                <x-button class="ml-3" type="submit">
+                    {{ $isEditInstrutor ? 'Atualizar' : 'Salvar' }}
+                </x-button>
+            </x-slot>
+        </x-form-section>
+     </x-modal>
+    <!-- Fim do formulário para adicionar e editar instrutores -->
+
     <!-- Modal para apagar Aluno -->
      <x-dialog-modal wire:model="openModalDeletaAluno">
         <x-slot name="title">Apagar Aluno</x-slot>

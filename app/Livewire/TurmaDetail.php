@@ -7,6 +7,7 @@ use App\Models\Turma;
 use App\Models\Pessoa;
 use App\Models\Aluno;
 use App\Models\Coordenador;
+use App\Models\Instrutor;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 use Livewire\Attributes\On;
@@ -45,6 +46,19 @@ class TurmaDetail extends Component
     public $matriculaCoordenador;
     public $dataDesignacao;
     public $parecerTecnico;
+
+    //Variáveis para operações com Instrutor
+    public $openModalInstrutor = false;
+    public $isEditInstrutor = false;
+    public $idInstrutor;
+    public $graduacaoInstrutor;
+    public $nomeInstrutor;
+    public $matriculaInstrutor;
+    public $dataDesignacaoInstrutor;
+    public $parecerTecnicoInstrutor;
+    public $dataSubstituicaoInstrutor;
+    public $disciplinaInstrutor;
+    public $tipoInstrutor;
 
     public function mount(Turma $turma)
     {
@@ -245,6 +259,103 @@ class TurmaDetail extends Component
         $this->reset(['nomeDel']);
     }
 
+    public function adicionarInstrutor()
+    {
+        $this->isEditInstrutor = false;
+        $this->openModalInstrutor = true;
+    }
+
+    public function editarInstrutor($id)
+    {
+        $instrutor = Instrutor::findOrFail($id);
+        $this->graduacaoInstrutor = $instrutor->posto_graduacao;
+        $this->tipoInstrutor = $instrutor->tipo_instrutor;
+        $this->parecerTecnicoInstrutor = $instrutor->parecer_tecnico;
+        $this->dataDesignacaoInstrutor = $instrutor->designacao;
+        $this->nomeInstrutor = $instrutor->pessoa->nome;
+        $this->matriculaInstrutor = $instrutor->pessoa->matricula;
+        $this->dataSubstituicaoInstrutor = $instrutor->substituicao;
+        $this->disciplinaInstrutor = $instrutor->disciplina->id;
+        $this->idInstrutor = $instrutor->id;
+        
+        $this->isEditInstrutor = true;
+        $this->openModalInstrutor = true;
+    }
+
+    public function saveInstrutor()
+    {
+         $this->validate([
+            'graduacaoInstrutor' => ['required','string'],
+            'nomeInstrutor' => ['required','string'],
+            'matriculaInstrutor' => ['required','integer'],
+            'dataDesignacao' => ['required','date'],
+            'disciplinaInstrutor' => ['required'],
+            'tipoInstrutor' => ['required']
+        ],[
+            'matricula.integer'=> "Só pode haver números na matrícula"
+        ]);
+
+        $pessoa = Pessoa::where('matricula', $this->matriculaInstrutor)->first();
+
+        if(!$pessoa){
+            $pessoa = Pessoa::create([
+                'nome' => $this->nomeInstrutor,
+                'matricula' => $this->matriculaInstrutor,
+            ]);
+        }
+        Instrutor::create([
+            'posto_graduacao' => $this->graduacaoInstrutor,
+            'pessoa_id' => $pessoa->id,
+            'turma_id' => $this->turma->id,
+            'parecer_tecnico' => $this->parecerTecnicoInstrutor,
+            'data_designacao' => $this->dataDesignacaoInstrutor,
+            'disciplina_id' => $this->disciplinaInstrutor,
+            'tipo_instrutor' => $this->tipoInstrutor
+        ]);
+        session()->flash('message','Coordenador Cadastrado com sucesso!');
+        $this->openModalInstrutor = false;
+        $this->isEditInstrutor = false;
+        $this->resetFieldsInstrutor();
+    }
+
+    public function updateInstrutor()
+    {
+        $this->validate([
+            'graduacaoInstrutor' => ['required','string'],
+            'nomeInstrutor' => ['required','string'],
+            'matriculaInstrutor' => ['required','integer'],
+            'dataDesignacao' => ['required','date'],
+            'disciplinaInstrutor' => ['required'],
+            'tipoInstrutor' => ['required']
+        ],[
+            'matricula.integer'=> "Só pode haver números na matrícula"
+        ]);
+
+        $pessoa = Pessoa::where('matricula', $this->matriculaInstrutor)->first();
+
+        if(!$pessoa){
+            $pessoa = Pessoa::create([
+                'nome' => $this->nomeInstrutor,
+                'matricula' => $this->matriculaInstrutor,
+            ]);
+        }
+        $instrutor = findOfFail($this->idInstrutor);
+        $instrutor::update([
+            'posto_graduacao' => $this->graduacaoInstrutor,
+            'pessoa_id' => $pessoa->id,
+            'turma_id' => $this->turma->id,
+            'parecer_tecnico' => $this->parecerTecnicoInstrutor,
+            'data_designacao' => $this->dataDesignacaoInstrutor,
+            'disciplina_id' => $this->disciplinaInstrutor,
+            'tipo_instrutor' => $this->tipoInstrutor
+        ]);
+        session()->flash('message','Coordenador Cadastrado com sucesso!');
+        $this->openModalInstrutor = false;
+        $this->isEditInstrutor = false;
+        $this->resetFieldsInstrutor();
+
+    }
+
     public function resetFieldsAluno()
     {
         $this->reset([
@@ -266,4 +377,17 @@ class TurmaDetail extends Component
         ]);
     }
 
+    public function resetFieldsInstrutor()
+    {
+        $this->reset([
+            'graduacaoInstrutor',
+            'nomeInstrutor',
+            'matriculaInstrutor',
+            'dataDesignacaoInstrutor',
+            'parecerTecnicoInstrutor',
+            'dataSubstituicaoInstrutor',
+            'disciplinaInstrutor',
+            'tipoInstrutor'
+        ]);
+    }
 }
