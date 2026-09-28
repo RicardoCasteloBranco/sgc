@@ -41,7 +41,8 @@
                         <button wire:click="editarAluno({{ $aluno->id }})" class="text-green-700">
                             Editar
                         </button>
-                        <button wire:click="apagarAluno({{ $aluno->id }})" class="text-red-600">
+                        <button wire:click="apagarAluno({{ $aluno->id }})" 
+                        wire:confirm="Deseja apagar o aluno {{$aluno->pessoa->nome}}?" class="text-red-600">
                             Apagar
                         </button>
                     </td>
@@ -75,7 +76,8 @@
                         <button wire:click="editarInstrutor({{ $instrutor->id }})" class="text-green-700">
                             Editar
                         </button>
-                        <button wire:click="apagarInstrutor({{ $instrutor->id }})" class="text-red-600">
+                        <button wire:click="apagarInstrutor({{ $instrutor->id }})" 
+                        wire:confirm="Deseja apagar o instrutor {{$instrutor->pessoa->nome}}?" class="text-red-600">
                             Apagar
                         </button>
                     </td>
@@ -319,20 +321,6 @@
         </x-form-section>
      </x-modal>
     <!-- Fim do formulário para adicionar e editar instrutores -->
-
-    <!-- Modal para apagar Aluno -->
-     <x-dialog-modal wire:model="openModalDeletaAluno">
-        <x-slot name="title">Apagar Aluno</x-slot>
-        <x-slot name="content">
-            <p>Você tem certeza que deseja apagar o aluno?</p>
-            <x-input id="nomeDel" wire:model.defer="nomeDel" disabled class="border-none focus:border-none focus:ring-0 shadow-none w-full"/>
-        </x-slot>
-        <x-slot name="footer">
-            <x-button wire:click="deleteAluno">Confirma</x-button>
-            <x-secondary-button wire:click="$set('openModalDeletaAluno', false)" class="ml-4">Cancela</x-secondary-button>
-        </x-slot>
-     </x-dialog-modal>
-     <!-- Fim do Modal para apagar material -->
 </div>
 <!-- Script para carregar um arquivo com os alunos da turma -->
 <script>

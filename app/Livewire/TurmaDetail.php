@@ -8,6 +8,9 @@ use App\Models\Pessoa;
 use App\Models\Aluno;
 use App\Models\Coordenador;
 use App\Models\Instrutor;
+use App\Models\Disciplina;
+use App\Models\Horario;
+use App\Models\Aula;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 use Livewire\Attributes\On;
@@ -28,15 +31,12 @@ class TurmaDetail extends Component
 
     //Variáveis para operações com alunos
     public $openModalAluno = false;
-    public $openModalDeletaAluno = false;
     public $isEditAluno = false;
     public $idAluno;
     public $graduacaoAluno;
     public $nomeAluno;
     public $matriculaAluno;
     public $situacao;
-    public $nomeDel;
-    public $idDel;
 
     //Variáveis para operações com Coordenador
     public $openModalCoordenador = false;
@@ -59,6 +59,21 @@ class TurmaDetail extends Component
     public $dataSubstituicaoInstrutor;
     public $disciplinaInstrutor;
     public $tipoInstrutor;
+
+    //Variávies para operações com Horário
+    public $openModalHorario = false;
+    public $isEditHorario = false;
+    public $idHorario;
+    public $horaInicio;
+    public $horaFim;
+
+    // Variáveis para operações com Aula
+    public $openModalAula = false;
+    public $isEditAula = false;
+    public $idAula;
+    public $dataAula;
+    public $horarioId;
+    public $disciplinaId;
 
     public function mount(Turma $turma)
     {
@@ -179,11 +194,9 @@ class TurmaDetail extends Component
 
     public function apagarAluno($id)
     {
-        $this->idAluno = $id;
         $aluno = Aluno::findOrFail($id);
-        $this->idDel = $id;
-        $this->nomeDel = $aluno->pessoa->nome;
-        $this->openModalDeletaAluno = true;
+        $aluno->delete();
+        session()->flash('message', 'Aluno Apagado');
     }
 
     public function carregarLista()
@@ -194,7 +207,7 @@ class TurmaDetail extends Component
     public function saveAluno()
     {
         $this->validate([
-            'graduacaoAluno' => ['required','string',Rule::in($this->graduacoes)],
+            'graduacaoAluno' => ['required','string'],
             'nomeAluno' => ['required','string'],
             'matriculaAluno' => ['required','integer']
         ],[
@@ -224,7 +237,7 @@ class TurmaDetail extends Component
     public function updateAluno()
     {
        $this->validate([
-            'graduacaoAluno' => ['required','string',Rule::in($this->graduacoes)],
+            'graduacaoAluno' => ['required','string'],
             'nomeAluno' => ['required','string'],
             'situacao' => ['required','string',Rule::in($this->situacoes)],
             'matriculaAluno' => ['required','integer']
@@ -248,15 +261,6 @@ class TurmaDetail extends Component
         $this->openModalAluno = false;
         $this->isEditAluno = false;
         $this->resetFieldsAluno();
-    }
-
-    public function deleteAluno()
-    {
-        $aluno = Aluno::findOrFail($this->idDel);
-        $aluno->delete();
-        session()->flash('message', 'Aluno Apagado');
-        $this->openModalDeletaAluno = false;
-        $this->reset(['nomeDel']);
     }
 
     public function adicionarInstrutor()
@@ -355,7 +359,154 @@ class TurmaDetail extends Component
         $this->openModalInstrutor = false;
         $this->isEditInstrutor = false;
         $this->resetFieldsInstrutor();
+    }
 
+    public function apagarInstrutor($id)
+    {
+        $instrutor = Instrutor::findOrFail($id);
+        $instrutor->delete();
+        session()->flash('message', 'Instrutor Apagado');
+    }
+
+    public function adicionarHorario()
+    {
+        $this->isEditHorario = false;
+        $this->openModalHorario = true;
+    }
+
+    public function editarHorario($id)
+    {
+        $horario = Horario::findOrFail($id);
+        $this->horaInicio = $horario->hora_inicio;
+        $this->horaFim = $horario->hora_fim;
+        $this->idHorario = $horario->id;
+
+        $this->isEditHorario = true;
+        $this->openModalHorario = true;
+    }
+
+    public function saveHorario()
+    {
+        $this->validate([
+            'horaInicio' => ['required','date_format:H:i'],
+            'horaFim' => ['required','date_format:H:i'],
+        ]);
+
+        Horario::create([
+            'hora_inicio' => $this->horaInicio,
+            'hora_fim' => $this->horaFim,
+            'turma_id' => $this->turmaId,
+        ]);
+        session()->flash('message','Horário Cadastrado com sucesso!');
+        $this->openModalHorario = false;
+        $this->isEditHorario = false;
+        $this->resetFieldsHorario();
+    }
+
+    public function updateHorario()
+    {
+        $this->validate([
+            'horaInicio' => ['required','date_format:H:i'],
+            'horaFim' => ['required','date_format:H:i'],
+        ]);
+
+        $horario = Horario::findOrFail($this->idHorario);
+        $horario->update([
+            'hora_inicio' => $this->horaInicio,
+            'hora_fim' => $this->horaFim,
+        ]);
+        session()->flash('message','Horário Atualizado com sucesso!');
+        $this->openModalHorario = false;
+        $this->isEditHorario = false;
+        $this->resetFieldsHorario();
+    }
+
+    public function deleteHorario($id)
+    {
+        $horario = Horario::findOrFail($id);
+        $horario->delete();
+        session()->flash('message', 'Horário Apagado');
+    }
+
+    public function adicionarAula()
+    {
+        $this->isEditAula = false;
+        $this->openModalAula = true;
+    }
+
+    public function editarAula($id)
+    {
+        $aula = Aula::findOrFail($id);
+        $this->dataAula = $aula->data_aula;
+        $this->horarioId = $aula->horario_id;
+        $this->disciplinaId = $aula->disciplina_id;
+        $this->idAula = $aula->id;
+
+        $this->isEditAula = true;
+        $this->openModalAula = true;
+    }
+
+    public function saveAula()
+    {
+        $this->validate([
+            'dataAula' => ['required','date'],
+            'horarioId' => ['required','integer'],
+            'disciplinaId' => ['required','integer'],
+        ]);
+
+        Aula::create([
+            'data_aula' => $this->dataAula,
+            'horario_id' => $this->horarioId,
+            'disciplina_id' => $this->disciplinaId,
+        ]);
+        session()->flash('message','Aula Cadastrada com sucesso!');
+        $this->openModalAula = false;
+        $this->isEditAula = false;
+        $this->resetFieldsAula();
+    }
+
+    public function updateAula()
+    {
+        $this->validate([
+            'dataAula' => ['required','date'],
+            'horarioId' => ['required','integer'],
+            'disciplinaId' => ['required','integer'],
+        ]);
+
+        $aula = Aula::findOrFail($this->idAula);
+        $aula->update([
+            'data_aula' => $this->dataAula,
+            'horario_id' => $this->horarioId,
+            'disciplina_id' => $this->disciplinaId,
+        ]);
+        session()->flash('message','Aula Atualizada com sucesso!');
+        $this->openModalAula = false;
+        $this->isEditAula = false;
+        $this->resetFieldsAula();
+    }
+
+    public function deleteAula($id)
+    {
+        $aula = Aula::findOrFail($id);
+        $aula->delete();
+        session()->flash('message', 'Aula Apagada');
+    }
+
+    public function resetFieldsAula()
+    {
+        $this->reset([
+            'dataAula',
+            'horarioId',
+            'disciplinaId'
+        ]);
+    }
+
+    public function resetFieldsHorario()
+    {
+        $this->reset([
+            'horaInicio',
+            'horaFim'
+        ]);
     }
 
     public function resetFieldsAluno()
