@@ -57,6 +57,11 @@ class Turma extends Model
         return $this->hasMany(Instrutor::class);
     }
 
+    public function horarios()
+    {
+        return $this->hasMany(Horario::class);
+    }
+
     public function statusTurma()
     {
         if(!is_null($this->portaria_conclusao)) {

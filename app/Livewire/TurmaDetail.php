@@ -72,8 +72,13 @@ class TurmaDetail extends Component
     public $isEditAula = false;
     public $idAula;
     public $dataAula;
-    public $horarioId;
-    public $disciplinaId;
+    public $horarioAula;
+    public $disciplinaAula;
+    public $horarios;
+    public $disciplinas;
+    public $aulasPorHorario;
+    public $aulas;
+
 
     public function mount(Turma $turma)
     {
@@ -82,6 +87,14 @@ class TurmaDetail extends Component
 
     public function render()
     {
+        $this->horarios = $this->turma->horarios()->orderBy('hora_inicio')->get();
+        $this->disciplinas = $this->turma->projeto->disciplinas()->get();
+        $this->aulas = Aula::whereIn('horario_id', $this->horarios->pluck('id'))->get();
+
+        $this->aulasPorHorario = $this->aulas->keyBy(function ($aula) {
+            return $aula->horario_id . '-' . $aula->disciplina_id;
+        });
+
         return view('livewire.turma-detail')->layout('layouts.app');
     }
 
@@ -438,8 +451,8 @@ class TurmaDetail extends Component
     {
         $aula = Aula::findOrFail($id);
         $this->dataAula = $aula->data_aula;
-        $this->horarioId = $aula->horario_id;
-        $this->disciplinaId = $aula->disciplina_id;
+        $this->horarioAula = $aula->horario_id;
+        $this->disciplinaAula = $aula->disciplina_id;
         $this->idAula = $aula->id;
 
         $this->isEditAula = true;
@@ -450,14 +463,14 @@ class TurmaDetail extends Component
     {
         $this->validate([
             'dataAula' => ['required','date'],
-            'horarioId' => ['required','integer'],
-            'disciplinaId' => ['required','integer'],
+            'horarioAula' => ['required','integer'],
+            'disciplinaAula' => ['required','integer'],
         ]);
 
         Aula::create([
             'data_aula' => $this->dataAula,
-            'horario_id' => $this->horarioId,
-            'disciplina_id' => $this->disciplinaId,
+            'horario_id' => $this->horarioAula,
+            'disciplina_id' => $this->disciplinaAula,
         ]);
         session()->flash('message','Aula Cadastrada com sucesso!');
         $this->openModalAula = false;
@@ -469,15 +482,15 @@ class TurmaDetail extends Component
     {
         $this->validate([
             'dataAula' => ['required','date'],
-            'horarioId' => ['required','integer'],
-            'disciplinaId' => ['required','integer'],
+            'horarioAula' => ['required','integer'],
+            'disciplinaAula' => ['required','integer'],
         ]);
 
         $aula = Aula::findOrFail($this->idAula);
         $aula->update([
             'data_aula' => $this->dataAula,
-            'horario_id' => $this->horarioId,
-            'disciplina_id' => $this->disciplinaId,
+            'horario_id' => $this->horarioAula,
+            'disciplina_id' => $this->disciplinaAula,
         ]);
         session()->flash('message','Aula Atualizada com sucesso!');
         $this->openModalAula = false;
@@ -496,8 +509,8 @@ class TurmaDetail extends Component
     {
         $this->reset([
             'dataAula',
-            'horarioId',
-            'disciplinaId'
+            'horarioAula',
+            'disciplinaAula'
         ]);
     }
 

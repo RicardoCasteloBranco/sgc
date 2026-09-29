@@ -18,4 +18,9 @@ class Horario extends Model
     {
         return $this->belongsTo(Turma::class);
     }
+
+    public function aulas()
+    {
+        return $this->hasMany(Aula::class);
+    }
 }

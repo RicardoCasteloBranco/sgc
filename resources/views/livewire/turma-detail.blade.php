@@ -86,6 +86,34 @@
             </x-slot>
         </x-table>
     </div>
+    <!-- Fim da tabela de Instrutores -->
+    <!-- Tabela de Horários -->
+    <div>
+        <x-section-title title="Horários" description=""></x-section-title>
+        <x-table>
+            <x-slot name="theaders">
+                <th class="p-3">Data</th>
+                @foreach($horarios as $horario)
+                <th class="p-3">{{date('H:i', strtotime($horario->horario_inicio))}} - {{date('H:i', strtotime($horario->horario_fim))}}</th>
+                @endforeach
+            </x-slot>
+            <x-slot name="tbody">
+                @foreach($aulas as $aula)
+                <tr class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }}" wire:key="aula-{{$aula->id}}">
+                    <td>{{$aula->data}}</td>
+                    @foreach($aulasPorHorario as $key => $aulaPorHorario)
+                        <td>
+                            @if($aulaPorHorario->data == $aula->data)
+                                {{$aulaPorHorario->disciplina->nome}}
+                            @endif
+                        </td>
+                    @endforeach
+                </tr>
+                @endforeach
+            </x-slot>
+        </x-table>
+    </div>
+    <!-- Fim da tabela de Horários --> 
     <!-- Formulário para carregar lista de alunos -->
       @if($openModalListaAlunos)
         <div class="fixed inset-0 z-50 overflow-y-auto">
@@ -321,6 +349,87 @@
         </x-form-section>
      </x-modal>
     <!-- Fim do formulário para adicionar e editar instrutores -->
+    <!-- Início do formulário para adicionar o horário das aulas -->
+    <x-modal wire:model="openModalHorario">
+        <x-form-section submit="{{ $isEditHorario ? 'updateHorario' : 'saveHorario' }}">
+            <x-slot name="title">
+                {{ $isEditHorario ? 'Editar Horário das Aulas' : 'Adicionar Horário das Aulas' }}
+            </x-slot>
+            <x-slot name="description">
+                {{ $isEditHorario ? 'Edite o horário das aulas da Turma.' : 'Adicione o horário das aulas da Turma.' }}
+            </x-slot>
+            <x-slot name="form">
+                <x-input type="hidden" id="turmaId" value="{{$turma->id}}" />
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="horaInicio" value="Horário de Início da Aula" />
+                    <x-input id="horaInicio" type="text" class="mt-1 block w-full" wire:model.defer="horaInicio" />
+                    <x-input-error for="horaInicio" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="horaFim" value="Horário de Fim da Aula" />
+                    <x-input id="horaFim" type="text" class="mt-1 block w-full" wire:model.defer="horaFim" />
+                    <x-input-error for="horaFim" class="mt-2" />
+                </div>
+            </x-slot>
+            <x-slot name="actions">
+                <x-secondary-button wire:click="$set('openModalHorario', false)">
+                    Cancelar
+                </x-secondary-button>
+                <x-button class="ml-3" type="submit">
+                    {{ $isEditHorario ? 'Atualizar' : 'Salvar' }}
+                </x-button>
+            </x-slot>
+        </x-form-section>
+     </x-modal>
+    <!-- Fim do formulário para adicionar o horário das aulas -->
+    <!-- Início do formulário para adicionar as aulas -->
+    <x-modal wire:model="openModalAula">
+        <x-form-section submit="{{ $isEditAula ? 'updateAula' : 'saveAula' }}">
+            <x-slot name="title">
+                {{ $isEditAula ? 'Editar Aula' : 'Adicionar Aula' }}
+            </x-slot>
+            <x-slot name="description">
+                {{ $isEditAula ? 'Edite a aula da Turma.' : 'Adicione uma aula da Turma.' }}
+            </x-slot>
+            <x-slot name="form">
+                <x-input type="hidden" id="turmaId" value="{{$turma->id}}" />
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="dataAula" value="Data da Aula" />
+                    <x-input id="dataAula" type="date" class="mt-1 block w-full" wire:model.defer="dataAula" />
+                    <x-input-error for="dataAula" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="disciplinaAula" value="Disciplina" />
+                    <x-select id="disciplinaAula" type="text" class="mt-1 block w-full" wire:model.defer="disciplinaAula">
+                        <option>Selecione uma disciplina:</option>
+                        @foreach($turma->projeto->disciplinas as $disciplina)
+                        <option value="{{$disciplina->id}}">{{$disciplina->nome}}</option>
+                        @endforeach
+                    </x-select>
+                    <x-input-error for="disciplinaAula" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="horarioAula" value="Horário" />
+                    <x-select id="horarioAula" type="text" class="mt-1 block w-full" wire:model.defer="horarioAula">
+                        <option>Selecione um horário:</option>
+                        @foreach($turma->horarios as $horario)
+                        <option value="{{$horario->id}}">{{$horario->hora_inicio}} - {{$horario->hora_fim}}</option>
+                        @endforeach
+                    </x-select>
+                    <x-input-error for="horarioAula" class="mt-2" />
+                </div>
+            </x-slot>
+            <x-slot name="actions">
+                <x-secondary-button wire:click="$set('openModalAula', false)">
+                    Cancelar
+                </x-secondary-button>
+                <x-button class="ml-3" type="submit">
+                    {{ $isEditAula ? 'Atualizar' : 'Salvar' }}
+                </x-button>
+            </x-slot>
+        </x-form-section>
+     </x-modal>
+    <!-- Fim do formulário para adicionar as aulas -->
 </div>
 <!-- Script para carregar um arquivo com os alunos da turma -->
 <script>
