@@ -23,4 +23,10 @@ class Aula extends Model
     {
         return $this->belongsTo(Disciplina::class);
     }
+
+    public function aulasMinistradas()
+    {
+        return $this->where('data_aula', '<=', 'data_aula')
+        ->groupBy('data_aula')->count();
+    }
 }

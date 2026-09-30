@@ -20,6 +20,7 @@ class TurmaDetail extends Component
     public $turma;
     public $alunos;
     public $turmaId;
+    public $abaAtiva;
     public $graduacoes = ['Cel PM','Ten Cel PM', 'Maj PM','Cap PM','1º Ten PM','2º Ten PM',
         'Asp PM','Cad PM','Al CHO PM','Al CFO PM','Sub Ten PM','1º Sgt PM','2º Sgt PM','3º Sgt PM','Al CFS PM',
         'Cb PM','Sd PM','Al CFP PM'];
@@ -76,7 +77,8 @@ class TurmaDetail extends Component
     public $disciplinaAula;
     public $horarios;
     public $disciplinas;
-    public $aulasPorHorario;
+    public $aulasPorDataHorario;
+    public $datasAulas;
     public $aulas;
 
 
@@ -87,15 +89,41 @@ class TurmaDetail extends Component
 
     public function render()
     {
-        $this->horarios = $this->turma->horarios()->orderBy('hora_inicio')->get();
+        $this->horarios = $this->turma->horarios()
+            ->orderBy('hora_inicio')
+            ->get();
+
         $this->disciplinas = $this->turma->projeto->disciplinas()->get();
-        $this->aulas = Aula::whereIn('horario_id', $this->horarios->pluck('id'))->get();
 
-        $this->aulasPorHorario = $this->aulas->keyBy(function ($aula) {
-            return $aula->horario_id . '-' . $aula->disciplina_id;
-        });
+        $this->aulas = Aula::with('disciplina')
+            ->whereIn('horario_id', $this->horarios->pluck('id'))
+            ->orderBy('data_aula')
+            ->get();
 
-        return view('livewire.turma-detail')->layout('layouts.app');
+        // Datas únicas das aulas, em ordem cronológica
+        $this->datasAulas = $this->aulas
+            ->sortBy('data_aula')
+            ->pluck('data_aula')
+            ->unique()
+            ->values();
+
+        // Organiza:
+        // data -> horario_id -> aula
+        $this->aulasPorDataHorario = $this->aulas
+            ->groupBy(function ($aula) {
+                return $aula->data_aula;
+            })
+            ->map(function ($aulasDoDia) {
+                return $aulasDoDia->keyBy('horario_id');
+            });
+
+        return view('livewire.turma-detail')
+            ->layout('layouts.app');
+    }
+
+    public function selecionarAba($aba)
+    {
+        $this->abaAtiva = $aba;
     }
 
     public function inserirCoordenador()
@@ -408,7 +436,7 @@ class TurmaDetail extends Component
         Horario::create([
             'hora_inicio' => $this->horaInicio,
             'hora_fim' => $this->horaFim,
-            'turma_id' => $this->turmaId,
+            'turma_id' => $this->turma->id,
         ]);
         session()->flash('message','Horário Cadastrado com sucesso!');
         $this->openModalHorario = false;
