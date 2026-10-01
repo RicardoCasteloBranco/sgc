@@ -344,7 +344,9 @@
                                             <div class="flex items-center justify-center gap-2">
 
                                                 <span>
-                                                    {{ $aula->disciplina->abreviacao }}                                                    
+                                                    {{ $aula->disciplina->abreviacao }}
+                                                    </br>
+                                                    {{$aula->aulasMinistradas()}} de {{$aula->disciplina->carga_horaria}}
                                                 </span>
 
                                                 <!-- Editar -->
@@ -389,7 +391,6 @@
                                                         <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3-3h8l1 1H6l1-1Z"/>
                                                     </svg>
                                                 </a>
-                                                <span>{{$aula->aulasMinistradas()}}</span>
                                             </div>
                                         @endif
                                     </td>

@@ -26,7 +26,23 @@ class Aula extends Model
 
     public function aulasMinistradas()
     {
-        return $this->where('data_aula', '<=', 'data_aula')
-        ->groupBy('data_aula')->count();
+        $horarioAtual = $this->horario;
+
+        return self::where('disciplina_id', $this->disciplina_id)
+            ->where(function ($query) use ($horarioAtual) {
+
+                $query->where('data_aula', '<', $this->data_aula)
+
+                    ->orWhere(function ($query) use ($horarioAtual) {
+
+                        $query->where('data_aula', $this->data_aula)
+                            ->whereHas('horario', function ($query) use ($horarioAtual) {
+                                $query->where('hora_inicio', '<=', $horarioAtual->hora_inicio);
+                            });
+
+                    });
+
+            })
+            ->count();
     }
 }
