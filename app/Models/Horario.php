@@ -11,12 +11,12 @@ class Horario extends Model
     protected $fillable = [
         'hora_inicio',
         'hora_fim',
-        'turma_id',
+        'projeto_id',
     ];
 
-    public function turma()
+    public function projeto()
     {
-        return $this->belongsTo(Turma::class);
+        return $this->belongsTo(Projeto::class);
     }
 
     public function aulas()

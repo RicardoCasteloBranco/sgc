@@ -249,11 +249,7 @@
                     </x-section-title>
 
                     <div class="flex items-center gap-2">
-                        <button
-                            wire:click="adicionarHorario()"
-                            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                            Adicionar Horário
-                        </button>
+                        
                         <x-button wire:click="adicionarAula()" class="m-4">Adicionar Aula</x-button>
                     </div>
                 </div>
@@ -267,62 +263,12 @@
 
                         @foreach($horarios as $horario)
                             <th class="p-3">
-                                <div class="flex items-center justify-center gap-2">
-
-                                    <span>
-                                        {{ date('H:i', strtotime($horario->hora_inicio)) }}
-                                        -
-                                        {{ date('H:i', strtotime($horario->hora_fim)) }}
-                                    </span>
-
-                                    <!-- Editar -->
-                                    <a
-                                        href="#"
-                                        wire:click="editarHorario({{ $horario->id }})"
-                                        class="text-gray-500 hover:text-blue-600"
-                                        title="Editar horário">
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="12"
-                                            height="12"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            stroke-width="2"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round">
-                                            <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
-                                            <path d="m15 5 4 4"/>
-                                        </svg>
-                                    </a>
-
-                                    <!-- Apagar -->
-                                    <a
-                                        href="#"
-                                        wire:click="apagarHorario({{ $horario->id }})"
-                                        wire:confirm="Deseja apagar o horário?"
-                                        class="text-gray-500 hover:text-red-600"
-                                        title="Apagar horário">
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="12"
-                                            height="12"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            stroke-width="2"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round">
-                                            <polyline points="3 6 5 6 21 6"/>
-                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3-3h8l1 1H6l1-1Z"/>
-                                        </svg>
-                                    </a>
-                                </div>
+                                {{ date('H:i', strtotime($horario->hora_inicio)) }}
+                                -
+                                {{ date('H:i', strtotime($horario->hora_fim)) }}
                             </th>
                         @endforeach
                     </x-slot>
-
-
                     <x-slot name="tbody">
                         @foreach($datasAulas as $data)
                             <tr
@@ -373,7 +319,7 @@
                                                 <!-- Apagar -->
                                                 <a
                                                     href="#"
-                                                    wire:click="apagarAula({{ $aula->id }})"
+                                                    wire:click="deleteAula({{ $aula->id }})"
                                                     wire:confirm="Deseja apagar a aula?"
                                                     class="text-gray-500 hover:text-red-600"
                                                     title="Apagar aula">
@@ -671,39 +617,7 @@
         </x-form-section>
      </x-modal>
     <!-- Fim do formulário para adicionar e editar instrutores -->
-    <!-- Início do formulário para adicionar o horário das aulas -->
-    <x-modal wire:model="openModalHorario">
-        <x-form-section submit="{{ $isEditHorario ? 'updateHorario' : 'saveHorario' }}">
-            <x-slot name="title">
-                {{ $isEditHorario ? 'Editar Horário das Aulas' : 'Adicionar Horário das Aulas' }}
-            </x-slot>
-            <x-slot name="description">
-                {{ $isEditHorario ? 'Edite o horário das aulas da Turma.' : 'Adicione o horário das aulas da Turma.' }}
-            </x-slot>
-            <x-slot name="form">
-                <x-input type="hidden" id="turmaId" value="{{$turma->id}}" />
-                <div class="col-span-6 sm:col-span-4">
-                    <x-label for="horaInicio" value="Horário de Início da Aula" />
-                    <x-input id="horaInicio" type="time" class="mt-1 block w-full" wire:model.defer="horaInicio" />
-                    <x-input-error for="horaInicio" class="mt-2" />
-                </div>
-                <div class="col-span-6 sm:col-span-4">
-                    <x-label for="horaFim" value="Horário de Fim da Aula" />
-                    <x-input id="horaFim" type="time" class="mt-1 block w-full" wire:model.defer="horaFim" />
-                    <x-input-error for="horaFim" class="mt-2" />
-                </div>
-            </x-slot>
-            <x-slot name="actions">
-                <x-secondary-button wire:click="$set('openModalHorario', false)">
-                    Cancelar
-                </x-secondary-button>
-                <x-button class="ml-3" type="submit">
-                    {{ $isEditHorario ? 'Atualizar' : 'Salvar' }}
-                </x-button>
-            </x-slot>
-        </x-form-section>
-     </x-modal>
-    <!-- Fim do formulário para adicionar o horário das aulas -->
+    
     <!-- Início do formulário para adicionar as aulas -->
     <x-modal wire:model="openModalAula">
         <x-form-section submit="{{ $isEditAula ? 'updateAula' : 'saveAula' }}">

@@ -51,6 +51,11 @@ class Projeto extends Model
         return $this->hasMany(Material::class);
     }
 
+    public function horarios()
+    {
+        return $this->hasMany(Horario::class);
+    }
+
     public function cargaHorariaTotal()
     {
         return $this->disciplinas()->sum('carga_horaria');

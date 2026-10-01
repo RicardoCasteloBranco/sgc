@@ -1,6 +1,8 @@
 <div class="p-6">
     <div class="w-full">
-        <div class="mb-6 p-4 bg-white rounded-lg">
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem;">
+            <!-- bloco de Detalhes do Projeto -->
+            <div class="bg-white text-black shadow p-5 rounded-lg flex flex-col justify-between">
                     <h3 class="text-2xl font-bold mb-4 uppercase">Detalhes do Projeto</h3>
                     <p><strong>Nome:</strong> {{ $projeto->curso->nome }}</p>
                     <p><strong>Centro de Ensino:</strong> {{ $projeto->centroEnsino->nome }}</p>
@@ -10,11 +12,51 @@
                     <p><strong>Custo com Bolsa de Formação:</strong> R$ {{ number_format($projeto->custo_bolsa_formacao_por_turma, 2, ',', '.') }}</p>
                     <p><strong>Custo com Serviços:</strong> R$ {{ number_format($projeto->custo_servico_por_turma, 2, ',', '.') }}</p>
                     <p><strong>Custo com Materiais:</strong> R$ {{ number_format($projeto->custoMaterial(), 2, ',','.') }}</p>
-        </div>
-        <div class="flex flex-col lg:flex-row gap-6 items-stretch h-auto">
+            </div>
+            <!-- bloco com o horário do projeto -->
+            <div class="bg-white text-black shadow p-5 rounded-lg flex flex-col justify-between">
+                <h3 class="text-2xl font-bold mb-4 uppercase">Horário do Projeto</h3>
+                    <div style="height: 280px; max-height: 280px; overflow-y: auto; position: relative;" class="border border-gray-100 rounded-lg">
+                        <div style="min-height: 100%;">
+                            <x-table>
+                                <x-slot name="theaders">
+                                    <tr>
+                                        <th class="px-4 py-2 border-b">Horário de Início</th>
+                                        <th class="px-4 py-2 border-b">Horário de Término</th>
+                                        <th class="px-4 py-2 border-b">Ação</th>
+                                    </tr>
+                                </x-slot>
+                                <x-slot name="tbody">
+                                    @foreach($projeto->horarios as $horario)
+                                        <tr class="text-center m-4">
+                                            <td class="px-4 py-2 border-b">{{ date('H:i', strtotime($horario->hora_inicio)) }}</td>
+                                            <td class="px-4 py-2 border-b">{{ date('H:i', strtotime($horario->hora_fim)) }}</td>
+                                            <td class="px-4 py-2 border-b">
+                                                <button wire:click="editarHorario({{ $horario->id }})" class="text-green-700">
+                                                    Editar
+                                                </button>
+                                                <button wire:click="deleteHorario({{ $horario->id }})" 
+                                                    wire:confirm="Tem certeza que deseja apagar o horário {{$horario->hora_inicio}} - {{$horario->hora_fim}}?" class="text-red-600">
+                                                    Apagar
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </x-slot>
+                            </x-table>
+                        </div>
+                    </div>
+                    <div class="m-4 px-1">
+                        <x-button
+                            wire:click="adicionarHorario()"
+                            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            Adicionar Horário
+                        </x-button>
+                    </div>
+            </div>
 
             <!-- bloco de Materiais -->
-            <div class="w-full lg:w-1/2 bg-white text-black shadow p-5 rounded-lg flex flex-col justify-between">
+            <div class="bg-white text-black shadow p-5 rounded-lg flex flex-col justify-between">
                 <div>
                     <h1 class="ml-6 text-lg font-semibold uppercase">Materiais</h1>
                     <h4 class="ml-6 mb-4 text-sm">Lista de Materiais para o Projeto</h4>
@@ -64,7 +106,7 @@
             </div>
 
             <!-- bloco de Disciplinas -->
-            <div class="w-full lg:w-1/2 bg-white p-5 rounded-lg shadow flex flex-col justify-between">
+            <div class="bg-white text-black shadow p-5 rounded-lg flex flex-col justify-between">
                 <div>
                     <h1 class="ml-4 text-lg font-semibold uppercase">Disciplinas</h1>
                     <h4 class="ml-4 mb-4 text-sm">Lista de Disciplinas do Projeto</h4>
@@ -395,6 +437,39 @@
         </x-form-section>
      </x-modal>
      <!-- Fim do Modal de Cadastro/Edicação de Material -->
+    <!-- Início do formulário para adicionar o horário das aulas -->
+    <x-modal wire:model="openModalHorario">
+        <x-form-section submit="{{ $isEditHorario ? 'updateHorario' : 'saveHorario' }}">
+            <x-slot name="title">
+                {{ $isEditHorario ? 'Editar Horário das Aulas' : 'Adicionar Horário das Aulas' }}
+            </x-slot>
+            <x-slot name="description">
+                {{ $isEditHorario ? 'Edite o horário das aulas da Turma.' : 'Adicione o horário das aulas da Turma.' }}
+            </x-slot>
+            <x-slot name="form">
+                <x-input type="hidden" id="turmaId" value="{{$turma->id}}" />
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="horaInicio" value="Horário de Início da Aula" />
+                    <x-input id="horaInicio" type="time" class="mt-1 block w-full" wire:model.defer="horaInicio" />
+                    <x-input-error for="horaInicio" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="horaFim" value="Horário de Fim da Aula" />
+                    <x-input id="horaFim" type="time" class="mt-1 block w-full" wire:model.defer="horaFim" />
+                    <x-input-error for="horaFim" class="mt-2" />
+                </div>
+            </x-slot>
+            <x-slot name="actions">
+                <x-secondary-button wire:click="$set('openModalHorario', false)">
+                    Cancelar
+                </x-secondary-button>
+                <x-button class="ml-3" type="submit">
+                    {{ $isEditHorario ? 'Atualizar' : 'Salvar' }}
+                </x-button>
+            </x-slot>
+        </x-form-section>
+     </x-modal>
+    <!-- Fim do formulário para adicionar o horário das aulas -->
     <!-- Modal de Cadastro de Parecer Técnico -->
     <x-modal wire:model="openModalParecer">
         <x-form-section submit="{{ $isEditParecer ? 'updateParecer' : 'saveParecer' }}">

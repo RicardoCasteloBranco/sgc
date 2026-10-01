@@ -9,7 +9,6 @@ use App\Models\Aluno;
 use App\Models\Coordenador;
 use App\Models\Instrutor;
 use App\Models\Disciplina;
-use App\Models\Horario;
 use App\Models\Aula;
 use App\Models\PerfilUsuario;
 use App\Models\User;
@@ -64,12 +63,6 @@ class TurmaDetail extends Component
     public $disciplinaInstrutor;
     public $tipoInstrutor;
 
-    //Variávies para operações com Horário
-    public $openModalHorario = false;
-    public $isEditHorario = false;
-    public $idHorario;
-    public $horaInicio;
-    public $horaFim;
 
     // Variáveis para operações com Aula
     public $openModalAula = false;
@@ -422,65 +415,6 @@ class TurmaDetail extends Component
         session()->flash('message', 'Instrutor Apagado');
     }
 
-    public function adicionarHorario()
-    {
-        $this->isEditHorario = false;
-        $this->openModalHorario = true;
-    }
-
-    public function editarHorario($id)
-    {
-        $horario = Horario::findOrFail($id);
-        $this->horaInicio = $horario->hora_inicio;
-        $this->horaFim = $horario->hora_fim;
-        $this->idHorario = $horario->id;
-
-        $this->isEditHorario = true;
-        $this->openModalHorario = true;
-    }
-
-    public function saveHorario()
-    {
-        $this->validate([
-            'horaInicio' => ['required','date_format:H:i'],
-            'horaFim' => ['required','date_format:H:i'],
-        ]);
-
-        Horario::create([
-            'hora_inicio' => $this->horaInicio,
-            'hora_fim' => $this->horaFim,
-            'turma_id' => $this->turma->id,
-        ]);
-        session()->flash('message','Horário Cadastrado com sucesso!');
-        $this->openModalHorario = false;
-        $this->isEditHorario = false;
-        $this->resetFieldsHorario();
-    }
-
-    public function updateHorario()
-    {
-        $this->validate([
-            'horaInicio' => ['required','date_format:H:i'],
-            'horaFim' => ['required','date_format:H:i'],
-        ]);
-
-        $horario = Horario::findOrFail($this->idHorario);
-        $horario->update([
-            'hora_inicio' => $this->horaInicio,
-            'hora_fim' => $this->horaFim,
-        ]);
-        session()->flash('message','Horário Atualizado com sucesso!');
-        $this->openModalHorario = false;
-        $this->isEditHorario = false;
-        $this->resetFieldsHorario();
-    }
-
-    public function deleteHorario($id)
-    {
-        $horario = Horario::findOrFail($id);
-        $horario->delete();
-        session()->flash('message', 'Horário Apagado');
-    }
 
     public function adicionarAula()
     {
@@ -552,14 +486,6 @@ class TurmaDetail extends Component
             'dataAula',
             'horarioAula',
             'disciplinaAula'
-        ]);
-    }
-
-    public function resetFieldsHorario()
-    {
-        $this->reset([
-            'horaInicio',
-            'horaFim'
         ]);
     }
 

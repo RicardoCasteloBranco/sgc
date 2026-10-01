@@ -10,6 +10,7 @@ use App\Models\Turma;
 use App\Models\Disciplina;
 use App\Models\ParecerTecnico;
 use App\Models\Material;
+use App\Models\Horario;
 use App\Models\TipoMaterial;
 
 class ProjetoDetail extends Component
@@ -65,6 +66,13 @@ class ProjetoDetail extends Component
     public $quantidadePorTurma;
     public $custoUnitario;
     public $tipoMaterialId;
+
+    //Variávies para operações com Horário
+    public $openModalHorario = false;
+    public $isEditHorario = false;
+    public $idHorario;
+    public $horaInicio;
+    public $horaFim;
 
 
     
@@ -398,8 +406,69 @@ class ProjetoDetail extends Component
     }
 
     public function apagaMaterial($id){
-        $this->material->delete();
+        $material = Material::findOrFail($id);
+        $material->delete();
         session()->flash('message','Material Apagado com Sucesso');
+    }
+
+    public function adicionarHorario()
+    {
+        $this->isEditHorario = false;
+        $this->openModalHorario = true;
+    }
+
+    public function editarHorario($id)
+    {
+        $horario = Horario::findOrFail($id);
+        $this->horaInicio = $horario->hora_inicio;
+        $this->horaFim = $horario->hora_fim;
+        $this->idHorario = $horario->id;
+
+        $this->isEditHorario = true;
+        $this->openModalHorario = true;
+    }
+
+    public function saveHorario()
+    {
+        $this->validate([
+            'horaInicio' => ['required','date_format:H:i'],
+            'horaFim' => ['required','date_format:H:i'],
+        ]);
+
+        Horario::create([
+            'hora_inicio' => $this->horaInicio,
+            'hora_fim' => $this->horaFim,
+            'projeto_id' => $this->projetoId,
+        ]);
+        session()->flash('message','Horário Cadastrado com sucesso!');
+        $this->openModalHorario = false;
+        $this->isEditHorario = false;
+        $this->resetFieldsHorario();
+    }
+
+    public function updateHorario()
+    {
+        $this->validate([
+            'horaInicio' => ['required','date_format:H:i'],
+            'horaFim' => ['required','date_format:H:i'],
+        ]);
+
+        $horario = Horario::findOrFail($this->idHorario);
+        $horario->update([
+            'hora_inicio' => $this->horaInicio,
+            'hora_fim' => $this->horaFim,
+        ]);
+        session()->flash('message','Horário Atualizado com sucesso!');
+        $this->openModalHorario = false;
+        $this->isEditHorario = false;
+        $this->resetFieldsHorario();
+    }
+
+    public function deleteHorario($id)
+    {
+        $horario = Horario::findOrFail($id);
+        $horario->delete();
+        session()->flash('message', 'Horário Apagado');
     }
 
     public function resetFieldsDisciplina()
@@ -449,6 +518,14 @@ class ProjetoDetail extends Component
             'quantidadePorTurma',
             'tipoMaterialId',
             'custoUnitario'
+        ]);
+    }
+
+    public function resetFieldsHorario()
+    {
+        $this->reset([
+            'horaInicio',
+            'horaFim'
         ]);
     }
 

@@ -59,7 +59,7 @@ class Turma extends Model
 
     public function horarios()
     {
-        return $this->hasMany(Horario::class);
+        return $this->hasManyThrough(Horario::class, Projeto::class, 'id', 'projeto_id', 'projeto_id', 'id');
     }
 
     public function statusTurma()
