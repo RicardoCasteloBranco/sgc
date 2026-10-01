@@ -12,7 +12,7 @@ use App\Models\Disciplina;
 use App\Models\Horario;
 use App\Models\Aula;
 use App\Models\PerfilUsuario;
-use App\Models\Users;
+use App\Models\User;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 use Livewire\Attributes\On;
@@ -26,6 +26,7 @@ class TurmaDetail extends Component
     public $graduacoes = ['Cel PM','Ten Cel PM', 'Maj PM','Cap PM','1º Ten PM','2º Ten PM',
         'Asp PM','Cad PM','Al CHO PM','Al CFO PM','Sub Ten PM','1º Sgt PM','2º Sgt PM','3º Sgt PM','Al CFS PM',
         'Cb PM','Sd PM','Al CFP PM'];
+    public $usuarios;
 
     public $situacoes = ['Matriculado(a)','Desistente','Excluído(a)','Aprovado(a)'];
     
@@ -97,6 +98,8 @@ class TurmaDetail extends Component
 
         $this->disciplinas = $this->turma->projeto->disciplinas()->get();
 
+        $this->usuarios = User::all();
+
         $this->aulas = Aula::with('disciplina')
             ->whereIn('horario_id', $this->horarios->pluck('id'))
             ->orderBy('data_aula')
@@ -138,6 +141,13 @@ class TurmaDetail extends Component
     {
         $this->isEditCoordenador = true;
         $this->openModalCoordenador = true;
+    }
+
+    public function updatedMatriculaCoordenador()
+    {
+        $usuario = User::where('matricula', $this->matriculaCoordenador)->first();
+        
+        $this->nomeCoordenador = $usuario ? $usuario->name : '';
     }
 
     public function saveCoordenador()

@@ -534,14 +534,19 @@
                     <x-input-error for="graduacaoCoordenador" class="mt-2" />
                 </div>
                 <div class="col-span-6 sm:col-span-4">
-                    <x-label for="nomeCoordenador" value="Nome" />
-                    <x-input id="nomeCoordenador" type="text" class="mt-1 block w-full" wire:model.defer="nomeCoordenador" />
-                    <x-input-error for="nomeCoodenador" class="mt-2" />
+                    <x-label for="matriculaCoordenador" value="Matrícula" />
+                    <x-select id="matriculaCoordenador" class="mt-1 block w-full" wire:model.live="matriculaCoordenador">
+                        <option value="">Selecione a matrícula</option>
+                        @foreach($usuarios as $usuario)
+                            <option value="{{ $usuario->matricula }}">{{ $usuario->matricula }}</option>
+                        @endforeach
+                    </x-select>
+                    <x-input-error for="matriculaCoordenador" class="mt-2" />
                 </div>
                 <div class="col-span-6 sm:col-span-4">
-                    <x-label for="matriculaCoordenador" value="Matrícula" />
-                    <x-input id="matriculaCoordenador" type="text" class="mt-1 block w-full" wire:model.defer="matriculaCoordenador" />
-                    <x-input-error for="matriculaCoordenador" class="mt-2" />
+                    <x-label for="nomeCoordenador" value="Nome" />
+                    <x-input id="nomeCoordenador" type="text" class="mt-1 block w-full" wire:model.defer="nomeCoordenador" />
+                    <x-input-error for="nomeCoordenador" class="mt-2" />
                 </div>
                 <div class="col-span-6 sm:col-span-4">
                     <x-label for="dataDesignacao" value="Data de Designação" />
@@ -619,10 +624,39 @@
                     <x-input-error for="disciplinaInstrutor" class="mt-2" />
                 </div>
                 <div class="col-span-6 sm:col-span-4">
-                    <x-label for="tipoInstrutor" value="Titular" />
-                    <x-input id="tipoInstrutor" type="radio" class="mt-1" wire:model.defer="tipoInstrutor" value="Titular"/>
-                    <x-label for="tipoInstrutor" value="Secundário" />
-                    <x-input id="tipoInstrutor" type="radio" class="mt-1" wire:model.defer="tipoInstrutor" value="Secundário"/>
+                    <x-label value="Tipo de Instrutor" class="mb-2" />
+
+                    <div class="flex flex-wrap items-center gap-4">
+
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <x-input
+                                type="radio"
+                                wire:model.defer="tipoInstrutor"
+                                value="Titular"
+                            />
+                            <span>Titular</span>
+                        </label>
+
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <x-input
+                                type="radio"
+                                wire:model.defer="tipoInstrutor"
+                                value="Secundário"
+                            />
+                            <span>Secundário</span>
+                        </label>
+
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <x-input
+                                type="radio"
+                                wire:model.defer="tipoInstrutor"
+                                value="Conteudista"
+                            />
+                            <span>Conteudista</span>
+                        </label>
+
+                    </div>
+
                     <x-input-error for="tipoInstrutor" class="mt-2" />
                 </div>
             </x-slot>

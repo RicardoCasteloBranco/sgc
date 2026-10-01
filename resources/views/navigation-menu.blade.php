@@ -103,16 +103,17 @@
                                     $title = __($menu->titulo);
                                     $url = '';
                                     $coordenador = Auth::user()->pessoa->coordenador ?? null;
-                                    if($menu->rota == 'turma' && $coordenador){
-                                        $url = route($menu->rota, ['turma' => $coordenador->turma_id]);
-                                    }else{
-                                        $url = route($menu->rota);
-                                    }
+                                    $url = route($menu->rota);
                                 @endphp
                                     <x-dropdown-link href="{{ $url }}" >
                                         {{ $title }}
                                     </x-dropdown-link>
                                 @endforeach
+                                @if($coordenador && is_null($coordenador->turma->data_fim))
+                                    <x-dropdown-link href="{{ route('turma', ['turma' => $coordenador->turma_id]) }}" >
+                                        {{ __('Turma '.$coordenador->turma->nome) }}
+                                    </x-dropdown-link>
+                                @endif
                             @endforeach
 
                             @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
