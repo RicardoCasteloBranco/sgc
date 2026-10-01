@@ -11,6 +11,8 @@ use App\Models\Instrutor;
 use App\Models\Disciplina;
 use App\Models\Horario;
 use App\Models\Aula;
+use App\Models\PerfilUsuario;
+use App\Models\Users;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 use Livewire\Attributes\On;
@@ -150,6 +152,7 @@ class TurmaDetail extends Component
         ]);
 
         $pessoa = Pessoa::where('matricula', $this->matriculaCoordenador)->first();
+        $user = User::where('matricula', $this->matriculaCoordenador)->first();
 
         if(!$pessoa){
             $pessoa = Pessoa::create([
