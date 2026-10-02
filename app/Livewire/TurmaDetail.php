@@ -392,8 +392,8 @@ class TurmaDetail extends Component
                 'matricula' => $this->matriculaInstrutor,
             ]);
         }
-        $instrutor = findOfFail($this->idInstrutor);
-        $instrutor::update([
+        $instrutor = Instrutor::findOrFail($this->idInstrutor);
+        $instrutor->update([
             'posto_graduacao' => $this->graduacaoInstrutor,
             'pessoa_id' => $pessoa->id,
             'turma_id' => $this->turma->id,
