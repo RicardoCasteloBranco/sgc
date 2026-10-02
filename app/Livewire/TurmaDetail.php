@@ -377,7 +377,6 @@ class TurmaDetail extends Component
             'nomeInstrutor' => ['required','string'],
             'matriculaInstrutor' => ['required','integer'],
             'dataDesignacaoInstrutor' => ['required','date'],
-            'dataSubstituicaoInstrutor' => ['required','date'],
             'disciplinaInstrutor' => ['required'],
             'tipoInstrutor' => ['required'],
             'parecerTecnicoInstrutor' => ['required','string']
