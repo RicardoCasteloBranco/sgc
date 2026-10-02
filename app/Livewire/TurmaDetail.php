@@ -364,7 +364,7 @@ class TurmaDetail extends Component
             'disciplina_id' => $this->disciplinaInstrutor,
             'tipo_instrutor' => $this->tipoInstrutor
         ]);
-        session()->flash('message','Coordenador Cadastrado com sucesso!');
+        session()->flash('message','Instrutor Cadastrado com sucesso!');
         $this->openModalInstrutor = false;
         $this->isEditInstrutor = false;
         $this->resetFieldsInstrutor();
@@ -391,6 +391,11 @@ class TurmaDetail extends Component
                 'nome' => $this->nomeInstrutor,
                 'matricula' => $this->matriculaInstrutor,
             ]);
+        }else{
+            $pessoa->update([
+                'nome' => $this->nomeInstrutor,
+                'matricula' => $this->matriculaInstrutor
+            ]);
         }
         $instrutor = Instrutor::findOrFail($this->idInstrutor);
         $instrutor->update([
@@ -403,7 +408,7 @@ class TurmaDetail extends Component
             'disciplina_id' => $this->disciplinaInstrutor,
             'tipo_instrutor' => $this->tipoInstrutor
         ]);
-        session()->flash('message','Coordenador Cadastrado com sucesso!');
+        session()->flash('message','Instrutor Atualizado com sucesso!');
         $this->openModalInstrutor = false;
         $this->isEditInstrutor = false;
         $this->resetFieldsInstrutor();
