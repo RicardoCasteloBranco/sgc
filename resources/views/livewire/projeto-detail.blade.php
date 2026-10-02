@@ -447,7 +447,6 @@
                 {{ $isEditHorario ? 'Edite o horário das aulas da Turma.' : 'Adicione o horário das aulas da Turma.' }}
             </x-slot>
             <x-slot name="form">
-                <x-input type="hidden" id="turmaId" value="{{$turma->id}}" />
                 <div class="col-span-6 sm:col-span-4">
                     <x-label for="horaInicio" value="Horário de Início da Aula" />
                     <x-input id="horaInicio" type="time" class="mt-1 block w-full" wire:model.defer="horaInicio" />
