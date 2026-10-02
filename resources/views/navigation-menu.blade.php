@@ -102,14 +102,16 @@
                                 @php
                                     $title = __($menu->titulo);
                                     $url = '';
-                                    $coordenador = Auth::user()->pessoa->coordenador ?? null;
                                     $url = route($menu->rota);
                                 @endphp
                                     <x-dropdown-link href="{{ $url }}" >
                                         {{ $title }}
                                     </x-dropdown-link>
                                 @endforeach
-                                @if($coordenador && is_null($coordenador->turma->data_fim))
+                                @php 
+                                    $coordenador = Auth::user()->pessoa->coordenador ?? null;
+                                @endphp
+                                @if(isset($coordenador) && is_null($coordenador->turma->data_fim))
                                     <x-dropdown-link href="{{ route('turma', ['turma' => $coordenador->turma_id]) }}" >
                                         {{ __('Turma '.$coordenador->turma->nome) }}
                                     </x-dropdown-link>

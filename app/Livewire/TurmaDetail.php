@@ -341,7 +341,8 @@ class TurmaDetail extends Component
             'matriculaInstrutor' => ['required','integer'],
             'dataDesignacaoInstrutor' => ['required','date'],
             'disciplinaInstrutor' => ['required'],
-            'tipoInstrutor' => ['required']
+            'tipoInstrutor' => ['required'],
+            'parecerTecnicoInstrutor' => ['required','string']
         ],[
             'matricula.integer'=> "Só pode haver números na matrícula"
         ]);
@@ -378,7 +379,8 @@ class TurmaDetail extends Component
             'dataDesignacaoInstrutor' => ['required','date'],
             'dataSubstituicaoInstrutor' => ['required','date'],
             'disciplinaInstrutor' => ['required'],
-            'tipoInstrutor' => ['required']
+            'tipoInstrutor' => ['required'],
+            'parecerTecnicoInstrutor' => ['required','string']
         ],[
             'matricula.integer'=> "Só pode haver números na matrícula"
         ]);

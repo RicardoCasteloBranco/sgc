@@ -83,11 +83,11 @@
                     <div class="flex items-center gap-2">
                         <x-button wire:click="carregarLista()" class="m-4">Carrregar Turma</x-button>
 
-                        <button
+                        <x-button
                             wire:click="adicionarAluno()"
                             class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                        Adicionar Aluno
-                        </button>
+                            Adicionar Aluno
+                        </x-button>
                     </div>
                 </div>
                 
@@ -165,12 +165,12 @@
                     description="">
                 </x-section-title>
 
-                    <button
+                    <x-button
                         wire:click="adicionarInstrutor()"
                         class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                     >
                         Adicionar Instrutor
-                    </button>
+                    </x-button>
 
                 </div>
 
