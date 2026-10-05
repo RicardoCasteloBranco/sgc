@@ -253,8 +253,6 @@
                         <x-button wire:click="adicionarAula()" class="m-4">Adicionar Aula</x-button>
                     </div>
                 </div>
-
-
                 <x-table>
 
                     <x-slot name="theaders">
@@ -629,6 +627,11 @@
             </x-slot>
             <x-slot name="form">
                 <x-input type="hidden" id="turmaId" value="{{$turma->id}}" />
+                @error('errorAula')
+                    <div class="col-span-6 sm:col-span-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                        <span class="block sm:inline">{{ $message }}</span>
+                    </div>
+                @enderror
                 <div class="col-span-6 sm:col-span-4">
                     <x-label for="dataAula" value="Data da Aula" />
                     <x-input id="dataAula" type="date" class="mt-1 block w-full" wire:model.defer="dataAula" />

@@ -447,16 +447,23 @@ class TurmaDetail extends Component
             'horarioAula' => ['required','integer'],
             'disciplinaAula' => ['required','integer'],
         ]);
-
-        Aula::create([
-            'data_aula' => $this->dataAula,
-            'horario_id' => $this->horarioAula,
-            'disciplina_id' => $this->disciplinaAula,
-        ]);
-        session()->flash('message','Aula Cadastrada com sucesso!');
-        $this->openModalAula = false;
-        $this->isEditAula = false;
-        $this->resetFieldsAula();
+        try{
+            Aula::create([
+                'data_aula' => $this->dataAula,
+                'horario_id' => $this->horarioAula,
+                'disciplina_id' => $this->disciplinaAula,
+            ]);
+            session()->flash('message','Aula Cadastrada com sucesso!');
+            $this->openModalAula = false;
+            $this->isEditAula = false;
+            $this->resetFieldsAula();
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() === '23000') { // Código de erro para violação de chave única
+                $this->addError('errorAula', 'Já existe uma aula cadastrada para esta data e horário. Por favor, escolha outro horário ou data.');
+            } else {
+                $this->addError('errorAula', 'Ocorreu um erro ao cadastrar a aula. Por favor, tente novamente.');
+            }
+        }
     }
 
     public function updateAula()
