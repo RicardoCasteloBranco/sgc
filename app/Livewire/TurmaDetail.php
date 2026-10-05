@@ -93,10 +93,7 @@ class TurmaDetail extends Component
 
         $this->usuarios = User::all();
 
-        $this->aulas = Aula::with('disciplina')
-            ->whereIn('horario_id', $this->horarios->pluck('id'))
-            ->orderBy('data_aula')
-            ->get();
+        $this->aulas = $this->turma->aulas;
 
         // Datas únicas das aulas, em ordem cronológica
         $this->datasAulas = $this->aulas
@@ -451,6 +448,7 @@ class TurmaDetail extends Component
             Aula::create([
                 'data_aula' => $this->dataAula,
                 'horario_id' => $this->horarioAula,
+                'turma_id' => $this->turma->id,
                 'disciplina_id' => $this->disciplinaAula,
             ]);
             session()->flash('message','Aula Cadastrada com sucesso!');

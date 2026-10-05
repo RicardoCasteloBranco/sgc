@@ -12,6 +12,7 @@ class Aula extends Model
         'data_aula',
         'horario_id',
         'disciplina_id',
+        'turma_id',
     ];
 
     public function horario()
@@ -22,6 +23,11 @@ class Aula extends Model
     public function disciplina()
     {
         return $this->belongsTo(Disciplina::class);
+    }
+
+    public function turma()
+    {
+        return $this->belongsTo(Turma::class);
     }
 
     public function aulasMinistradas()

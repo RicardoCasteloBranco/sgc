@@ -12,7 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('aulas', function (Blueprint $table) {
-            $table->unique(['data_aula', 'horario_id']);
+            $table->unsignedBigInteger('turma_id')->nullable()->after('horario_id');
+            $table->foreign('turma_id')->references('id')->on('turmas');
+            $table->dropUnique(['data_aula', 'horario_id']);
+            $table->unique(['data_aula', 'horario_id','turma_id']);
         });
     }
 
@@ -21,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('aulas', function (Blueprint $table) {
-            $table->dropUnique(['data_aula', 'horario_id']);
-        });
+        
     }
 };

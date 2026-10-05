@@ -62,6 +62,11 @@ class Turma extends Model
         return $this->hasManyThrough(Horario::class, Projeto::class, 'id', 'projeto_id', 'projeto_id', 'id');
     }
 
+    public function aulas()
+    {
+        return $this->hasMany(Aula::class);
+    }
+
     public function statusTurma()
     {
         if(!is_null($this->portaria_conclusao)) {
