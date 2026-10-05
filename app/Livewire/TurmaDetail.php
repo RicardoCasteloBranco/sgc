@@ -475,15 +475,23 @@ class TurmaDetail extends Component
         ]);
 
         $aula = Aula::findOrFail($this->idAula);
-        $aula->update([
-            'data_aula' => $this->dataAula,
-            'horario_id' => $this->horarioAula,
-            'disciplina_id' => $this->disciplinaAula,
-        ]);
-        session()->flash('message','Aula Atualizada com sucesso!');
-        $this->openModalAula = false;
-        $this->isEditAula = false;
-        $this->resetFieldsAula();
+        try {
+            $aula->update([
+                'data_aula' => $this->dataAula,
+                'horario_id' => $this->horarioAula,
+                'disciplina_id' => $this->disciplinaAula,
+            ]);
+            session()->flash('message','Aula Atualizada com sucesso!');
+            $this->openModalAula = false;
+            $this->isEditAula = false;
+            $this->resetFieldsAula();
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() === '23000') { // Código de erro para violação de chave única
+                $this->addError('errorAula', 'Você tentou atualizar para data e horário que já existe uma aula cadastrada. Por favor, escolha outro horário ou data.');
+            } else {
+                $this->addError('errorAula', 'Ocorreu um erro ao atualizar a aula. Por favor, tente novamente.');
+            }
+        }
     }
 
     public function deleteAula($id)
