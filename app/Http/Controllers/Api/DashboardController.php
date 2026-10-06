@@ -7,20 +7,16 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function turmas()
+    public function turmasEncerradas()
     {
-        $encerradas = \App\Models\Turma::whereNotNull('data_fim')->count();
-        $andamento = \App\Models\Turma::whereNull('data_fim')->count();
-        return response()->json([
-            [
-                'status' => 'Andamento',
-                'total' => $andamento
-            ],
-            [
-                'status' => 'Encerradas',
-                'total' => $encerradas
-            ]
-        ]);
+        $encerradas = \App\Models\Turma::whereNotNull('data_fim')->get();
+        return response()->json($encerradas);
+    }
+
+    public function turmasAndamento()
+    {
+        $andamento = \App\Models\Turma::whereNull('data_fim')->get();
+        return response()->json($andamento);
     }
 
     public function projetos()
@@ -65,27 +61,142 @@ class DashboardController extends Controller
 
     public function alunos()
     {
-        $dados = array();
-        $concluintes = \App\Models\Turma::selectRaw('
-            MONTH(data_fim) as mes,
-            SUM(quantidade_concluintes) as total
+        $dados = [];
+
+        // ============================
+        // MATRICULADOS
+        // ============================
+        $matriculados = \App\Models\Turma::selectRaw('
+            YEAR(data_inicio) as ano,
+            MONTH(data_inicio) as mes,
+            COUNT(alunos.id) as total
         ')
-        ->whereNotNull('data_fim')
-        ->groupByRaw('MONTH(data_fim)')
-        ->orderByRaw('MONTH(data_fim)')
+        ->join('alunos', 'alunos.turma_id', '=', 'turmas.id')
+        ->whereNotNull('data_inicio')
+        ->groupByRaw('YEAR(data_inicio), MONTH(data_inicio)')
+        ->orderByRaw('YEAR(data_inicio), MONTH(data_inicio)')
         ->get();
-        for($i = 0; $i < 12; $i++){
-            $dados[$i] = [
-                'mes' => $this->getMes($i + 1),
-                'total' => 0
-            ];
+
+
+        // ============================
+        // DESISTENTES
+        // ============================
+        $desistentes = \App\Models\Turma::selectRaw('
+            YEAR(data_inicio) as ano,
+            MONTH(data_inicio) as mes,
+            COUNT(alunos.id) as total
+        ')
+        ->join('alunos', 'alunos.turma_id', '=', 'turmas.id')
+        ->whereNotNull('data_inicio')
+        ->where('alunos.situacao', 'Desistente')
+        ->groupByRaw('YEAR(data_inicio), MONTH(data_inicio)')
+        ->orderByRaw('YEAR(data_inicio), MONTH(data_inicio)')
+        ->get();
+
+
+        // ============================
+        // EXCLUÍDOS
+        // ============================
+        $excluidos = \App\Models\Turma::selectRaw('
+            YEAR(data_inicio) as ano,
+            MONTH(data_inicio) as mes,
+            COUNT(alunos.id) as total
+        ')
+        ->join('alunos', 'alunos.turma_id', '=', 'turmas.id')
+        ->whereNotNull('data_inicio')
+        ->where('alunos.situacao', 'Excluido(a)')
+        ->groupByRaw('YEAR(data_inicio), MONTH(data_inicio)')
+        ->orderByRaw('YEAR(data_inicio), MONTH(data_inicio)')
+        ->get();
+
+
+        // ============================
+        // APROVADOS
+        // ============================
+        $aprovados = \App\Models\Turma::selectRaw('
+            YEAR(data_fim) as ano,
+            MONTH(data_fim) as mes,
+            COUNT(alunos.id) as total
+        ')
+        ->join('alunos', 'alunos.turma_id', '=', 'turmas.id')
+        ->whereNotNull('data_fim')
+        ->where('alunos.situacao', 'Aprovado(a)')
+        ->groupByRaw('YEAR(data_fim), MONTH(data_fim)')
+        ->orderByRaw('YEAR(data_fim), MONTH(data_fim)')
+        ->get();
+
+
+        // ============================
+        // IDENTIFICAR TODOS OS ANOS
+        // ============================
+        $anos = collect([
+            ...$matriculados->pluck('ano'),
+            ...$desistentes->pluck('ano'),
+            ...$excluidos->pluck('ano'),
+            ...$aprovados->pluck('ano'),
+        ])
+        ->filter()
+        ->unique()
+        ->sort()
+        ->values();
+
+
+        // ============================
+        // INDEXAR POR ANO + MÊS
+        // ============================
+
+        $matriculados = $matriculados->keyBy(function ($item) {
+            return $item->ano . '-' . $item->mes;
+        });
+
+        $desistentes = $desistentes->keyBy(function ($item) {
+            return $item->ano . '-' . $item->mes;
+        });
+
+        $excluidos = $excluidos->keyBy(function ($item) {
+            return $item->ano . '-' . $item->mes;
+        });
+
+        $aprovados = $aprovados->keyBy(function ($item) {
+            return $item->ano . '-' . $item->mes;
+        });
+
+
+        // ============================
+        // MONTAR OS DADOS
+        // ============================
+
+        foreach ($anos as $ano) {
+
+            for ($mes = 1; $mes <= 12; $mes++) {
+
+                $chave = $ano . '-' . $mes;
+
+                $dados[] = [
+                    'ano' => $ano,
+
+                    'mes' => $this->getMes($mes),
+
+                    'matriculado' =>
+                        $matriculados->get($chave)?->total ?? 0,
+
+                    'desistente' =>
+                        $desistentes->get($chave)?->total ?? 0,
+
+                    'excluido' =>
+                        $excluidos->get($chave)?->total ?? 0,
+
+                    'aprovado' =>
+                        $aprovados->get($chave)?->total ?? 0,
+                ];
+            }
         }
-        foreach($concluintes as $concluinte){
-            $dados[$concluinte->mes - 1] = [
-                'mes' => $this->getMes($concluinte->mes),
-                'total' => $concluinte->total
-            ];
-        }
+
+
+        // ============================
+        // RETORNO
+        // ============================
+
         return response()->json($dados);
     }
 
