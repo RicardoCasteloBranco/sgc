@@ -1,11 +1,11 @@
 <a href="/">
 <svg
-   class="w-15 h-15"
+   class="w-14 h-14"
    fill="currentColor"
    aria-hidden="true"
-   width="35mm"
-   height="49mm"
-   viewBox="38 52 155 195"
+   width="50mm"
+   height="50mm"
+   viewBox="50 50 155 195"
    id="svg1"
    xmlns="http://www.w3.org/2000/svg">
   <defs
