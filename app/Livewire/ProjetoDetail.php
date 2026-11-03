@@ -37,12 +37,11 @@ class ProjetoDetail extends Component
     public $dataFim;
     public $diasDeAulaPorSemana;
     public $cargaHorariaDiaria;
+    public $valorHoraAulaCoordenador;
+    public $valorHoraAulaInstrutorTitular;
+    public $valorHoraAulaInstrutorSecundario;
     public $unidadeId;
-    public $editalDocente;
-    public $editalDiscente;
-    public $portariaDocente;
-    public $portariaMatricula;
-    public $portariaConclusao;
+    
 
     //campos do formulário de disciplina
     public $disciplinaId;
@@ -50,10 +49,10 @@ class ProjetoDetail extends Component
     public $cargaHoraria;
     public $abreviacao;
     public $ementa;
-    public $conhecimentos;
-    public $habilidades;
-    public $atitudes;
+    public $qtdInstrutoresTitulares;
+    public $qtdInstrutoresSecundarios;
     public $referencias;
+    public $conteudistaId;
 
     //campos do parecerTécnico
     public $parecerId;
@@ -64,7 +63,6 @@ class ProjetoDetail extends Component
     //campos do formulário Material
     public $materialId;
     public $quantidadePorTurma;
-    public $custoUnitario;
     public $tipoMaterialId;
 
     //Variávies para operações com Horário
@@ -88,6 +86,7 @@ class ProjetoDetail extends Component
         return view('livewire.projeto-detail', [
             'disciplinas' => $this->projeto->disciplinas,
             'materiais' => $this->projeto->material,
+            'conteudistas' => $this->projeto->turmas->flatMap->conteudistas,
         ])->layout('layouts.app');
     }
 
@@ -123,12 +122,12 @@ class ProjetoDetail extends Component
         $disciplina = Disciplina::findOrFail($id);
         $this->disciplinaId = $disciplina->id;
         $this->nomeDisciplina = $disciplina->nome;
-        $this->cargaHoraria = $disciplina->carga_horaria;
         $this->abreviacao = $disciplina->abreviacao;
         $this->ementa = $disciplina->ementa;
-        $this->conhecimentos = $disciplina->conhecimentos;
-        $this->habilidades = $disciplina->habilidades;
-        $this->atitudes = $disciplina->atitudes;
+        $this->cargaHoraria = $disciplina->carga_horaria;
+        $this->qtdInstrutoresTitulares = $disciplina->qtd_instrutores_titulares;
+        $this->qtdInstrutoresSecundarios = $disciplina->qtd_instrutores_secundarios;
+        $this->conteudistaId = $disciplina->conteudista_id;
         $this->referencias = $disciplina->referencias;
 
         $this->openModalDisciplina = true;
@@ -144,11 +143,6 @@ class ProjetoDetail extends Component
         $this->diasDeAulaPorSemana = $turma->dias_de_aula_por_semana;
         $this->cargaHorariaDiaria = $turma->carga_horaria_diaria;
         $this->unidadeId = $turma->unidade_id;
-        $this->editalDocente = $turma->edital_docente;
-        $this->editalDiscente = $turma->edital_discente;
-        $this->portariaDocente = $turma->portaria_docente;
-        $this->portariaMatricula = $turma->portaria_matricula;
-        $this->portariaConclusao = $turma->portaria_conclusao;
 
         $this->openModalTurma = true;
         $this->isEditTurma = true;
@@ -158,10 +152,9 @@ class ProjetoDetail extends Component
     {
         $material = Material::findOrFail($id);
         $this->materialId = $material->id;
-        $this->tipoMaterialId = $material->tipo_material_id;
-        $this->projetoId = $material->projeto_id;
         $this->quantidadePorTurma = $material->quantidade_por_turma;
-        $this->custoUnitario = $material->custo_unitario;
+        $this->projetoId = $material->projeto_id;
+        $this->tipoMaterialId = $material->tipo_material_id;
         $this->openModalMaterial = true;
         $this->isEditMaterial = true;
     }
@@ -182,12 +175,12 @@ class ProjetoDetail extends Component
     {
         $this->validate([
             'nomeDisciplina' => 'required|string|max:255',
-            'cargaHoraria' => 'required|integer|min:1',
             'abreviacao' => 'nullable|string|max:50',
             'ementa' => 'nullable|string',
-            'conhecimentos' => 'nullable|string',
-            'habilidades' => 'nullable|string',
-            'atitudes' => 'nullable|string',
+            'cargaHoraria' => 'required|integer|min:1',
+            'qtdInstrutoresTitulares' => 'nullable|integer|min:0',
+            'qtdInstrutoresSecundarios' => 'nullable|integer|min:0',
+            'conteudistaId' => 'nullable|exists:instrutores,id',
             'referencias' => 'nullable|string',
         ]);
 
@@ -196,11 +189,11 @@ class ProjetoDetail extends Component
             'carga_horaria' => $this->cargaHoraria,
             'abreviacao' => $this->abreviacao,
             'ementa' => $this->ementa,
-            'conhecimentos' => $this->conhecimentos,
-            'habilidades' => $this->habilidades,
-            'atitudes' => $this->atitudes,
+            'qtd_instrutores_titulares' => $this->qtdInstrutoresTitulares,
+            'qtd_instrutores_secundarios' => $this->qtdInstrutoresSecundarios,
             'referencias' => $this->referencias,
             'projeto_id' => $this->projetoId,
+            'conteudista_id' => $this->conteudistaId,
         ]);
 
         session()->flash('message', 'Disciplina criada com sucesso.');
@@ -216,9 +209,9 @@ class ProjetoDetail extends Component
             'cargaHoraria' => 'required|integer|min:1',
             'abreviacao' => 'nullable|string|max:50',
             'ementa' => 'nullable|string',
-            'conhecimentos' => 'nullable|string',
-            'habilidades' => 'nullable|string',
-            'atitudes' => 'nullable|string',
+            'qtdInstrutoresTitulares' => 'nullable|integer|min:0',
+            'qtdInstrutoresSecundarios' => 'nullable|integer|min:0',
+            'conteudistaId' => 'nullable|exists:instrutores,id',
             'referencias' => 'nullable|string',
         ]);
 
@@ -228,10 +221,10 @@ class ProjetoDetail extends Component
             'carga_horaria' => $this->cargaHoraria,
             'abreviacao' => $this->abreviacao,
             'ementa' => $this->ementa,
-            'conhecimentos' => $this->conhecimentos,
-            'habilidades' => $this->habilidades,
-            'atitudes' => $this->atitudes,
-            'referencias' => $this->referencias
+            'qtd_instrutores_titulares' => $this->qtdInstrutoresTitulares,
+            'qtd_instrutores_secundarios' => $this->qtdInstrutoresSecundarios,
+            'referencias' => $this->referencias,
+            'conteudista_id' => $this->conteudistaId
         ]);
 
         session()->flash('message', 'Disciplina atualizada com sucesso.');
@@ -250,17 +243,20 @@ class ProjetoDetail extends Component
 
     public function saveTurma()
     {
+        $this->valorHoraAulaCoordenador = str_replace(',', '.', $this->valorHoraAulaCoordenador);
+        $this->valorHoraAulaInstrutorTitular = str_replace(',', '.', $this->valorHoraAulaInstrutorTitular);
+        $this->valorHoraAulaInstrutorSecundario = str_replace(',', '.', $this->valorHoraAulaInstrutorSecundario);
+
+
         $this->validate([
             'dataInicio' => 'required|date',
             'dataFim' => 'nullable|date|after_or_equal:dataInicio',
             'diasDeAulaPorSemana' => 'required|integer|min:0|max:7',
             'cargaHorariaDiaria' => 'required|integer|min:0|max:12',
+            'valorHoraAulaCoordenador' => 'nullable|decimal:2|min:0',
+            'valorHoraAulaInstrutorTitular' => 'nullable|decimal:2|min:0',
+            'valorHoraAulaInstrutorSecundario' => 'nullable|decimal:2|min:0',
             'unidadeId' => 'required|exists:unidades,id',
-            'editalDocente' => 'nullable|string|max:255',
-            'editalDiscente' => 'nullable|string|max:255',
-            'portariaDocente' => 'nullable|string|max:255',
-            'portariaMatricula' => 'nullable|string|max:255',
-            'portariaConclusao' => 'nullable|string|max:255',
         ]);
 
         Turma::create([
@@ -268,12 +264,10 @@ class ProjetoDetail extends Component
             'data_fim' => $this->dataFim,
             'dias_de_aula_por_semana' => $this->diasDeAulaPorSemana,
             'carga_horaria_diaria' => $this->cargaHorariaDiaria,
+            'valor_hora_aula_coordenador' => $this->valorHoraAulaCoordenador,
+            'valor_hora_aula_instrutor_titular' => $this->valorHoraAulaInstrutorTitular,
+            'valor_hora_aula_instrutor_secundario' => $this->valorHoraAulaInstrutorSecundario,
             'unidade_id' => $this->unidadeId,
-            'edital_docente' => $this->editalDocente,
-            'edital_discente' => $this->editalDiscente,
-            'portaria_docente' => $this->portariaDocente,
-            'portaria_matricula' => $this->portariaMatricula,
-            'portaria_conclusao' => $this->portariaConclusao,
             'projeto_id' => $this->projetoId
         ]);
 
@@ -285,17 +279,19 @@ class ProjetoDetail extends Component
 
     public function updateTurma()
     {
+        $this->valorHoraAulaCoordenador = str_replace(',', '.', $this->valorHoraAulaCoordenador);
+        $this->valorHoraAulaInstrutorTitular = str_replace(',', '.', $this->valorHoraAulaInstrutorTitular);
+        $this->valorHoraAulaInstrutorSecundario = str_replace(',', '.', $this->valorHoraAulaInstrutorSecundario);
+
         $this->validate([
             'dataInicio' => 'required|date',
             'dataFim' => 'nullable|date|after_or_equal:dataInicio',
             'diasDeAulaPorSemana' => 'required|integer|min:0|max:7',
             'cargaHorariaDiaria' => 'required|integer|min:0|max:12',
             'unidadeId' => 'required|exists:unidades,id',
-            'editalDocente' => 'nullable|string|max:255',
-            'editalDiscente' => 'nullable|string|max:255',
-            'portariaDocente' => 'nullable|string|max:255',
-            'portariaMatricula' => 'nullable|string|max:255',
-            'portariaConclusao' => 'nullable|string|max:255',
+            'valorHoraAulaCoordenador' => 'nullable|decimal:2|min:0',
+            'valorHoraAulaInstrutorTitular' => 'nullable|decimal:2|min:0',
+            'valorHoraAulaInstrutorSecundario' => 'nullable|decimal:2|min:0',
         ]);
 
         $turma = Turma::findOrFail($this->turmaId);
@@ -305,11 +301,9 @@ class ProjetoDetail extends Component
             'dias_de_aula_por_semana' => $this->diasDeAulaPorSemana,
             'carga_horaria_diaria' => $this->cargaHorariaDiaria,
             'unidade_id' => $this->unidadeId,
-            'edital_docente' => $this->editalDocente,
-            'edital_discente' => $this->editalDiscente,
-            'portaria_docente' => $this->portariaDocente,
-            'portaria_matricula' => $this->portariaMatricula,
-            'portaria_conclusao' => $this->portariaConclusao
+            'valor_hora_aula_coordenador' => $this->valorHoraAulaCoordenador,
+            'valor_hora_aula_instrutor_titular' => $this->valorHoraAulaInstrutorTitular,
+            'valor_hora_aula_instrutor_secundario' => $this->valorHoraAulaInstrutorSecundario
         ]);
 
         session()->flash('message', 'Turma atualizada com sucesso.');
@@ -371,7 +365,6 @@ class ProjetoDetail extends Component
     {
         $this->validate([
             'quantidadePorTurma' => 'required|integer|min:1',
-            'custoUnitario' => ['required', 'regex:/^\d+(,\d{1,2})?$/'],
             'tipoMaterialId' => 'required'
         ]);
 
@@ -379,7 +372,6 @@ class ProjetoDetail extends Component
             'projeto_id' => $this->projetoId,
             'tipo_material_id' => $this->tipoMaterialId,
             'quantidade_por_turma' => $this->quantidadePorTurma,
-            'custo_unitario' => str_replace(',', '.', $this->custoUnitario)
         ]);
         session()->flash('message', 'Material Cadastrado com Sucesso');
 
@@ -391,7 +383,6 @@ class ProjetoDetail extends Component
     {
         $this->validate([
             'quantidadePorTurma' => 'required|integer|min:1',
-            'custoUnitario' => ['required', 'regex:/^\d+(,\d{1,2})?$/'],
             'tipoMaterialId' => 'required'
         ]);
 
@@ -399,7 +390,6 @@ class ProjetoDetail extends Component
         $material->update([
             'tipo_material_id' => $this->tipoMaterialId,
             'quantidade_por_turma' => $this->quantidadePorTurma,
-            'custo_unitario' => str_replace(',', '.', $this->custoUnitario),
         ]);
         $this->resetFieldsMaterial();
         $this->openModalMaterial = false;
@@ -479,9 +469,9 @@ class ProjetoDetail extends Component
             'cargaHoraria',
             'abreviacao',
             'ementa',
-            'conhecimentos',
-            'habilidades',
-            'atitudes',
+            'qtdInstrutoresTitulares',
+            'qtdInstrutoresSecundarios',
+            'conteudistaId',
             'referencias'
         ]);
     }
@@ -495,11 +485,9 @@ class ProjetoDetail extends Component
             'diasDeAulaPorSemana',
             'cargaHorariaDiaria',
             'unidadeId',
-            'editalDocente',
-            'editalDiscente',
-            'portariaDocente',
-            'portariaMatricula',
-            'portariaConclusao'
+            'valorHoraAulaCoordenador',
+            'valorHoraAulaInstrutorTitular',
+            'valorHoraAulaInstrutorSecundario'
         ]);
     }
 
@@ -517,7 +505,6 @@ class ProjetoDetail extends Component
         $this->reset([
             'quantidadePorTurma',
             'tipoMaterialId',
-            'custoUnitario'
         ]);
     }
 

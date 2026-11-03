@@ -7,7 +7,7 @@
         <x-slot name="theaders">
             <th class="p-3 text-center">Descrição</th>
             <th class="p-3 text-center">Unidade de Medida</th>
-            <th class="p-3 text-center">Material Bélico</th>
+            <th class="p-3 text-center">Natureza do Material</th>
             <th class="p-3 text-center">Ações</th> 
         </x-slot>
         <!-- Corpo da tabela Cursos -->
@@ -18,7 +18,7 @@
                     class="{{ $loop->even ? 'bg-blue-100' : 'bg-white' }}">
                     <td class="p-3 text-center">{{ $tipo->descricao }}</td>
                     <td class="p-3 text-center">{{ $tipo->unidade_medida }}</td>
-                    <td class="p-3 text-center">{{ $tipo->material_belico ? 'Sim' : 'Não' }}</td>
+                    <td class="p-3 text-center">{{ $tipo->naturezaMaterial->descricao ?? 'Nenhuma' }}</td>
                     <td class="p-3 text-center">
                         <button wire:click="editTipoMaterial({{ $tipo->id }})">
                             Editar
@@ -47,14 +47,19 @@
                     <x-input-error for="descricao" class="mt-2" />
                 </div>
                 <div class="col-span-6 w-full">
-                    <x-label for="unidade_medida" value="Unidade de Medida" />
-                    <x-input id="unidade_medida" wire:model.defer="unidade_medida" class="w-full" type="text" />
-                    <x-input-error for="unidade_medida" class="mt-2" />
+                    <x-label for="unidadeMedida" value="Unidade de Medida" />
+                    <x-input id="unidadeMedida" wire:model.defer="unidadeMedida" class="w-full" type="text" />
+                    <x-input-error for="unidadeMedida" class="mt-2" />
                 </div>
                 <div class="col-span-6 w-full">
-                    <x-label for="material_belico" value="Material Bélico" />
-                    <x-checkbox id="material_belico" wire:model.defer="material_belico" />
-                    <x-input-error for="material_belico" class="mt-2" />
+                    <x-label for="naturezaMaterialId" value="Natureza do Material" />
+                    <x-select id="naturezaMaterialId" wire:model.defer="naturezaMaterialId" class="w-full">
+                        <option value="">Selecione uma natureza</option>
+                        @foreach($naturezasMateriais as $natureza)
+                            <option value="{{ $natureza->id }}">{{ $natureza->descricao }}</option>
+                        @endforeach
+                    </x-select>
+                    <x-input-error for="naturezaMaterialId" class="mt-2" />
                 </div>
             </x-slot>
             <x-slot name="actions">

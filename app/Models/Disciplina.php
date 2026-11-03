@@ -11,10 +11,10 @@ class Disciplina extends Model
         'abreviacao',
         'ementa',
         'carga_horaria',
-        'conhecimentos',
-        'habilidades',
-        'atitudes',
+        'qtd_instrutores_titulares',
+        'qtd_instrutores_secundarios',
         'referencias',
+        'conteudista_id',
         'projeto_id',
     ];
 
@@ -23,9 +23,14 @@ class Disciplina extends Model
        return $this->belongsTo(Projeto::class);
     }
 
-    public function disciplina()
+    public function instrutores()
     {
         return $this->hasMany(Instrutor::class);
+    }
+
+    public function conteudista()
+    {
+        return $this->belongsTo(Instrutor::class);
     }
 
 

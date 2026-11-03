@@ -8,10 +8,11 @@
                     <p><strong>Centro de Ensino:</strong> {{ $projeto->centroEnsino->nome }}</p>
                     <p><strong>Quantidade de Turmas Previstas:</strong> {{ $projeto->quantidade_turmas }}</p>
                     <p><strong>Carga Horária Total: </strong>{{ $projeto->cargaHorariaTotal() }} horas</p>
-                    <p><strong>Custo com Hora-aula:</strong> R$ {{ number_format($projeto->custo_hora_aula_por_turma, 2, ',', '.') }}</p>
-                    <p><strong>Custo com Bolsa de Formação:</strong> R$ {{ number_format($projeto->custo_bolsa_formacao_por_turma, 2, ',', '.') }}</p>
-                    <p><strong>Custo com Serviços:</strong> R$ {{ number_format($projeto->custo_servico_por_turma, 2, ',', '.') }}</p>
-                    <p><strong>Custo com Materiais:</strong> R$ {{ number_format($projeto->custoMaterial(), 2, ',','.') }}</p>
+                    <p><strong>Modalidade: </strong>{{ $projeto->curso->modalidade }}</p>
+                    <p><strong>Público Alvo: </strong>{{ $projeto->curso->publico_alvo }}</p>
+                    <p><strong>Objetivo Geral: </strong>{{ $projeto->curso->objetivo_geral }}</p>
+                    <p><strong>Data de Aprovação do Projeto: </strong>{{ date('d/m/Y', strtotime($projeto->data_aprovacao)) }}</p>
+                    <p><strong>Parecer Técnico: </strong>{{ $projeto->parecerTecnico ? $projeto->parecerTecnico->numero : 'N/A' }}</p>
             </div>
             <!-- bloco com o horário do projeto -->
             <div class="bg-white text-black shadow p-5 rounded-lg flex flex-col justify-between">
@@ -58,8 +59,8 @@
             <!-- bloco de Materiais -->
             <div class="bg-white text-black shadow p-5 rounded-lg flex flex-col justify-between">
                 <div>
-                    <h1 class="ml-6 text-lg font-semibold uppercase">Materiais</h1>
-                    <h4 class="ml-6 mb-4 text-sm">Lista de Materiais para o Projeto</h4>
+                    <h1 class="ml-6 text-lg font-semibold uppercase">Custos</h1>
+                    <h4 class="ml-6 mb-4 text-sm">Lista de Custos para o Projeto</h4>
                     
                     <!-- Container com altura estrita e scroll ativado por style -->
                     <div style="height: 280px; max-height: 280px; overflow-y: auto; position: relative;" class="border border-gray-100 rounded-lg">
@@ -70,7 +71,6 @@
                                         <th class="p-3">Descrição</th>
                                         <th class="p-3">Unidade</th>
                                         <th class="p-3">Qtd/Turma</th>
-                                        <th class="p-3">Custo/Turma</th>
                                         <th class="p-3">Ações</th>
                                     </tr>
                                 </x-slot>
@@ -80,7 +80,6 @@
                                         <td class="p-3">{{ $material->tipoMaterial->descricao }}</td>
                                         <td class="p-3">{{ $material->tipoMaterial->unidade_medida }}</td>
                                         <td class="p-3">{{ $material->quantidade_por_turma }}</td>
-                                        <td class="p-3">R$ {{ number_format($material->custo_unitario, 2, ',', '.') }}</td>
                                         <td class="p-3">
                                             <button wire:click="editMaterial({{ $material->id }})" class="text-green-700">
                                                     Editar
@@ -100,7 +99,7 @@
 
                 <div class="m-4 px-1">
                     <x-button wire:click="createMaterial">
-                        Inserir Material
+                        Inserir Custos
                     </x-button>
                 </div>
             </div>
@@ -120,6 +119,8 @@
                                         <th class="p-3">Nome</th>
                                         <th class="p-3">Abreviação</th>
                                         <th class="p-3">Carga Horária</th>
+                                        <th class="p-3">Instrutores Titulares</th>
+                                        <th class="p-3">Instrutores Secundários</th>
                                         <th class="p-3">Ação</th>
                                     </tr>
                                 </x-slot>
@@ -129,6 +130,8 @@
                                             <td class="text-center p-2">{{ $disciplina->nome }}</td>
                                             <td class="text-center p-2">{{ $disciplina->abreviacao }}</td>
                                             <td class="text-center p-2">{{ $disciplina->carga_horaria }}</td>
+                                            <td class="text-center p-2">{{ $disciplina->qtd_instrutores_titulares }}</td>
+                                            <td class="text-center p-2">{{ $disciplina->qtd_instrutores_secundarios }}</td>
                                             <td class="text-center p-2">
                                                 <button wire:click="editDisciplina({{ $disciplina->id }})" class="text-green-700">
                                                 Editar
@@ -271,14 +274,29 @@
                     <x-input-error for="dataFim" class="mt-2" />
                 </div>
                 <div class="col-span-6 sm:col-span-4">
+                    <x-label for="diasDeAulaPorSemana" value="Dias de Aula por Semana" />
+                    <x-input id="diasDeAulaPorSemana" type="number" class="mt-1 block w-full" wire:model.defer="diasDeAulaPorSemana" />
+                    <x-input-error for="diasDeAulaPorSemana" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4">
                     <x-label for="cargaHorariaDiaria" value="Carga Horária Diária" />
                     <x-input id="cargaHorariaDiaria" type="number" class="mt-1 block w-full" wire:model.defer="cargaHorariaDiaria" />
                     <x-input-error for="cargaHorariaDiaria" class="mt-2" />
                 </div>
                 <div class="col-span-6 sm:col-span-4">
-                    <x-label for="diasDeAulaPorSemana" value="Dias de Aula por Semana" />
-                    <x-input id="diasDeAulaPorSemana" type="number" class="mt-1 block w-full" wire:model.defer="diasDeAulaPorSemana" />
-                    <x-input-error for="diasDeAulaPorSemana" class="mt-2" />
+                    <x-label for="valorHoraAulaCoordenador" value="Valor Hora-aula do Coordenador" />
+                    <x-input id="valorHoraAulaCoordenador" type="text" class="mt-1 block w-full" wire:model.defer="valorHoraAulaCoordenador" />
+                    <x-input-error for="valorHoraAulaCoordenador" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="valorHoraAulaInstrutorTitular" value="Valor Hora-aula do Instrutor Titular" />
+                    <x-input id="valorHoraAulaInstrutorTitular" type="text" class="mt-1 block w-full" wire:model.defer="valorHoraAulaInstrutorTitular" />
+                    <x-input-error for="valorHoraAulaInstrutorTitular" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="valorHoraAulaInstrutorSecundario" value="Valor Hora-aula do Instrutor Secundário" />
+                    <x-input id="valorHoraAulaInstrutorSecundario" type="text" class="mt-1 block w-full" wire:model.defer="valorHoraAulaInstrutorSecundario" />
+                    <x-input-error for="valorHoraAulaInstrutorSecundario" class="mt-2" />
                 </div>
                 <div class="col-span-6 sm:col-span-4">
                     <x-label for="unidadeId" value="Unidade" />
@@ -293,31 +311,6 @@
                         @endforeach
                     </x-select>
                     <x-input-error for="unidadeId" class="mt-2" />
-                </div>
-                <div class="col-span-6 sm:col-span-4">
-                    <x-label for="editalDiscente" value="Edital de Discente" />
-                    <x-input id="editalDiscente" type="text" class="mt-1 block w-full" wire:model.defer="editalDiscente" />
-                    <x-input-error for="editalDiscente" class="mt-2" />
-                </div>
-                 <div class="col-span-6 sm:col-span-4">
-                    <x-label for="editalDocente" value="Edital de Docente" />
-                    <x-input id="editalDocente" type="text" class="mt-1 block w-full" wire:model.defer="editalDocente" />
-                    <x-input-error for="editalDocente" class="mt-2" />
-                </div>
-                <div class="col-span-6 sm:col-span-4">
-                    <x-label for="portariaDocente" value="Portaria de Docente" />
-                    <x-input id="portariaDocente" type="text" class="mt-1 block w-full" wire:model.defer="portariaDocente" />
-                    <x-input-error for="portariaDocente" class="mt-2" />
-                </div>
-                 <div class="col-span-6 sm:col-span-4">
-                    <x-label for="portariaMatricula" value="Portaria de Matrícula" />
-                    <x-input id="portariaMatricula" type="text" class="mt-1 block w-full" wire:model.defer="portariaMatricula" />
-                    <x-input-error for="portariaMatricula" class="mt-2" />
-                </div>
-                <div class="col-span-6 sm:col-span-4">
-                    <x-label for="portariaConclusao" value="Portaria de Conclusão" />
-                    <x-input id="portariaConclusao" type="text" class="mt-1 block w-full" wire:model.defer="portariaConclusao" />
-                    <x-input-error for="portariaConclusao" class="mt-2" />
                 </div>
             </x-slot>
             <x-slot name="actions">
@@ -353,29 +346,34 @@
                     <x-input-error for="abreviacao" class="mt-2" />
                 </div>
                 <div class="col-span-6 sm:col-span-4">
-                    <x-label for="cargaHoraria" value="Carga Horária" />
-                    <x-input id="cargaHoraria" type="number" class="mt-1 block w-full" wire:model.defer="cargaHoraria" />
-                    <x-input-error for="cargaHoraria" class="mt-2" />
-                </div>
-                <div class="col-span-6 sm:col-span-4">
                     <x-label for="ementa" value="Ementa" />
                     <x-textarea id="ementa" class="mt-1 block w-full" wire:model.defer="ementa" />
                     <x-input-error for="ementa" class="mt-2" />
                 </div>
                 <div class="col-span-6 sm:col-span-4">
-                    <x-label for="conhecimentos" value="Conhecimentos" />
-                    <x-textarea id="conhecimentos" class="mt-1 block w-full" wire:model.defer="conhecimentos" />
-                    <x-input-error for="conhecimentos" class="mt-2" />
+                    <x-label for="cargaHoraria" value="Carga Horária" />
+                    <x-input id="cargaHoraria" type="number" class="mt-1 block w-full" wire:model.defer="cargaHoraria" />
+                    <x-input-error for="cargaHoraria" class="mt-2" />
                 </div>
                 <div class="col-span-6 sm:col-span-4">
-                    <x-label for="habilidades" value="Habilidades" />
-                    <x-textarea id="habilidades" class="mt-1 block w-full" wire:model.defer="habilidades" />
-                    <x-input-error for="habilidades" class="mt-2" />
+                    <x-label for="qtdInstrutoresTitulares" value="Quantidade de Instrutores Titulares" />
+                    <x-input id="qtdInstrutoresTitulares" type="number" class="mt-1 block w-full" wire:model.defer="qtdInstrutoresTitulares" />
+                    <x-input-error for="qtdInstrutoresTitulares" class="mt-2" />
                 </div>
                 <div class="col-span-6 sm:col-span-4">
-                    <x-label for="atitudes" value="Atitudes" />
-                    <x-textarea id="atitudes" class="mt-1 block w-full" wire:model.defer="atitudes" />
-                    <x-input-error for="atitudes" class="mt-2" />
+                    <x-label for="qtdInstrutoresSecundarios" value="Quantidade de Instrutores Secundários" />
+                    <x-input id="qtdInstrutoresSecundarios" type="number" class="mt-1 block w-full" wire:model.defer="qtdInstrutoresSecundarios" />
+                    <x-input-error for="qtdInstrutoresSecundarios" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="conteudistaId" value="Conteudista" />
+                    <x-select id="conteudistaId" class="mt-1 block w-full" wire:model.defer="conteudistaId">
+                        <option value="">Selecione um Conteudista</option>
+                        @foreach($conteudistas as $conteudista)
+                            <option value="{{ $conteudista->id }}">{{ $conteudista->posto_graduacao}} {{ $conteudista->pessoa->nome }}</option>
+                        @endforeach
+                    </x-select>
+                    <x-input-error for="conteudistaId" class="mt-2" />
                 </div>
                 <div class="col-span-6 sm:col-span-4">
                     <x-label for="referencias" value="Referências" />
@@ -398,17 +396,17 @@
      <x-modal wire:model="openModalMaterial">
         <x-form-section submit="{{ $isEditMaterial ? 'updateMaterial' : 'saveMaterial' }}">
             <x-slot name="title">
-                {{ $isEditMaterial ? 'Editar Material' : 'Adicionar Material' }}
+                {{ $isEditMaterial ? 'Editar Custo' : 'Adicionar Custo' }}
             </x-slot>
             <x-slot name="description">
-                {{ $isEditMaterial ? 'Edite a quantidade de Material por Turma.' : 'Preencha a quantidade de materiais por turma.' }}
+                {{ $isEditMaterial ? 'Edite os custos por Turma.' : 'Preencha os custos por turma.' }}
             </x-slot>
             <x-slot name="form">
                 <x-input type="hidden" id="projetoID" wire:model="projetoId" />
                 <div class="col-span-6 sm:col-span-4">
-                    <x-label for="tipoMaterialId" value="Tipo de Material Bélico" />
+                    <x-label for="tipoMaterialId" value="Tipo de Custo" />
                     <x-select id="tipoMaterialId" type="text" class="mt-1 block w-full" wire:model.defer="tipoMaterialId">
-                        <option>Selecione um dos Materiais</option>
+                        <option>Selecione um dos Tipos de Custo</option>
                         @foreach($tiposMateriais as $tipo)
                         <option value="{{ $tipo->id }}">{{ $tipo->descricao }}</option>
                         @endforeach
@@ -420,16 +418,11 @@
                     <x-input id="quantidadePorTurma" type="text" class="mt-1 block w-full" wire:model.defer="quantidadePorTurma" />
                     <x-input-error for="quantidadePorTurma" class="mt-2" />
                 </div>
-                <div class="col-span-6 sm:col-span-4">
-                    <x-label for="custoUnitario" value="Custo Total" />
-                    <x-input id="custoUnitario" type="text" class="mt-1 block w-full" wire:model.defer="custoUnitario"  />
-                    <x-input-error for="custoUnitario" class="mt-2" />
-                </div>
             </x-slot>
             <x-slot name="actions">
-                <x-secondary-button wire:click="$set('openModalMaterial', false)">
+                <x-button wire:click="$set('openModalMaterial', false)">
                     Cancelar
-                </x-secondary-button>
+                </x-button>
                 <x-button class="ml-3" type="submit">
                     {{ $isEditMaterial ? 'Atualizar' : 'Salvar' }}
                 </x-button>

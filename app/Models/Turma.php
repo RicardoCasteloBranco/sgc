@@ -13,11 +13,9 @@ class Turma extends Model
         'data_fim',
         'dias_de_aula_por_semana',
         'carga_horaria_diaria',
-        'edital_docente',
-        'edital_discente',
-        'portaria_docente',
-        'portaria_matricula',
-        'portaria_conclusao',
+        'valor_hora_aula_coordenador',
+        'valor_hora_aula_instrutor_titular',
+        'valor_hora_aula_instrutor_secundario',
         'unidade_id',
         'projeto_id'
     ];
@@ -65,6 +63,11 @@ class Turma extends Model
     public function aulas()
     {
         return $this->hasMany(Aula::class);
+    }
+
+    public function conteudistas()
+    {
+        return $this->hasMany(Instrutor::class)->where('tipo_instrutor', 'Conteudista');
     }
 
     public function statusTurma()
@@ -140,5 +143,10 @@ class Turma extends Model
     public function quantidadeExcluidos()
     {
         return $this->alunos->where('situacao','Excluído(a)')->count();
+    }
+
+    public function materiais()
+    {
+        return $this->hasMany(MaterialTurma::class, 'turma_id', 'id');
     }
 }

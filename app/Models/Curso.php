@@ -13,6 +13,7 @@ class Curso extends Model
         'objetivo_geral',
         'objetivos_especificos',
         'publico_alvo',
+        'modalidade',
         'centro_ensino_id',
     ];
 

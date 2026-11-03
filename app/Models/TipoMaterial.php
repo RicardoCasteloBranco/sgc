@@ -11,10 +11,16 @@ class TipoMaterial extends Model
         'descricao',
         'material_belico',
         'unidade_medida',
+        'natureza_material_id',
     ];
 
     public function materiais()
     {
         return $this->hasMany(Material::class);
+    }
+
+    public function naturezaMaterial()
+    {
+        return $this->belongsTo(NaturezaMaterial::class);
     }
 }

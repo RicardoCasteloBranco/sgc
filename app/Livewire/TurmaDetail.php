@@ -12,6 +12,7 @@ use App\Models\Disciplina;
 use App\Models\Aula;
 use App\Models\PerfilUsuario;
 use App\Models\User;
+use App\Models\MaterialTurma;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 use Livewire\Attributes\On;
@@ -77,6 +78,15 @@ class TurmaDetail extends Component
     public $datasAulas;
     public $aulas;
 
+    //Variáveis para custo com materiais
+    public $openModalMaterial = false;
+    public $isEditMaterial = false;
+    public $materiais;
+    public $materialId;
+    public $valorUnitario;
+    public $quantidadeMaterial;
+    public $descricaoMaterial;
+
 
     public function mount(Turma $turma)
     {
@@ -94,6 +104,8 @@ class TurmaDetail extends Component
         $this->usuarios = User::all();
 
         $this->aulas = $this->turma->aulas;
+
+        $this->materiais = $this->turma->projeto->material;
 
         // Datas únicas das aulas, em ordem cronológica
         $this->datasAulas = $this->aulas
@@ -499,6 +511,95 @@ class TurmaDetail extends Component
         session()->flash('message', 'Aula Apagada');
     }
 
+    public function adicionarMaterial()
+    {
+        $this->isEditMaterial = false;
+        $this->openModalMaterial = true;
+    }
+
+    public function editarMaterial($id)
+    {
+        $materialTurma = $this->turma->materiais()->where('material_id', $id)->first();
+        if ($materialTurma) {
+            $this->materialId = $materialTurma->material_id;
+            $this->valorUnitario = $materialTurma->valor_unitario;
+            $this->quantidadeMaterial = $materialTurma->quantidade;
+            $this->descricaoMaterial = $materialTurma->descricao_material;
+            $this->isEditMaterial = true;
+            $this->openModalMaterial = true;
+        } else {
+            session()->flash('message', 'Material não encontrado para esta turma.');
+        }
+    }
+
+    public function saveMaterial()
+    {
+        $this->validate([
+            'materialId' => ['required','integer'],
+            'valorUnitario' => ['required','numeric'],
+            'quantidadeMaterial' => ['required','integer'],
+        ]);
+
+        try{
+            MaterialTurma::create([
+                'material_id' => $this->materialId,
+                'turma_id' => $this->turma->id,
+                'valor_unitario' => $this->valorUnitario,
+                'quantidade' => $this->quantidadeMaterial,
+                'descricao_material' => $this->descricaoMaterial,
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->getCode() === '23000') { // Código de erro para violação de chave única
+                $this->addError('errorMaterial', 'Este material já está cadastrado para esta turma. Por favor, escolha outro material.');
+                return;
+            } else {
+                $this->addError('errorMaterial', 'Ocorreu um erro ao cadastrar o material. Por favor, tente novamente.');
+                return;
+            }
+        }
+
+        session()->flash('message','Material Cadastrado com sucesso!');
+        $this->openModalMaterial = false;
+        $this->isEditMaterial = false;
+        $this->resetFieldsMaterial();
+    }
+
+    public function updateMaterial()
+    {
+        $this->validate([
+            'materialId' => ['required','integer'],
+            'valorUnitario' => ['required','numeric'],
+            'quantidadeMaterial' => ['required','integer'],
+            'descricaoMaterial' => ['nullable','string'],
+        ]);
+
+        $materialTurma = MaterialTurma::findOrFail($this->materialId);
+        if ($materialTurma) {
+            $materialTurma->update([
+                'valor_unitario' => $this->valorUnitario,
+                'quantidade' => $this->quantidadeMaterial,
+                'descricao_material' => $this->descricaoMaterial,
+            ]);
+            session()->flash('message','Material Atualizado com sucesso!');
+            $this->openModalMaterial = false;
+            $this->isEditMaterial = false;
+            $this->resetFieldsMaterial();
+        } else {
+            session()->flash('message', 'Material não encontrado para esta turma.');
+        }
+    }
+
+    public function deleteMaterial($id)
+    {
+        $materialTurma = MaterialTurma::findOrFail($id);
+        if ($materialTurma) {
+            $materialTurma->delete();
+            session()->flash('message', 'Material Apagado');
+        } else {
+            session()->flash('message', 'Material não encontrado para esta turma.');
+        }
+    }
+
     public function resetFieldsAula()
     {
         $this->reset([
@@ -540,6 +641,16 @@ class TurmaDetail extends Component
             'dataSubstituicaoInstrutor',
             'disciplinaInstrutor',
             'tipoInstrutor'
+        ]);
+    }
+    
+    public function resetFieldsMaterial()
+    {
+        $this->reset([
+            'materialId',
+            'valorUnitario',
+            'quantidadeMaterial',
+            'descricaoMaterial'
         ]);
     }
 }

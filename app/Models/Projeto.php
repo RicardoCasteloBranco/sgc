@@ -10,9 +10,6 @@ class Projeto extends Model
         'curso_id',
         'data_aprovacao',
         'quantidade_turmas',
-        'custo_hora_aula_por_turma',
-        'custo_bolsa_formacao_por_turma',
-        'custo_servico_por_turma',
         'centro_ensino_id',
     ];
 

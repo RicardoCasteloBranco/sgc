@@ -8,6 +8,7 @@
             <th class="p-3 text-left">Curso</th>
             <th>Sigla</th>
             <th>Processo Eletrônico</th>
+            <th>Modalidade</th>
             <th>Turmas Previstas</th>
             <th>Turmas em Andamento</th>
             <th>Turmas Encerradas</th>
@@ -21,20 +22,25 @@
                     <td class="p-3 cursor-pointer" wire:click="toggle({{ $curso->id }})">{{ $curso->nome }}</td>
                     <td class="text-center">{{ $curso->sigla }}</td>
                     <td class="text-center">{{ $curso->processo_eletronico }}</td>
+                    <td class="text-center">{{ $curso->modalidade }}</td>
                     <td class="text-center">{{ $curso->projetos->filter(fn($p) => $p->turmas()->whereNull('data_fim')->exists())->sum('quantidade_turmas') }}</td>
                     <td class="text-center">{{ $curso->projetos->filter(fn($p) => $p->turmas()->whereNull('data_fim')->exists())->count() }}</td>
                     <td class="text-center">{{ $curso->projetos->filter(fn($p) => $p->turmas()->whereNotNull('data_fim')->exists())->count() }}</td>
                     <td class="text-center">
-                        <button wire:click="editCurso({{ $curso->id }})" class="text-blue-600">Editar</button>
+                        <button wire:click="editCurso({{ $curso->id }})" class="text-blue-600">Editar Curso</button>
                         <button wire:click="toggle({{ $curso->id }})" class="ml-2 text-green-600">
-                            {{ ($expanded[$curso->id] ?? false) ? 'Fechar' : 'Detalhes' }}
+                            @if($expanded[$curso->id] ?? false)
+                                &minus; Ocultar Projetos
+                            @else
+                                &plus; Mostrar Projetos
+                            @endif
                         </button>
                     </td>
                 </tr>
                 <!-- Relação dos projetos por curso -->
                 @if($expanded[$curso->id] ?? false)
                     <tr>
-                        <td colspan="7" class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }} p-4">
+                        <td colspan="8" class="{{$loop->even ? 'bg-blue-100' : 'bg-white' }} p-4">
                         <x-success-button wire:model="openModalProjeto" 
                             wire:click="createProjeto({{ $curso->id }})" >Novo Projeto</x-success-button>
                             <h4 class="font-bold mt-6 mb-2">Projetos em andamento</h4>
@@ -46,16 +52,9 @@
                                         <th class="border border-black" rowspan="2">Data de Aprovação</th>
                                         <th class="border border-black" rowspan="2">Turmas Previstas</th>
                                         <th class="border border-black" rowspan="2">Carga Horária</th>
-                                        <th class="border border-black p-3" colspan="4">Custos</th>
                                         <th class="border border-black" rowspan="2">Centro de Ensino</th>
                                         <th class="border border-black" rowspan="2">Ações</th>
                                     </tr>
-                                    <tr class="bg-gray-500 text-white uppercase">
-                                        <th class="border border-black p-2">Hora-aula</th>
-                                        <th class="border border-black">Serviços</th>
-                                        <th class="border border-black">Bolsa Formação</th>
-                                        <th class="border border-black">Material</th>
-                                    <tr>
                                     </thead>
                                     <tbody>
                                     @foreach($curso->projetos->filter(fn($p)=>$p->projetoNaoEncerrado() == true) as $projeto)
@@ -74,27 +73,15 @@
                                             <td class="text-center border border-black p-2">
                                                 {{ $projeto->cargaHorariaTotal() }}
                                             </td>
-                                            <td class="text-right border border-black p-2">
-                                                R$ {{ number_format($projeto->custo_hora_aula_por_turma, 2, ',', '.') }}
-                                            </td>
-                                            <td class="text-right border border-black p-2">
-                                                R$ {{ number_format($projeto->custo_material_por_turma, 2, ',', '.') }}
-                                            </td>
-                                            <td class="text-right border border-black p-2">
-                                                R$ {{ number_format($projeto->custo_servicos_por_turma, 2, ',', '.') }}
-                                            </td>
-                                            <td class="text-right border border-black p-2">
-                                                R$ {{ number_format($projeto->custoMaterial(), 2, ',', '.') }}
-                                            </td>
                                             <td class="text-center border border-black p-2">
                                                 {{ $projeto->centroEnsino->sigla }}
                                             </td>
                                             <td class="text-center border border-black p-2">
                                                 <button wire:click="editProjeto({{ $projeto->id }})" class="text-blue-600">
-                                                    Editar
+                                                    Editar Projeto
                                                 </button>
                                                 <button wire:click="viewProjeto({{ $projeto->id }})" class="text-green-600 ml-2">
-                                                    Detalhes
+                                                    Exibir Projeto
                                                 </button>
                                             </td>
                                         </tr>
@@ -111,16 +98,9 @@
                                         <th class="border border-black" rowspan="2">Data de Aprovação</th>
                                         <th class="border border-black" rowspan="2">Turmas Executadas</th>
                                         <th class="border border-black" rowspan="2">Carga Horária</th>
-                                        <th class="border border-black p-3" colspan="4">Custos</th>
                                         <th class="border border-black" rowspan="2">Centro de Ensino</th>
                                         <th class="border border-black" rowspan="2">Ações</th>
                                     </tr>
-                                    <tr class="bg-gray-500 text-white uppercase">
-                                        <th class="border border-black p-2">Hora-aula</th>
-                                        <th class="border border-black">Serviços</th>
-                                        <th class="border border-black">Bolsa Formação</th>
-                                        <th class="border border-black">Material</th>
-                                    <tr>
                                     </thead>
                                     <tbody>
                                     @foreach($curso->projetos->filter(fn($p)=>$p->projetoNaoEncerrado()==false) as $projeto)
@@ -138,18 +118,6 @@
                                             </td>
                                             <td class="text-center border border-black p-2">
                                                 {{ $projeto->cargaHorariaTotal() }}
-                                            </td>
-                                            <td class="text-right border border-black p-2">
-                                                R$ {{ number_format($projeto->custo_hora_aula_por_turma, 2, ',', '.') }}
-                                            </td>
-                                            <td class="text-right border border-black p-2">
-                                                R$ {{ number_format($projeto->custo_servico_por_turma, 2, ',', '.') }}
-                                            </td>
-                                            <td class="text-right border border-black p-2">
-                                                R$ {{ number_format($projeto->custo_bolsa_formacao_por_turma, 2, ',', '.') }}
-                                            </td>
-                                            <td class="text-right border border-black p-2">
-                                                R$ {{ number_format($projeto->custoMaterial(), 2, ',', '.') }}
                                             </td>
                                             <td class="text-center border border-black p-2">
                                                 {{ $projeto->centroEnsino->sigla }}
@@ -203,6 +171,16 @@
                     <x-input-error for="processo_eletronico" class="mt-2" />
                 </div>
                 <div class="col-span-6 w-full">
+                    <x-label for="modalidade" value="Modalidade" />
+                    <x-select id="modalidade" wire:model.defer="modalidade" class="w-full">
+                        <option value="">Selecione uma modalidade</option>
+                        <option value="Presencial">Presencial</option>
+                        <option value="EAD">EAD</option>
+                        <option value="Híbrido">Híbrido</option>
+                    </x-select>
+                    <x-input-error for="modalidade" class="mt-2" />
+                </div>
+                <div class="col-span-6 w-full">
                     <x-label for="objetivo_geral" value="Objetivo Geral" />
                     <x-input id="objetivo_geral" wire:model.defer="objetivo_geral" class="w-full" type="text" />
                     <x-input-error for="objetivo_geral" class="mt-2" />
@@ -250,21 +228,6 @@
                     <x-label for="quantidade_turmas" value="Quantidade de Turmas" />
                     <x-input id="quantidade_turmas" wire:model.defer="quantidade_turmas" class="w-full" type="number" />
                     <x-input-error for="quantidade_turmas" class="mt-2" />
-                </div>
-                <div class="col-span-6 w-full">
-                    <x-label for="custo_hora_aula_por_turma" value="Custo com Hora-aula por Turma" />
-                    <x-input id="custo_hora_aula_por_turma" wire:model.defer="custo_hora_aula_por_turma" class="w-full" type="number" step="0.01" />
-                    <x-input-error for="custo_hora_aula_por_turma" class="mt-2" />
-                </div>
-                <div class="col-span-6 w-full">
-                    <x-label for="custo_bolsa_formacao_por_turma" value="Custo com Bolsa de Formação por Turma" />
-                    <x-input id="custo_bolsa_formacao_por_turma" wire:model.defer="custo_bolsa_formacao_por_turma" class="w-full" type="number" step="0.01" />
-                    <x-input-error for="custo_bolsa_formacao_por_turma" class="mt-2" />
-                </div>
-                <div class="col-span-6 w-full">
-                    <x-label for="custo_servico_por_turma" value="Custo com Serviços por Turma" />
-                    <x-input id="custo_servico_por_turma" wire:model.defer="custo_servico_por_turma" class="w-full" type="number" step="0.01" />
-                    <x-input-error for="custo_servico_por_turma" class="mt-2" />
                 </div>
                 <div class="col-span-6 w-full">
                     <x-label for="centro_ensino_id" value="Centro de Ensino" />

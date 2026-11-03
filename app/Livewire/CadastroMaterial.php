@@ -10,21 +10,24 @@ class CadastroMaterial extends Component
     public $isEditTipoMaterial = false;
     public $openModalTipoMaterial = false;
     public $descricao;
-    public $material_belico;
-    public $unidade_medida;
+    public $unidadeMedida;
     public $tipoMaterialId;
+    public $naturezaMaterialId;
 
 
     public function render()
     {
-        return view('livewire.cadastro-material', ['tiposMateriais' => TipoMaterial::orderBy('descricao')->get()])->layout('layouts.app');
+        return view('livewire.cadastro-material',
+         ['tiposMateriais' => TipoMaterial::orderBy('descricao')->get(),
+         'naturezasMateriais' => \App\Models\NaturezaMaterial::orderBy('descricao')->get()])
+         ->layout('layouts.app');
     }
 
     public function createTipoMaterial()
     {
         $this->openModalTipoMaterial = true;
         $this->isEditTipoMaterial = false;
-        $this->reset(['descricao','material_belico', 'unidade_medida']);
+        $this->reset(['descricao', 'unidadeMedida', 'naturezaMaterialId']);
 
     }
 
@@ -33,8 +36,8 @@ class CadastroMaterial extends Component
          $tipo = TipoMaterial::findOrFail($tipoMaterialId);
          $this->tipoMaterialId = $tipo->id;
          $this->descricao = $tipo->descricao;
-         $this->material_belico = $tipo->material_belico;
-         $this->unidade_medida = $tipo->unidade_medida;
+         $this->unidadeMedida = $tipo->unidade_medida;
+         $this->naturezaMaterialId = $tipo->natureza_material_id;
 
          $this->isEditTipoMaterial = true;
          $this->openModalTipoMaterial = true;
@@ -48,14 +51,14 @@ class CadastroMaterial extends Component
 
         TipoMaterial::create([
             'descricao' => $this->descricao,
-            'material_belico' => $this->material_belico ?? false,
-            'unidade_medida' => $this->unidade_medida ?? null
+            'natureza_material_id' => $this->naturezaMaterialId ?? null,
+            'unidade_medida' => $this->unidadeMedida ?? null
         ]);
 
         session()->flash('message', 'Tipo de Material Criado com Sucesso');
 
         $this->openModalTipoMaterial = false;
-        $this->reset(['descricao','material_belico','unidade_medida']);
+        $this->reset(['descricao', 'unidadeMedida', 'naturezaMaterialId']);
     }
 
     public function updateTipoMaterial()
@@ -67,13 +70,13 @@ class CadastroMaterial extends Component
         $tipo = TipoMaterial::findOrFail($this->tipoMaterialId);
         $tipo->update([
             'descricao' => $this->descricao,
-            'material_belico' => $this->material_belico ?? false,
-            'unidade_medida' => $this->unidade_medida ?? null,
+            'natureza_material_id' => $this->naturezaMaterialId ?? null,
+            'unidade_medida' => $this->unidadeMedida ?? null,
         ]);
 
         session()->flash('message','Tipo de Material Atualizado');
 
         $this->openModalTipoMaterial = false;
-        $this->reset(['descricao','material_belico','unidade_medida']);
+        $this->reset(['descricao', 'unidadeMedida', 'naturezaMaterialId']);
     }
 }

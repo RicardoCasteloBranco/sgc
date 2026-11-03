@@ -9,7 +9,6 @@ class Material extends Model
     protected $table = "materiais";
     protected $fillable = [
         'quantidade_por_turma',
-        'custo_unitario',
         'projeto_id',
         'tipo_material_id'
     ];

@@ -62,6 +62,18 @@
                     Horários
                 </button>
 
+                <!-- Aba Materiais -->
+                <button
+                    type="button"
+                    wire:click="selecionarAba('materiais')"
+                    class="px-5 py-3 text-sm font-medium border-b-2 transition
+                        {{ $abaAtiva === 'materiais'
+                            ? 'border-blue-600 text-blue-600'
+                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                        }}">
+                    Recursos
+                </button>
+
             </nav>
 
         </div>
@@ -339,6 +351,90 @@
                                         @endif
                                     </td>
                                 @endforeach
+                            </tr>
+                        @endforeach
+                    </x-slot>
+                </x-table>
+            </div>
+        @endif
+
+        <!-- ====================================================== -->
+        <!-- ABA MATERIAIS                                          -->
+        <!-- ====================================================== -->
+        @if($abaAtiva === 'materiais')
+            <div>
+
+                <div class="flex items-center justify-between mb-4">
+
+                    <x-section-title
+                        title="Recursos"
+                        description="">
+                    </x-section-title>
+
+                    <div class="flex items-center gap-2">
+                        
+                        <x-button wire:click="adicionarMaterial()" class="m-4">Adicionar Material</x-button>
+                    </div>
+                </div>
+                <x-table>
+
+                    <x-slot name="theaders">
+
+                        <th class="p-3">Material</th>
+                        <th class="p-3">Valor Unitário</th>
+                        <th class="p-3">Quantidade</th>
+                        <th class="p-3">Valor Total</th>
+                        <th class="p-3">Ações</th>
+
+                    </x-slot>
+                    <x-slot name="tbody">
+                        @foreach($turma->materiais as $material)
+                            <tr
+                                class="{{ $loop->even ? 'bg-blue-100' : 'bg-white' }}"
+                                wire:key="material-{{ $material->id }}">
+
+                                <!-- MATERIAL -->
+                                <td class="p-3 text-center font-medium">
+                                    {{ $material->material->tipoMaterial->naturezaMaterial->descricao }} - {{ $material->material->tipoMaterial->descricao }} - {{ $material->descricao_material ?? $material->material->descricao }}
+                                </td>
+
+                                <!-- VALOR UNITÁRIO -->
+                                <td class="p-3 text-center font-medium">
+                                    R$ {{ number_format($material->valor_unitario, 2, ',', '.') }}
+                                </td>
+
+                                <!-- QUANTIDADE -->
+                                <td class="p-3 text-center font-medium">
+                                    {{ $material->quantidade }}
+                                </td>
+
+                                <!-- Valor Total -->
+                                <td class="p-3 text-center font-medium">
+                                    R$ {{ number_format($material->valor_unitario * $material->quantidade, 2, ',', '.') }}
+                                </td>
+
+                                <!-- AÇÕES -->
+                                <td class="p-3 text-center">
+
+                                    <!-- Editar -->
+                                    <a
+                                        href="#"
+                                        wire:click="editarMaterial({{ $material->id }})"
+                                        class="text-gray-500 hover:text-blue-600"
+                                        title="Editar material">
+                                        Editar
+                                    </a>
+
+                                    <!-- Apagar -->
+                                    <a
+                                        href="#"
+                                        wire:click="deleteMaterial({{ $material->id }})"
+                                        wire:confirm="Deseja apagar o material?"
+                                        class="text-gray-500 hover:text-red-600 ml-2"
+                                        title="Apagar material">
+                                        Apagar
+                                    </a>
+                                </td>
                             </tr>
                         @endforeach
                     </x-slot>
@@ -669,6 +765,54 @@
         </x-form-section>
      </x-modal>
     <!-- Fim do formulário para adicionar as aulas -->
+    <!-- Início do formulário para adicionar e editar materiais -->
+    <x-modal wire:model="openModalMaterial">
+        <x-form-section submit="{{ $isEditMaterial ? 'updateMaterial' : 'saveMaterial' }}">
+            <x-slot name="title">
+                {{ $isEditMaterial ? 'Editar Material' : 'Adicionar Material' }}
+            </x-slot>
+            <x-slot name="description">
+                {{ $isEditMaterial ? 'Edite o material da Turma.' : 'Adicione um material da Turma.' }}
+            </x-slot>
+            <x-slot name="form">
+                <x-input type="hidden" id="turmaId" value="{{$turma->id}}" />
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="materialId" value="Material" />
+                    <x-select id="materialId" type="text" class="mt-1 block w-full" wire:model.defer="materialId">
+                        <option>Selecione um material:</option>
+                        @foreach($materiais as $mat)
+                        <option value="{{$mat->id}}">{{$mat->tipoMaterial->descricao}}</option>
+                        @endforeach
+                    </x-select>
+                    <x-input-error for="materialId" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="valorUnitario" value="Valor Unitário" />
+                    <x-input id="valorUnitario" type="number" step="0.01" class="mt-1 block w-full" wire:model.defer="valorUnitario" />
+                    <x-input-error for="valorUnitario" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="quantidadeMaterial" value="Quantidade" />
+                    <x-input id="quantidadeMaterial" type="number" class="mt-1 block w-full" wire:model.defer="quantidadeMaterial" />
+                    <x-input-error for="quantidadeMaterial" class="mt-2" />
+                </div>
+                <div class="col-span-6 sm:col-span-4">
+                    <x-label for="descricaoMaterial" value="Descrição" />
+                    <x-input id="descricaoMaterial" type="text" class="mt-1 block w-full" wire:model.defer="descricaoMaterial" />
+                    <x-input-error for="descricaoMaterial" class="mt-2" />
+                </div>
+            </x-slot>
+            <x-slot name="actions">
+                <x-secondary-button wire:click="$set('openModalMaterial', false)">
+                    Cancelar
+                </x-secondary-button>
+                <x-button class="ml-3" type="submit">
+                    {{ $isEditMaterial ? 'Atualizar' : 'Salvar' }}
+                </x-button>
+            </x-slot>
+        </x-form-section>
+     </x-modal>
+    <!-- Fim do formulário para adicionar e editar materiais -->
 </div>
 <!-- Script para carregar um arquivo com os alunos da turma -->
 <script>
