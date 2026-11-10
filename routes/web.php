@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Laravel\Fortify\Contracts\CreatesNewUsers;
 
 
 Route::get('/', function () {
@@ -16,6 +18,11 @@ Route::middleware([
     Route::get('/register', function () {
         return view('auth.register');
     })->name('register');
+    Route::post('/register', function (Request $request, CreatesNewUsers $creator) {
+        $creator->create($request->all());
+
+        return redirect()->route('register')->with('status', 'Usuário cadastrado com sucesso.');
+    })->name('register.store');
     Route::get('/centro', \App\Livewire\CentroEnsino::class)->name('centro-ensino');
     Route::get('/supervisor', \App\Livewire\Supervisor::class)->name('supervisor');
     Route::get('/curso', \App\Livewire\CursosTable::class)->name('curso');

@@ -11,7 +11,7 @@ class RegistrationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_registration_screen_can_be_rendered(): void
+    public function test_registration_screen_requires_authentication(): void
     {
         if (! Features::enabled(Features::registration())) {
             $this->markTestSkipped('Registration support is not enabled.');
@@ -19,7 +19,7 @@ class RegistrationTest extends TestCase
 
         $response = $this->get('/register');
 
-        $response->assertStatus(200);
+        $response->assertRedirect('/login');
     }
 
     public function test_registration_screen_cannot_be_rendered_if_support_is_disabled(): void
@@ -39,15 +39,52 @@ class RegistrationTest extends TestCase
             $this->markTestSkipped('Registration support is not enabled.');
         }
 
+        $admin = User::create([
+            'name' => 'Admin User',
+            'email' => 'admin@example.com',
+            'login' => 'admin-login',
+            'matricula' => 123,
+            'cargo' => 'Administrador',
+        ]);
+
+        $this->actingAs($admin);
+
         $response = $this->post('/register', [
             'name' => 'Test User',
+            'login' => '12345678901',
             'email' => 'test@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
+            'matricula' => '987654321',
+            'cargo' => 'Analista',
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature(),
         ]);
 
-        $this->assertAuthenticated();
-        $response->assertRedirect(route('dashboard', absolute: false));
+        $response->assertRedirect(route('register', absolute: false));
+        $this->assertAuthenticatedAs($admin);
+        $this->assertDatabaseHas('users', [
+            'name' => 'Test User',
+            'login' => '12345678901',
+            'email' => 'test@example.com',
+            'matricula' => '987654321',
+            'cargo' => 'Analista',
+        ]);
+        $this->assertSessionHas('status', 'Usuário cadastrado com sucesso.');
+    }
+
+    public function test_guests_cannot_register_users(): void
+    {
+        if (! Features::enabled(Features::registration())) {
+            $this->markTestSkipped('Registration support is not enabled.');
+        }
+
+        $response = $this->post('/register', [
+            'name' => 'Test User',
+            'login' => '12345678901',
+            'email' => 'test@example.com',
+            'matricula' => '987654321',
+            'cargo' => 'Analista',
+        ]);
+
+        $response->assertRedirect('/login');
+        $this->assertDatabaseMissing('users', ['email' => 'test@example.com']);
     }
 }
